@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">MeetingApp</string>
+    <string name="login">Login</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="title_activity_botton_navigation">BottonNavigationActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_activity_bottom_navigation">BottomNavigationActivity</string>
+    <string name="button">Button</string>
+    <integer name="com_vk_sdk_AppId">7334440</integer>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps2">Map</string>
+    <string name="title_activity_work_please">MapAAAA</string>
+    <string name="api_key">AIzaSyDB3CO5OhPS7qyeZFb9PrIOy3m9sIlesvc</string>
+
+
+</resources>

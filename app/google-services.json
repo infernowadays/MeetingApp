@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "782236131176",
+    "firebase_url": "https://meetingapp-27f7e.firebaseio.com",
+    "project_id": "meetingapp-27f7e",
+    "storage_bucket": "meetingapp-27f7e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:782236131176:android:b9e958fa16597c417b80dd",
+        "android_client_info": {
+          "package_name": "com.example.meetingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "782236131176-ghfq6qjgk31a6vtu8q7p3p8bpbm8ounc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.meetingapp",
+            "certificate_hash": "9c9d3f69cb69f6fd2db0a5e328b32f883c5c8df5"
+          }
+        },
+        {
+          "client_id": "782236131176-n6kq4of6k4esd8d19kph28rn3ud7edcf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxq2C66dJymwYwpsVaO0Sz9dEw4rdA4cI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "782236131176-n6kq4of6k4esd8d19kph28rn3ud7edcf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
