@@ -14,6 +14,10 @@
     <string name="title_activity_maps2">Map</string>
     <string name="title_activity_work_please">MapAAAA</string>
     <string name="api_key">AIzaSyDB3CO5OhPS7qyeZFb9PrIOy3m9sIlesvc</string>
+    <string name="username">Username</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>
