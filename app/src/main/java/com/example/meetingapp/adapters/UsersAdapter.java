@@ -19,14 +19,15 @@ import com.example.meetingapp.models.ChatUser;
 import java.util.List;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> {
+    String theLastMessage;
     private Context mContext;
     private List<ChatUser> mUsers;
+    private boolean is_chat;
 
-    String theLastMessage;
-
-    public UsersAdapter(Context mContext, List<ChatUser> mUsers){
+    public UsersAdapter(Context mContext, List<ChatUser> mUsers, boolean is_chat) {
         this.mUsers = mUsers;
         this.mContext = mContext;
+        this.is_chat = is_chat;
     }
 
     @NonNull
@@ -41,10 +42,23 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
         final ChatUser user = mUsers.get(position);
         holder.username.setText(user.getUsername());
-        if (user.getImageURL().equals("default")){
+        if (user.getImageURL().equals("default")) {
             holder.profile_image.setImageResource(R.mipmap.ic_launcher);
         } else {
             Glide.with(mContext).load(user.getImageURL()).into(holder.profile_image);
+        }
+
+        if (is_chat) {
+            if (user.getStatus().equals("online")) {
+                holder.img_on.setVisibility(View.VISIBLE);
+                holder.img_off.setVisibility(View.GONE);
+            } else {
+                holder.img_on.setVisibility(View.GONE);
+                holder.img_off.setVisibility(View.VISIBLE);
+            }
+        } else {
+            holder.img_on.setVisibility(View.GONE);
+            holder.img_off.setVisibility(View.GONE);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -63,16 +77,21 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         return mUsers.size();
     }
 
-    public  class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView username;
         public ImageView profile_image;
+        public ImageView img_on;
+        public ImageView img_off;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             username = itemView.findViewById(R.id.username);
             profile_image = itemView.findViewById(R.id.profile_image);
+
+            img_on = itemView.findViewById(R.id.img_on);
+            img_off = itemView.findViewById(R.id.img_off);
         }
     }
 }

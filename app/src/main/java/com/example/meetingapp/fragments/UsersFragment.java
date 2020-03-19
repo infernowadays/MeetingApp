@@ -1,17 +1,14 @@
 package com.example.meetingapp.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.UsersAdapter;
@@ -59,16 +56,16 @@ public class UsersFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 chatUsers.clear();
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ChatUser chatUser = snapshot.getValue(ChatUser.class);
 
                     assert chatUser != null;
                     assert firebaseUser != null;
-                    if(!chatUser.getId().equals(firebaseUser.getUid())){
+                    if (!chatUser.getId().equals(firebaseUser.getUid())) {
                         chatUsers.add(chatUser);
                     }
 
-                    usersAdapter = new UsersAdapter(getContext(), chatUsers);
+                    usersAdapter = new UsersAdapter(getContext(), chatUsers, false);
                     recyclerView.setAdapter(usersAdapter);
                 }
             }

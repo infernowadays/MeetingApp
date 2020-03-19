@@ -87,7 +87,7 @@ public class RegisterActivity extends AppCompatActivity {
                             }
                         });
                     } else{
-                        Toast.makeText(RegisterActivity.this, "Provide all the data", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

@@ -1,5 +1,11 @@
 package com.example.meetingapp.activities;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,12 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.meetingapp.R;
@@ -31,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -65,7 +66,7 @@ public class Main2Activity extends AppCompatActivity {
                 ChatUser chatUser = dataSnapshot.getValue(ChatUser.class);
                 assert chatUser != null;
                 username.setText(chatUser.getUsername());
-                if(chatUser.getImageURL().equals("default")) {
+                if (chatUser.getImageURL().equals("default")) {
                     profile_image.setImageResource(R.mipmap.ic_launcher);
                 } else {
                     Glide.with(Main2Activity.this).load(chatUser.getImageURL()).into(profile_image);
@@ -89,7 +90,8 @@ public class Main2Activity extends AppCompatActivity {
 
         viewPager.setAdapter(viewPagerAdapter);
 
-        tabLayout.setupWithViewPager(viewPager);    }
+        tabLayout.setupWithViewPager(viewPager);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -99,14 +101,35 @@ public class Main2Activity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(Main2Activity.this, StartActivity.class));
+                startActivity(new Intent(Main2Activity.this, StartActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 finish();
                 return true;
         }
         return false;
+    }
+
+    private void status(String status) {
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
+
+        databaseReference.updateChildren(hashMap);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        status("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        status("offline");
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -114,7 +137,7 @@ public class Main2Activity extends AppCompatActivity {
         private ArrayList<Fragment> fragments;
         private ArrayList<String> titles;
 
-        ViewPagerAdapter(FragmentManager fm){
+        ViewPagerAdapter(FragmentManager fm) {
             super(fm);
             this.fragments = new ArrayList<>();
             this.titles = new ArrayList<>();
@@ -130,7 +153,7 @@ public class Main2Activity extends AppCompatActivity {
             return fragments.size();
         }
 
-        public void addFragment(Fragment fragment, String title){
+        public void addFragment(Fragment fragment, String title) {
             fragments.add(fragment);
             titles.add(title);
         }
@@ -140,4 +163,5 @@ public class Main2Activity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return titles.get(position);
         }
-    }}
+    }
+}
