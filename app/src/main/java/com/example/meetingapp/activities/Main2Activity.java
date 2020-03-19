@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.meetingapp.R;
 import com.example.meetingapp.fragments.ChatsFragment;
+import com.example.meetingapp.fragments.ProfileFragment;
 import com.example.meetingapp.fragments.UsersFragment;
 import com.example.meetingapp.models.ChatUser;
 import com.google.android.material.tabs.TabLayout;
@@ -84,6 +85,7 @@ public class Main2Activity extends AppCompatActivity {
 
         viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
         viewPagerAdapter.addFragment(new UsersFragment(), "Users");
+        viewPagerAdapter.addFragment(new ProfileFragment(), "Profile");
 
         viewPager.setAdapter(viewPagerAdapter);
 
