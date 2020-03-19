@@ -61,14 +61,11 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             holder.img_off.setVisibility(View.GONE);
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, MessageActivity.class);
-                intent.putExtra("userId", user.getId());
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, MessageActivity.class);
+            intent.putExtra("userId", user.getId());
 
-                mContext.startActivity(intent);
-            }
+            mContext.startActivity(intent);
         });
     }
 

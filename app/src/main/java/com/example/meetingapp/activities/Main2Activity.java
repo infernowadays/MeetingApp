@@ -69,7 +69,7 @@ public class Main2Activity extends AppCompatActivity {
                 if (chatUser.getImageURL().equals("default")) {
                     profile_image.setImageResource(R.mipmap.ic_launcher);
                 } else {
-                    Glide.with(Main2Activity.this).load(chatUser.getImageURL()).into(profile_image);
+                    Glide.with(getApplicationContext()).load(chatUser.getImageURL()).into(profile_image);
                 }
             }
 
