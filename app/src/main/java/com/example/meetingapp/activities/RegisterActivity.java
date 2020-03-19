@@ -77,6 +77,9 @@ public class RegisterActivity extends AppCompatActivity {
                         hashMap.put("id", user_id);
                         hashMap.put("username", username);
                         hashMap.put("imageURL", "default");
+                        hashMap.put("status", "offline");
+                        hashMap.put("search", username.toLowerCase());
+
 
                         databaseReference.setValue(hashMap).addOnCompleteListener(task1 -> {
                             if(task1.isSuccessful()){
