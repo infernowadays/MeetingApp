@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.meetingapp.MyHandler;
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.MessageAdapter;
 import com.example.meetingapp.models.Chat;
@@ -53,6 +54,9 @@ public class MessageActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     ValueEventListener seenListener;
+
+    private Runnable mUpdateTimeTask = () -> status("offline");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,12 +220,19 @@ public class MessageActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         status("online");
+
+        MyHandler.getHandler();
+        MyHandler.stopMyHandler();
+        MyHandler.setUser(firebaseUser);
+//        status("online");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         databaseReference.removeEventListener(seenListener);
-        status("offline");
+        MyHandler.resumeMyHandler(mUpdateTimeTask);
+
+        //        status("offline");
     }
 }

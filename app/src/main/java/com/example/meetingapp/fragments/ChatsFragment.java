@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.UsersAdapter;
-import com.example.meetingapp.models.Chat;
 import com.example.meetingapp.models.ChatList;
 import com.example.meetingapp.models.ChatUser;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,7 +57,7 @@ public class ChatsFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usersList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ChatList chatlist = snapshot.getValue(ChatList.class);
                     usersList.add(chatlist);
                 }
@@ -83,17 +82,23 @@ public class ChatsFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mUsers.clear();
 
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ChatUser user = snapshot.getValue(ChatUser.class);
-                    for (ChatList chatlist : usersList){
+                    for (ChatList chatlist : usersList) {
                         assert user != null;
-                        if (user.getId().equals(chatlist.getId())){
+                        if (user.getId().equals(chatlist.getId())) {
                             mUsers.add(user);
                         }
                     }
                 }
-                userAdapter = new UsersAdapter(getContext(), mUsers, true);
-                recyclerView.setAdapter(userAdapter);
+
+                if (userAdapter == null) {
+                    userAdapter = new UsersAdapter(getContext(), mUsers, true);
+                    recyclerView.setAdapter(userAdapter);
+                } else {
+                    userAdapter.notifyDataSetChanged();
+                }
+
             }
 
             @Override

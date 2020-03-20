@@ -2,6 +2,7 @@ package com.example.meetingapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.example.meetingapp.MyHandler;
 import com.example.meetingapp.R;
 import com.example.meetingapp.fragments.ChatsFragment;
 import com.example.meetingapp.fragments.ProfileFragment;
@@ -43,6 +45,9 @@ public class Main2Activity extends AppCompatActivity {
 
     FirebaseUser firebaseUser;
     DatabaseReference databaseReference;
+
+    private Handler mHandler = new Handler();
+    private Runnable mUpdateTimeTask = () -> status("offline");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,12 +106,11 @@ public class Main2Activity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.logout:
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(Main2Activity.this, StartActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                finish();
-                return true;
+        if (item.getItemId() == R.id.logout) {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(Main2Activity.this, StartActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            finish();
+            return true;
         }
         return false;
     }
@@ -124,13 +128,24 @@ public class Main2Activity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         status("online");
+//        mHandler.removeCallbacks(mUpdateTimeTask);
+        MyHandler.getHandler();
+        MyHandler.stopMyHandler();
+        MyHandler.setUser(firebaseUser);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        status("offline");
+        MyHandler.resumeMyHandler(mUpdateTimeTask);
+        //        mHandler.postDelayed(mUpdateTimeTask, 5000);
     }
+
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        mHandler.postDelayed(mUpdateTimeTask, 5000);
+//    }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
 
@@ -153,7 +168,7 @@ public class Main2Activity extends AppCompatActivity {
             return fragments.size();
         }
 
-        public void addFragment(Fragment fragment, String title) {
+        void addFragment(Fragment fragment, String title) {
             fragments.add(fragment);
             titles.add(title);
         }
