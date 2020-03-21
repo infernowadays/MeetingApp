@@ -23,6 +23,7 @@ import com.example.meetingapp.fragments.ChatsFragment;
 import com.example.meetingapp.fragments.ProfileFragment;
 import com.example.meetingapp.fragments.UsersFragment;
 import com.example.meetingapp.models.ChatUser;
+import com.example.meetingapp.services.KillAppService;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,6 +55,10 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+
+        startService(new Intent(getBaseContext(), KillAppService.class));
+
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Profile");
@@ -62,8 +67,7 @@ public class Main2Activity extends AppCompatActivity {
         profile_image = findViewById(R.id.profile_image);
         username = findViewById(R.id.username);
 
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+        initFireBase();
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -98,6 +102,11 @@ public class Main2Activity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    public void initFireBase() {
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -115,7 +124,7 @@ public class Main2Activity extends AppCompatActivity {
         return false;
     }
 
-    private void status(String status) {
+    public void status(String status) {
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -138,14 +147,19 @@ public class Main2Activity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         MyHandler.resumeMyHandler(mUpdateTimeTask);
-        //        mHandler.postDelayed(mUpdateTimeTask, 5000);
     }
 
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        mHandler.postDelayed(mUpdateTimeTask, 5000);
-//    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MyHandler.resumeMyHandler(mUpdateTimeTask);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MyHandler.resumeMyHandler(mUpdateTimeTask);
+    }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
 
