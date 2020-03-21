@@ -1,17 +1,18 @@
 package com.example.meetingapp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.widget.TextView;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.adapters.EventsAdapter;
 import com.example.meetingapp.api.UserClient;
+import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
-
-import java.util.List;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,7 +26,10 @@ public class EventActivity extends AppCompatActivity {
 
     private TextView textViewEventId;
     private TextView textViewEventName;
+    private ChipGroup chipGroup;
     private Event event;
+    private Context context;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,8 @@ public class EventActivity extends AppCompatActivity {
 
         textViewEventId = findViewById(R.id.textViewEventId);
         textViewEventName = findViewById(R.id.textViewEventName);
+        chipGroup = findViewById(R.id.chip_group);
+        context = this;
 
         loadEvent();
     }
@@ -53,6 +59,14 @@ public class EventActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Event> call, Response<Event> response) {
                 event = response.body();
+
+                assert event != null;
+                for(Category category : event.getCategories()){
+                    Chip chip = (Chip) getLayoutInflater().inflate(R.layout.category_item, chipGroup, false);
+                    chip.setText(category.getName());
+                    chipGroup.addView(chip);
+
+                }
                 putEvent();
             }
 
