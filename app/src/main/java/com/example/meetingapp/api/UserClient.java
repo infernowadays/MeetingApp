@@ -12,6 +12,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface UserClient {
 
@@ -22,4 +23,8 @@ public interface UserClient {
     @Headers("Content-Type: application/json")
     @GET("api/events")
     Call<List<Event>> getEvents(@Header("Authorization") String authToken);
+
+    @Headers("Content-Type: application/json")
+    @GET("api/events/{pk}")
+    Call<Event> getEvent(@Path("pk") String pk, @Header("Authorization") String authToken);
 }

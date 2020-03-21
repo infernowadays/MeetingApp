@@ -55,7 +55,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
                 List<Event> eventList = response.body();
-                rvEvents.setAdapter(new EventsAdapter(eventList));
+                rvEvents.setAdapter(new EventsAdapter(getContext(), eventList));
             }
 
             @Override

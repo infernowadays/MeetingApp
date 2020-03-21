@@ -27,6 +27,7 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:fullBackupContent"
         tools:targetApi="m">
+        <activity android:name=".activities.EventActivity"></activity>
         <activity
             android:name=".activities.ResetPasswordActivity"
             android:parentActivityName=".activities.Login2Activity" />

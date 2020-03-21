@@ -1,6 +1,7 @@
 package com.example.meetingapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.activities.EventActivity;
+import com.example.meetingapp.activities.MessageActivity;
 import com.example.meetingapp.models.Event;
 
 import java.util.List;
@@ -17,31 +20,36 @@ import java.util.List;
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
 
     private List<Event> mEvents;
+    private Context mContext;
 
-    public EventsAdapter(List<Event> events) {
-        mEvents = events;
+    public EventsAdapter(Context mContext, List<Event> events) {
+        this.mEvents = events;
+        this.mContext = mContext;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-
-        View contactView = inflater.inflate(R.layout.event_item, parent, false);
-
-        return new ViewHolder(contactView);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.event_item, parent, false);
+        return new EventsAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Event event = mEvents.get(position);
+        final Event event = mEvents.get(position);
 
         TextView textViewEventId = holder.textViewEventId;
         textViewEventId.setText(String.valueOf(event.getId()));
 
         TextView textViewEventName = holder.textViewEventName;
         textViewEventName.setText(event.getName());
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, EventActivity.class);
+            intent.putExtra("eventId", String.valueOf(event.getId()));
+
+            mContext.startActivity(intent);
+        });
     }
 
     @Override
@@ -49,11 +57,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         return mEvents.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textViewEventId;
-        public TextView textViewEventName;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView textViewEventId;
+        private TextView textViewEventName;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             textViewEventId = itemView.findViewById(R.id.textViewEventId);

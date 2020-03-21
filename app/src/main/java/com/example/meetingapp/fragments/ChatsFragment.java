@@ -92,12 +92,15 @@ public class ChatsFragment extends Fragment {
                     }
                 }
 
-                if (userAdapter == null) {
-                    userAdapter = new UsersAdapter(getContext(), mUsers, true);
-                    recyclerView.setAdapter(userAdapter);
-                } else {
-                    userAdapter.notifyDataSetChanged();
-                }
+                userAdapter = new UsersAdapter(getContext(), mUsers, true);
+                recyclerView.setAdapter(userAdapter);
+//
+//                if (userAdapter == null) {
+//                    userAdapter = new UsersAdapter(getContext(), mUsers, true);
+//                    recyclerView.setAdapter(userAdapter);
+//                } else {
+//                    userAdapter.notifyDataSetChanged();
+//                }
 
             }
 
