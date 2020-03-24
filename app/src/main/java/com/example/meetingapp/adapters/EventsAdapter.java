@@ -13,7 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.EventActivity;
 import com.example.meetingapp.activities.MessageActivity;
+import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 
 import java.util.List;
 
@@ -38,11 +41,17 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Event event = mEvents.get(position);
 
-        TextView textViewEventId = holder.textViewEventId;
-        textViewEventId.setText(String.valueOf(event.getId()));
+        TextView event_name = holder.name;
+        event_name.setText(event.getName());
 
-        TextView textViewEventName = holder.textViewEventName;
-        textViewEventName.setText(event.getName());
+        TextView event_description = holder.description;
+        event_description.setText(event.getDescription());
+
+        for(Category category : event.getCategories()){
+            Chip chip = (Chip) LayoutInflater.from(mContext).inflate(R.layout.category_item, holder.chipGroup, false);
+            chip.setText(category.getName());
+            holder.chipGroup.addView(chip);
+        }
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, EventActivity.class);
@@ -58,14 +67,16 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView textViewEventId;
-        private TextView textViewEventName;
+        private TextView name;
+        private TextView description;
+        private ChipGroup chipGroup;
 
         ViewHolder(View itemView) {
             super(itemView);
 
-            textViewEventId = itemView.findViewById(R.id.textViewEventId);
-            textViewEventName = itemView.findViewById(R.id.textViewEventName);
+            name = itemView.findViewById(R.id.event_name);
+            description = itemView.findViewById(R.id.event_description);
+            chipGroup = itemView.findViewById(R.id.chip_group);
         }
     }
 

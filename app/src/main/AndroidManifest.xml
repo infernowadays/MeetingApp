@@ -27,7 +27,9 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:fullBackupContent"
         tools:targetApi="m">
-        <activity android:name=".activities.EventActivity"></activity>
+        <activity android:name=".activities.PassDataBetweenStepsActivity"></activity>
+        <activity android:name=".activities.EventActivity" />
+        <activity android:name=".activities.StepperActivity" />
         <activity
             android:name=".activities.ResetPasswordActivity"
             android:parentActivityName=".activities.Login2Activity" />
@@ -118,9 +120,9 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <service android:name=".services.KillAppService" android:stopWithTask="false" />
-
+        <service
+            android:name=".services.KillAppService"
+            android:stopWithTask="false" />
     </application>
 
 </manifest>

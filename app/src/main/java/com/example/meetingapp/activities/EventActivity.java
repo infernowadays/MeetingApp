@@ -65,7 +65,6 @@ public class EventActivity extends AppCompatActivity {
                     Chip chip = (Chip) getLayoutInflater().inflate(R.layout.category_item, chipGroup, false);
                     chip.setText(category.getName());
                     chipGroup.addView(chip);
-
                 }
                 putEvent();
             }

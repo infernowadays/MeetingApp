@@ -46,6 +46,7 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements
@@ -80,8 +81,8 @@ public class MapsActivity extends FragmentActivity implements
             checkUserLocationPermission();
         }
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
@@ -94,7 +95,8 @@ public class MapsActivity extends FragmentActivity implements
 
         // Specify the types of place data to return.
 
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ADDRESS));
+        assert autocompleteFragment != null;
+        autocompleteFragment.setPlaceFields(Collections.singletonList(Place.Field.ADDRESS));
 
         // Set up a PlaceSelectionListener to handle the response.
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -187,17 +189,20 @@ public class MapsActivity extends FragmentActivity implements
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        mMap.getUiSettings().setScrollGesturesEnabled(false);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.getUiSettings().setCompassEnabled(false);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
 
-        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-            @Override
-            public void onCameraIdle() {
-                Log.i("centerLat", String.valueOf(mMap.getCameraPosition().target.latitude));
-                Log.i("centerLong", String.valueOf(mMap.getCameraPosition().target.longitude));
-            }
+        mMap.setOnCameraIdleListener(() -> {
+            Log.i("centerLat", String.valueOf(mMap.getCameraPosition().target.latitude));
+            Log.i("centerLong", String.valueOf(mMap.getCameraPosition().target.longitude));
         });
     }
 
@@ -255,7 +260,7 @@ public class MapsActivity extends FragmentActivity implements
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.title("You're here!");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
         currentUserLocationMarker = mMap.addMarker(markerOptions);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentUserLocationMarker.getPosition(), 12.0f));

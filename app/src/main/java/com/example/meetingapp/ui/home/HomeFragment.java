@@ -1,19 +1,29 @@
 package com.example.meetingapp.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.activities.EventsMapActivity;
+import com.example.meetingapp.activities.MapsActivity;
+import com.example.meetingapp.activities.MessageActivity;
+import com.example.meetingapp.activities.PassDataBetweenStepsActivity;
+import com.example.meetingapp.activities.StepperActivity;
 import com.example.meetingapp.adapters.EventsAdapter;
+import com.example.meetingapp.adapters.StepperAdapter;
 import com.example.meetingapp.api.UserClient;
 import com.example.meetingapp.models.Event;
+import com.stepstone.stepper.StepperLayout;
 
 import java.util.List;
 
@@ -27,11 +37,29 @@ public class HomeFragment extends Fragment {
 
     static final String BASE_URL = "http://10.0.2.2:8000/";
 
-    private HomeViewModel homeViewModel;
     private RecyclerView rvEvents;
+    private Button geo_btn;
+    private Button create_event_btn;
+    private StepperLayout mStepperLayout;
+    private FragmentActivity myContext;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+        geo_btn = root.findViewById(R.id.geo_btn);
+        geo_btn.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), MapsActivity.class);
+            startActivity(intent);
+        });
+
+
+        create_event_btn = root.findViewById(R.id.new_event);
+        create_event_btn.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), PassDataBetweenStepsActivity.class);
+            startActivity(intent);
+        });
+
 
         rvEvents = root.findViewById(R.id.my_recycler_view);
         rvEvents.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -50,7 +78,6 @@ public class HomeFragment extends Fragment {
 
         Call<List<Event>> call = userClient.getEvents("Token 9ba875f0b1b909484e327292bd5d01be30c75791");
 
-        //noinspection NullableProblems
         call.enqueue(new Callback<List<Event>>() {
             @Override
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {

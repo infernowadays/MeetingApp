@@ -18,6 +18,7 @@ import androidx.navigation.ui.NavigationUI;
 
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.fragments.ProfileFragment;
 import com.example.meetingapp.ui.dashboard.DashboardFragment;
 import com.example.meetingapp.ui.home.HomeFragment;
 import com.example.meetingapp.ui.notifications.NotificationsFragment;
@@ -28,7 +29,10 @@ public class BottomNavigationActivity extends AppCompatActivity {
     final Fragment fragment1 = new HomeFragment();
     final Fragment fragment2 = new DashboardFragment();
     final Fragment fragment3 = new NotificationsFragment();
+    final Fragment profileFragment = new ProfileFragment();
+
     final FragmentManager fm = getSupportFragmentManager();
+
     Fragment active = fragment1;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -48,6 +52,10 @@ public class BottomNavigationActivity extends AppCompatActivity {
                         fm.beginTransaction().hide(active).show(fragment3).commit();
                         active = fragment3;
                         return true;
+                    case R.id.navigation_profile:
+                        fm.beginTransaction().hide(active).show(profileFragment).commit();
+                        active = profileFragment;
+                        return true;
                 }
                 return false;
             };
@@ -64,6 +72,7 @@ public class BottomNavigationActivity extends AppCompatActivity {
         BottomNavigationView navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        fm.beginTransaction().add(R.id.main_container, profileFragment, "4").hide(profileFragment).commit();
         fm.beginTransaction().add(R.id.main_container, fragment3, "3").hide(fragment3).commit();
         fm.beginTransaction().add(R.id.main_container, fragment2, "2").hide(fragment2).commit();
         fm.beginTransaction().add(R.id.main_container, fragment1, "1").commit();

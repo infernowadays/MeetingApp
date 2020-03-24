@@ -149,17 +149,17 @@ public class Main2Activity extends AppCompatActivity {
         MyHandler.resumeMyHandler(mUpdateTimeTask);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        MyHandler.resumeMyHandler(mUpdateTimeTask);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        MyHandler.resumeMyHandler(mUpdateTimeTask);
-    }
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        MyHandler.resumeMyHandler(mUpdateTimeTask);
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        MyHandler.resumeMyHandler(mUpdateTimeTask);
+//    }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
 

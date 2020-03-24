@@ -85,12 +85,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        image_profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openImage();
-            }
-        });
+        image_profile.setOnClickListener(view1 -> openImage());
 
         return view;
     }
