@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/geo_fragment"
+    tools:context=".fragments.event_stepper.EventGeoLocationStepperFragment">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/addressEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Адрес" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/openGeo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="Выбрать на карте"/>
+
+</FrameLayout>

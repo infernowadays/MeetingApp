@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
     private String googlePlaceData, url;
@@ -48,8 +49,8 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
             HashMap<String, String> googleNearbyPlace = nearbyPlacesList.get(i);
             String nameOfPlace = googleNearbyPlace.get("place_name");
             String vicinity = googleNearbyPlace.get("vicinity");
-            double latitude = Double.parseDouble(googleNearbyPlace.get("latitude"));
-            double longitude = Double.parseDouble(googleNearbyPlace.get("longitude"));
+            double latitude = Double.parseDouble(Objects.requireNonNull(googleNearbyPlace.get("latitude")));
+            double longitude = Double.parseDouble(Objects.requireNonNull(googleNearbyPlace.get("longitude")));
 
 
             LatLng latLng = new LatLng(latitude, longitude);

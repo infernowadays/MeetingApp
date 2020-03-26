@@ -1,8 +1,10 @@
 package com.example.meetingapp.activities;
 
+import android.app.Fragment;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.meetingapp.DataManager;
 import com.example.meetingapp.R;
@@ -12,12 +14,9 @@ import com.stepstone.stepper.StepperLayout;
 public class PassDataBetweenStepsActivity extends AppCompatActivity implements DataManager {
 
     private static final String CURRENT_STEP_POSITION_KEY = "position";
-
     private static final String DATA = "data";
 
-    //    @BindView(R.id.stepperLayout)
     private StepperLayout mStepperLayout;
-    private StepperAdapter mStepperAdapter;
 
     private String mData;
 
@@ -27,20 +26,22 @@ public class PassDataBetweenStepsActivity extends AppCompatActivity implements D
         setTitle("Stepper sample");
 
         setContentView(R.layout.step);
-//        ButterKnife.bind(this);
 
-
-
-
-
-        int startingStepPosition = savedInstanceState != null ? savedInstanceState.getInt(CURRENT_STEP_POSITION_KEY) : 0;
-        mData = savedInstanceState != null ? savedInstanceState.getString(DATA) : null;
+//        int startingStepPosition = savedInstanceState != null ? savedInstanceState.getInt(CURRENT_STEP_POSITION_KEY) : 0;
+//        mData = savedInstanceState != null ? savedInstanceState.getString(DATA) : null;
 
         mStepperLayout = findViewById(R.id.stepperLayout);
-        mStepperAdapter = new StepperAdapter(getSupportFragmentManager(), this);
+        StepperAdapter mStepperAdapter = new StepperAdapter(getSupportFragmentManager(), this);
 
 
         mStepperLayout.setAdapter(mStepperAdapter);
+    }
+
+    public Fragment getLatestFragment(){
+        int index = getFragmentManager().getBackStackEntryCount() - 1;
+        FragmentManager.BackStackEntry backEntry = (FragmentManager.BackStackEntry) getFragmentManager().getBackStackEntryAt(index);
+        String tag = backEntry.getName();
+        return getFragmentManager().findFragmentByTag(tag);
     }
 
     @Override

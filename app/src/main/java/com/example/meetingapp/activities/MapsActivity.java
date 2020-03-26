@@ -1,12 +1,14 @@
 package com.example.meetingapp.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +23,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.meetingapp.GetNearbyPlaces;
 import com.example.meetingapp.R;
+import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
@@ -34,7 +37,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -45,9 +47,9 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
@@ -189,7 +191,7 @@ public class MapsActivity extends FragmentActivity implements
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mMap.getUiSettings().setScrollGesturesEnabled(false);
+//        mMap.getUiSettings().setScrollGesturesEnabled(false);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setMapToolbarEnabled(false);
@@ -203,6 +205,56 @@ public class MapsActivity extends FragmentActivity implements
         mMap.setOnCameraIdleListener(() -> {
             Log.i("centerLat", String.valueOf(mMap.getCameraPosition().target.latitude));
             Log.i("centerLong", String.valueOf(mMap.getCameraPosition().target.longitude));
+
+
+//
+//            Bundle bundle = new Bundle();
+//            bundle.putString("edttext", "From Activity");
+//            EventGeoLocationStepperFragment eventGeoLocationStepperFragment = new EventGeoLocationStepperFragment();
+//            eventGeoLocationStepperFragment.setArguments(bundle);
+//
+//
+
+            Intent intent = new Intent();
+            intent.putExtra("lol", "kek");
+            setResult(0, intent);
+            finish();
+
+
+
+
+
+
+
+
+
+            Geocoder gcd = new Geocoder(this, Locale.getDefault());
+            List<Address> addresses = null;
+            try {
+                addresses = gcd.getFromLocation(mMap.getCameraPosition().target.latitude, mMap.getCameraPosition().target.longitude, 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            if (addresses.size() > 0) {
+                Log.i("address", addresses.get(0).getAddressLine(0));
+            } else {
+                Log.i("suka", "kto");
+
+            }
+
+//            Bundle bundle = new Bundle();
+//            bundle.putString("centerLat", String.valueOf(mMap.getCameraPosition().target.latitude));
+//            bundle.putString("centerLong", String.valueOf(mMap.getCameraPosition().target.longitude));
+
+            PreferenceUtils.saveLocation(String.valueOf(
+                    mMap.getCameraPosition().target.latitude),
+                    String.valueOf(mMap.getCameraPosition().target.longitude),
+                    this
+            );
+
+
         });
     }
 

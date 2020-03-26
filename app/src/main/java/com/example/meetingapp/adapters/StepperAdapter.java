@@ -2,17 +2,16 @@ package com.example.meetingapp.adapters;
 
 import android.content.Context;
 
-import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.meetingapp.activities.PassDataBetweenStepsActivity;
 import com.example.meetingapp.activities.StepperActivity;
-import com.example.meetingapp.fragments.CreateEventByStep2Fragment;
-import com.example.meetingapp.fragments.CreateEventByStepFragment;
+import com.example.meetingapp.fragments.event_stepper.EventDateStepperFragment;
+import com.example.meetingapp.fragments.event_stepper.EventGeoLocationStepperFragment;
+import com.example.meetingapp.fragments.event_stepper.EventNameStepperFragment;
+import com.example.meetingapp.fragments.event_stepper.EventPublishStepperFragment;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.adapter.AbstractFragmentStepAdapter;
-import com.stepstone.stepper.viewmodel.StepViewModel;
 
 public class StepperAdapter extends AbstractFragmentStepAdapter {
 
@@ -30,19 +29,16 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
     public Step createStep(int position) {
         switch (position) {
             case 0:
-                return CreateEventByStepFragment.newInstance();
-//                final CreateEventByStepFragment step1 = new CreateEventByStepFragment();
-//                Bundle b1 = new Bundle();
-//                b1.putInt(CURRENT_STEP_POSITION_KEY, position);
-//                step1.setArguments(b1);
-//                return step1;
+                return EventNameStepperFragment.newInstance();
+
             case 1:
-                return CreateEventByStep2Fragment.newInstance();
-//                final CreateEventByStep2Fragment step2 = new CreateEventByStep2Fragment();
-//                Bundle b2 = new Bundle();
-//                b2.putInt(CURRENT_STEP_POSITION_KEY, position);
-//                step2.setArguments(b2);
-//                return step2;
+                return EventDateStepperFragment.newInstance();
+
+            case 2:
+                return EventGeoLocationStepperFragment.newInstance();
+
+            case 3:
+                return EventPublishStepperFragment.newInstance();
         }
 
         return null;
@@ -50,7 +46,7 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 4;
     }
 
 //    @NonNull

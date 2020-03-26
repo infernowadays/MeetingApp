@@ -14,13 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.activities.EventsMapActivity;
 import com.example.meetingapp.activities.MapsActivity;
-import com.example.meetingapp.activities.MessageActivity;
 import com.example.meetingapp.activities.PassDataBetweenStepsActivity;
-import com.example.meetingapp.activities.StepperActivity;
 import com.example.meetingapp.adapters.EventsAdapter;
-import com.example.meetingapp.adapters.StepperAdapter;
 import com.example.meetingapp.api.UserClient;
 import com.example.meetingapp.models.Event;
 import com.stepstone.stepper.StepperLayout;

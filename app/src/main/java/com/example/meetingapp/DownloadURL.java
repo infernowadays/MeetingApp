@@ -7,8 +7,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class DownloadURL {
-    public String readTheURL(String placeURL) throws IOException {
+class DownloadURL {
+    String readTheURL(String placeURL) throws IOException {
         String data = "";
         InputStream inputStream = null;
         HttpURLConnection httpURLConnection = null;
@@ -34,6 +34,7 @@ public class DownloadURL {
             e.printStackTrace();
         }
         finally {
+            assert inputStream != null;
             inputStream.close();
             httpURLConnection.disconnect();
         }
