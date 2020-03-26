@@ -7,24 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.meetingapp.DataManager;
+import com.example.meetingapp.EventManager;
 import com.example.meetingapp.R;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
-
-import butterknife.BindView;
 
 
 public class CreateEventByStepFragment extends ButterKnifeFragment implements BlockingStep {
 
 //    @BindView(R.id.editText)
     EditText editText;
-    private DataManager dataManager;
+    private EventManager eventManager;
 
     public static CreateEventByStepFragment newInstance() {
         return new CreateEventByStepFragment();
@@ -42,10 +39,10 @@ public class CreateEventByStepFragment extends ButterKnifeFragment implements Bl
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof DataManager) {
-            dataManager = (DataManager) context;
+        if (context instanceof EventManager) {
+            eventManager = (EventManager) context;
         } else {
-            throw new IllegalStateException("Activity must implement DataManager interface!");
+            throw new IllegalStateException("Activity must implement EventManager interface!");
         }
     }
 
@@ -68,7 +65,7 @@ public class CreateEventByStepFragment extends ButterKnifeFragment implements Bl
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
         String enteredText = editText.getText().toString();
-        dataManager.saveData(enteredText);
+        eventManager.saveDate(enteredText);
         callback.goToNextStep();
     }
 

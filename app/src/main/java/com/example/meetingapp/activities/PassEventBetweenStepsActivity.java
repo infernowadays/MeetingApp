@@ -6,19 +6,27 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.meetingapp.DataManager;
+import com.example.meetingapp.EventManager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.StepperAdapter;
+import com.example.meetingapp.models.MyLocation;
 import com.stepstone.stepper.StepperLayout;
 
-public class PassDataBetweenStepsActivity extends AppCompatActivity implements DataManager {
+public class PassEventBetweenStepsActivity extends AppCompatActivity implements EventManager {
 
     private static final String CURRENT_STEP_POSITION_KEY = "position";
-    private static final String DATA = "data";
+    private static final String DESCRIPTION = "description";
+    private static final String DATE = "date";
+    private static final String TIME = "time";
+    private static final String LOCATION = "location";
+
 
     private StepperLayout mStepperLayout;
 
-    private String mData;
+    private String mDescription;
+    private String mDate;
+    private String mTime;
+    private MyLocation mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +55,10 @@ public class PassDataBetweenStepsActivity extends AppCompatActivity implements D
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(CURRENT_STEP_POSITION_KEY, mStepperLayout.getCurrentStepPosition());
-        outState.putString(DATA, mData);
+        outState.putString(DESCRIPTION, mDescription);
+        outState.putString(DATE, mDate);
+        outState.putString(TIME, mTime);
+        outState.putParcelable(DESCRIPTION, mLocation);
         super.onSaveInstanceState(outState);
     }
 
@@ -62,11 +73,38 @@ public class PassDataBetweenStepsActivity extends AppCompatActivity implements D
     }
 
     @Override
-    public void saveData(String data) {
-        mData = data;
+    public void saveDescription(String description) {
+        mDescription = description;
     }
 
-    public String getData() {
-        return mData;
+    public String getDescription() {
+        return mDescription;
+    }
+
+    @Override
+    public void saveDate(String date) {
+        mDate = date;
+    }
+
+    public String getDate() {
+        return mDate;
+    }
+
+    @Override
+    public void saveTime(String time) {
+        mTime = time;
+    }
+
+    public String getTime() {
+        return mTime;
+    }
+
+    @Override
+    public void saveLocation(MyLocation location) {
+        mLocation = location;
+    }
+
+    public MyLocation getLocation() {
+        return mLocation;
     }
 }

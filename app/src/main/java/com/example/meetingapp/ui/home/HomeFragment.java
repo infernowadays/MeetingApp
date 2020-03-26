@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.MapsActivity;
-import com.example.meetingapp.activities.PassDataBetweenStepsActivity;
+import com.example.meetingapp.activities.PassEventBetweenStepsActivity;
 import com.example.meetingapp.adapters.EventsAdapter;
 import com.example.meetingapp.api.UserClient;
 import com.example.meetingapp.models.Event;
@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
 
         create_event_btn = root.findViewById(R.id.new_event);
         create_event_btn.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), PassDataBetweenStepsActivity.class);
+            Intent intent = new Intent(getActivity(), PassEventBetweenStepsActivity.class);
             startActivity(intent);
         });
 

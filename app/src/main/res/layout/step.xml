@@ -5,4 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:ms_activeStepColor="@color/quantum_googred"
+    app:ms_completeButtonColor="@color/quantum_googred"
+    app:ms_completeButtonBackground="@color/vk_black"
     app:ms_stepperType="progress_bar" />

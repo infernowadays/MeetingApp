@@ -5,29 +5,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
-import com.example.meetingapp.DataManager;
+import com.example.meetingapp.EventManager;
 import com.example.meetingapp.R;
-import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.Step;
-import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
-
-import butterknife.BindView;
 
 
 public class CreateEventByStep2Fragment extends ButterKnifeFragment implements Step {
 
 //    @BindView(R.id.test_text_2)
     TextView editText;
-    private DataManager dataManager;
+    private EventManager eventManager;
 
     public static CreateEventByStep2Fragment newInstance() {
         return new CreateEventByStep2Fragment();
@@ -45,10 +37,10 @@ public class CreateEventByStep2Fragment extends ButterKnifeFragment implements S
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof DataManager) {
-            dataManager = (DataManager) context;
+        if (context instanceof EventManager) {
+            eventManager = (EventManager) context;
         } else {
-            throw new IllegalStateException("Activity must implement DataManager interface!");
+            throw new IllegalStateException("Activity must implement EventManager interface!");
         }
     }
 
@@ -59,7 +51,7 @@ public class CreateEventByStep2Fragment extends ButterKnifeFragment implements S
 
     @Override
     public void onSelected() {
-        editText.setText("Entered text:\n" + dataManager.getData());
+        editText.setText("Entered text:\n" + eventManager.getDate());
     }
 
     @Override

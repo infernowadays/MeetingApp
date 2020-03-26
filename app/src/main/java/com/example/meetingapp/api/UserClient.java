@@ -3,6 +3,7 @@ package com.example.meetingapp.api;
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.Login;
 import com.example.meetingapp.models.User;
+import com.example.meetingapp.models.Test;
 
 import java.util.List;
 
@@ -27,4 +28,8 @@ public interface UserClient {
     @Headers("Content-Type: application/json")
     @GET("api/events/{pk}")
     Call<Event> getEvent(@Path("pk") String pk, @Header("Authorization") String authToken);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/events")
+    Call<Event> createEvent(@Body Test test, @Header("Authorization") String authToken);
 }

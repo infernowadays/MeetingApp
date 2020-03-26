@@ -27,7 +27,7 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:fullBackupContent"
         tools:targetApi="m">
-        <activity android:name=".activities.PassDataBetweenStepsActivity"></activity>
+        <activity android:name=".activities.PassEventBetweenStepsActivity"></activity>
         <activity android:name=".activities.EventActivity" />
         <activity android:name=".activities.StepperActivity" />
         <activity
