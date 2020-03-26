@@ -2,7 +2,6 @@ package com.example.meetingapp.fragments.event_stepper;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,21 +11,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.activities.BottomNavigationActivity;
-import com.example.meetingapp.activities.LoginActivity;
 import com.example.meetingapp.activities.MapsActivity;
-import com.example.meetingapp.models.Location;
-import com.example.meetingapp.utils.PreferenceUtils;
+import com.example.meetingapp.models.MyLocation;
 import com.google.android.material.button.MaterialButton;
+import com.rengwuxian.materialedittext.MaterialEditText;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
-
-import java.util.Objects;
 
 
 public class EventGeoLocationStepperFragment extends Fragment implements Step {
 
-    private MaterialButton locationButton;
+    private MaterialEditText editAddress;
+    private MyLocation myLocation;
 
     public static EventGeoLocationStepperFragment newInstance() {
         return new EventGeoLocationStepperFragment();
@@ -37,38 +33,33 @@ public class EventGeoLocationStepperFragment extends Fragment implements Step {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        if( getArguments() != null) {
-            String strtext = getArguments().getString("edttext");
-        }
-
-
-        Location location = PreferenceUtils.getLocation(Objects.requireNonNull(getActivity()));
-
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        String bundle = Objects.requireNonNull(data).getStringExtra("lol");
-        int a = 5;
+        if (data != null && data.hasExtra("newLocation")) {
+            myLocation = data.getParcelableExtra("newLocation");
+            String address = null;
+            if (myLocation != null) {
+                address = myLocation.getAddress();
+                editAddress.setText(address);
+            }
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_geo_location_stepper, container, false);
 
-        locationButton = view.findViewById(R.id.openGeo);
+        editAddress = view.findViewById(R.id.addressEdit);
+        myLocation = null;
+
+        MaterialButton locationButton = view.findViewById(R.id.openGeo);
         locationButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), MapsActivity.class);
-//            intent.putExtra("my_context", (Parcelable) getActivity());
+            intent.putExtra("prevLocation", myLocation);
             startActivityForResult(intent, 1);
         });
 
         return view;
     }
-
 
     @Nullable
     @Override

@@ -33,7 +33,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -79,7 +78,7 @@ public class EventsMapActivity extends FragmentActivity implements OnMapReadyCal
                         if (mapFragment != null)
                             mapFragment.getMapAsync(EventsMapActivity.this);
 
-                        initArea();
+//                        initArea();
                         settingGeoFire();
                     }
 
@@ -117,12 +116,14 @@ public class EventsMapActivity extends FragmentActivity implements OnMapReadyCal
                             locationResult.getLastLocation().getLongitude()), (key, error) -> {
 
                         if (currentUser != null) currentUser.remove();
-                        currentUser = mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(locationResult.getLastLocation().getLatitude(),
-                                        locationResult.getLastLocation().getLongitude()))
-                                .title("You"));
+//                        currentUser = mMap.addMarker(new MarkerOptions()
+//                                .position(new LatLng(locationResult.getLastLocation().getLatitude(),
+//                                        locationResult.getLastLocation().getLongitude()))
+//                                .title("You"));
+
+
                         mMap.animateCamera(CameraUpdateFactory
-                                .newLatLngZoom(currentUser.getPosition(), 12.0f));
+                                .newLatLngZoom(new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()), 17.0f));
                     });
                 }
             }

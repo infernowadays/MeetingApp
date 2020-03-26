@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.example.meetingapp.models.Location;
-
 import static android.content.Context.MODE_PRIVATE;
 
 public class PreferenceUtils {
@@ -20,23 +18,6 @@ public class PreferenceUtils {
         prefsEditor.apply();
         return true;
     }
-
-    public static boolean saveLocation(String latitude, String longitude, Context context) {
-        SharedPreferences.Editor prefsEditor = context.getSharedPreferences("LocationToGo", MODE_PRIVATE).edit();
-        prefsEditor.putString("latitude", latitude);
-        prefsEditor.putString("longitude", longitude);
-        prefsEditor.apply();
-        return true;
-    }
-
-    public static Location getLocation(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences("LocationToGo", MODE_PRIVATE);
-        return new Location(
-                prefs.getString("latitude", null),
-                prefs.getString("longitude", null)
-        );
-    }
-
 
     public static boolean getEmail(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("MyPrefsFile", MODE_PRIVATE);
