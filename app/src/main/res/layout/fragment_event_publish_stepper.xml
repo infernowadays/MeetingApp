@@ -6,29 +6,29 @@
     tools:context=".fragments.event_stepper.EventPublishStepperFragment">
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/create_event_description"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/create_event_description"/>
+        android:layout_height="wrap_content" />
 
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/_create_event_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/create_event_description"
-        android:id="@+id/_create_event_date"/>
+        android:layout_below="@id/create_event_description" />
 
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/create_event_time"
         android:layout_width="wrap_content"
-        android:layout_below="@id/_create_event_date"
         android:layout_height="wrap_content"
-        android:id="@+id/create_event_time"/>
+        android:layout_below="@id/_create_event_date" />
 
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/create_event_address"
         android:layout_width="wrap_content"
-        android:layout_below="@id/create_event_time"
         android:layout_height="wrap_content"
-        android:id="@+id/create_event_address"/>
+        android:layout_below="@id/create_event_time" />
 
 </RelativeLayout>

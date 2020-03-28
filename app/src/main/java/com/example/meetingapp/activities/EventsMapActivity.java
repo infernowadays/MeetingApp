@@ -103,7 +103,7 @@ public class EventsMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     private void settingGeoFire() {
-        databaseReference = FirebaseDatabase.getInstance().getReference("MyLocation");
+        databaseReference = FirebaseDatabase.getInstance().getReference("GeoPoint");
         geoFire = new GeoFire(databaseReference);
     }
 

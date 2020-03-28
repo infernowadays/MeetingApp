@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import com.example.meetingapp.EventManager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.StepperAdapter;
-import com.example.meetingapp.models.MyLocation;
+import com.example.meetingapp.models.GeoPoint;
 import com.stepstone.stepper.StepperLayout;
 
 public class PassEventBetweenStepsActivity extends AppCompatActivity implements EventManager {
@@ -26,7 +26,7 @@ public class PassEventBetweenStepsActivity extends AppCompatActivity implements 
     private String mDescription;
     private String mDate;
     private String mTime;
-    private MyLocation mLocation;
+    private GeoPoint mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,11 +100,11 @@ public class PassEventBetweenStepsActivity extends AppCompatActivity implements 
     }
 
     @Override
-    public void saveLocation(MyLocation location) {
+    public void saveLocation(GeoPoint location) {
         mLocation = location;
     }
 
-    public MyLocation getLocation() {
+    public GeoPoint getLocation() {
         return mLocation;
     }
 }

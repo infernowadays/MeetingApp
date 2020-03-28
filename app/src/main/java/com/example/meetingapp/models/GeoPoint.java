@@ -3,12 +3,12 @@ package com.example.meetingapp.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class MyLocation implements Parcelable {
+public class GeoPoint implements Parcelable {
     private double latitude;
     private double longitude;
     private String address;
 
-    public MyLocation(double latitude, double longitude, String address) {
+    public GeoPoint(double latitude, double longitude, String address) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
@@ -50,17 +50,17 @@ public class MyLocation implements Parcelable {
         dest.writeString(address);
     }
 
-    public static final Parcelable.Creator<MyLocation> CREATOR = new Parcelable.Creator<MyLocation>() {
-        public MyLocation createFromParcel(Parcel in) {
-            return new MyLocation(in);
+    public static final Parcelable.Creator<GeoPoint> CREATOR = new Parcelable.Creator<GeoPoint>() {
+        public GeoPoint createFromParcel(Parcel in) {
+            return new GeoPoint(in);
         }
 
-        public MyLocation[] newArray(int size) {
-            return new MyLocation[size];
+        public GeoPoint[] newArray(int size) {
+            return new GeoPoint[size];
         }
     };
 
-    private MyLocation(Parcel in) {
+    private GeoPoint(Parcel in) {
         latitude = in.readDouble();
         longitude = in.readDouble();
         address = in.readString();

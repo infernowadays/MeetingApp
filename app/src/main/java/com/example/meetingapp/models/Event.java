@@ -6,13 +6,23 @@ public class Event {
     private int id;
     private String name;
     private String description;
+    private String date;
+    private String time;
+    private GeoPoint geoPoint;
     private List<Category> categories;
 
-    public Event(int id, String name, String description, List<Category> categories) {
+
+    public Event(int id, String name, String description, String date, String time, GeoPoint geoPoint, List<Category> categories) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.date = date;
+        this.time = time;
+        this.geoPoint = geoPoint;
         this.categories = categories;
+    }
+
+    public Event() {
     }
 
     public List<Category> getCategories() {
@@ -45,5 +55,29 @@ public class Event {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public GeoPoint getGeoPoint() {
+        return geoPoint;
+    }
+
+    public void setGeoPoint(GeoPoint geoPoint) {
+        this.geoPoint = geoPoint;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

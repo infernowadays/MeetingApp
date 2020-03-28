@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.stepstone.stepper.StepperLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/stepperLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:ms_activeStepColor="@color/quantum_googred"
-    app:ms_completeButtonColor="@color/quantum_googred"
-    app:ms_completeButtonBackground="@color/vk_black"
-    app:ms_stepperType="progress_bar" />
+    android:layout_height="wrap_content">
+
+    <ImageButton
+        android:layout_width="32dp"
+        android:layout_margin="16dp"
+        android:layout_height="32dp"
+        android:background="@drawable/ic_close_icon"/>
+
+    <com.stepstone.stepper.StepperLayout
+        android:id="@+id/stepperLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:ms_activeStepColor="@color/quantum_googred"
+        app:ms_completeButtonColor="@color/quantum_googred"
+        app:ms_stepperType="progress_bar" />
+
+</RelativeLayout>

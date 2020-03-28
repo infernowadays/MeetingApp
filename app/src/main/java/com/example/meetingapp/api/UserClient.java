@@ -31,5 +31,5 @@ public interface UserClient {
 
     @Headers("Content-Type: application/json")
     @POST("api/events")
-    Call<Event> createEvent(@Body Test test, @Header("Authorization") String authToken);
+    Call<Event> createEvent(@Body Event event, @Header("Authorization") String authToken);
 }

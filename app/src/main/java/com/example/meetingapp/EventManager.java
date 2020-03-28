@@ -1,6 +1,6 @@
 package com.example.meetingapp;
 
-import com.example.meetingapp.models.MyLocation;
+import com.example.meetingapp.models.GeoPoint;
 
 public interface EventManager {
 
@@ -16,8 +16,8 @@ public interface EventManager {
 
     String getTime();
 
-    void saveLocation(MyLocation location);
+    void saveLocation(GeoPoint location);
 
-    MyLocation getLocation();
+    GeoPoint getLocation();
 
 }

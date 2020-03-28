@@ -8,14 +8,13 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.models.MyLocation;
+import com.example.meetingapp.models.GeoPoint;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -51,8 +50,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void checkPrevLocation() {
         Intent intent = getIntent();
-        MyLocation prevLocation = intent.getParcelableExtra("prevLocation");
-        if(prevLocation != null){
+        GeoPoint prevLocation = intent.getParcelableExtra("prevLocation");
+        if (prevLocation != null) {
             currentLocation.setLatitude(prevLocation.getLatitude());
             currentLocation.setLongitude(prevLocation.getLongitude());
         }
@@ -75,11 +74,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             if (Objects.requireNonNull(addresses).size() > 0) {
                 Intent intent = new Intent();
-                MyLocation myLocation = new MyLocation(
+                GeoPoint geoPoint = new GeoPoint(
                         map.getCameraPosition().target.latitude,
                         map.getCameraPosition().target.longitude,
                         addresses.get(0).getAddressLine(0));
-                intent.putExtra("newLocation", myLocation);
+                intent.putExtra("newLocation", geoPoint);
                 setResult(0, intent);
             }
 
@@ -106,6 +105,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
+    }
+
+    private String getAddressByLatLng(double latitude, double longitude) {
+        Geocoder gcd = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+            addresses = gcd.getFromLocation(latitude, longitude, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (Objects.requireNonNull(addresses).size() > 0) {
+            return addresses.get(0).getAddressLine(0);
+        } else return "";
     }
 
     @Override

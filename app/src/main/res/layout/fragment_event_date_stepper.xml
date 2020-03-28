@@ -5,19 +5,45 @@
     android:layout_height="match_parent"
     tools:context=".fragments.event_stepper.EventDateStepperFragment">
 
+    <LinearLayout
+        android:id="@+id/dateButtons"
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:orientation="horizontal"
+        android:padding="16dp">
 
-    <com.google.android.material.button.MaterialButton
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/todayButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:text="Сегодня" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/tomorrowButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Завтра" />
+    </LinearLayout>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/setDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Дата" />
+        android:layout_below="@id/dateButtons"
+        android:focusable="false"
+        android:hint="Дата" />
 
-
-    <com.google.android.material.button.MaterialButton
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/setTimeOptional"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/setDate"
-        android:text="Время (необязательно)" />
+        android:focusable="false"
+        android:hint="Время (необязательно)" />
+
 
 </RelativeLayout>
+
