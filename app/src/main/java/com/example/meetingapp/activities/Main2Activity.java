@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.example.meetingapp.MyHandler;
 import com.example.meetingapp.R;
 import com.example.meetingapp.fragments.ChatsFragment;
+import com.example.meetingapp.fragments.GroupChatsFragment;
 import com.example.meetingapp.fragments.ProfileFragment;
 import com.example.meetingapp.fragments.UsersFragment;
 import com.example.meetingapp.models.ChatUser;
@@ -96,6 +97,8 @@ public class Main2Activity extends AppCompatActivity {
         viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
         viewPagerAdapter.addFragment(new UsersFragment(), "Users");
         viewPagerAdapter.addFragment(new ProfileFragment(), "Profile");
+        viewPagerAdapter.addFragment(new GroupChatsFragment(), "Group Chats");
+
 
         viewPager.setAdapter(viewPagerAdapter);
 

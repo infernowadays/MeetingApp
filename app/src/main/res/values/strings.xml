@@ -25,6 +25,9 @@
     <string name="add_location">Добавить</string>
     <string name="cancel_location">Отмена</string>
     <string name="set_address">Наведитесь на нужный адрес</string>
+    <string name="tickets">Tickets</string>
+    <string name="events">Events</string>
+    <string name="messages">Messages</string>
 
 
 </resources>

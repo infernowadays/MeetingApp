@@ -195,8 +195,8 @@ public class MessageActivity extends AppCompatActivity {
                         mchat.add(chat);
                     }
 
-                    messageAdapter = new MessageAdapter(MessageActivity.this, mchat, imageurl);
-                    recyclerView.setAdapter(messageAdapter);
+//                    messageAdapter = new MessageAdapter(MessageActivity.this, mchat, imageurl);
+//                    recyclerView.setAdapter(messageAdapter);
                 }
             }
 
@@ -224,7 +224,6 @@ public class MessageActivity extends AppCompatActivity {
         MyHandler.getHandler();
         MyHandler.stopMyHandler();
         MyHandler.setUser(firebaseUser);
-//        status("online");
     }
 
     @Override
@@ -232,7 +231,5 @@ public class MessageActivity extends AppCompatActivity {
         super.onPause();
         databaseReference.removeEventListener(seenListener);
         MyHandler.resumeMyHandler(mUpdateTimeTask);
-
-        //        status("offline");
     }
 }

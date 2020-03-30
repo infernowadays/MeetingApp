@@ -14,12 +14,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.meetingapp.EventManager;
 import com.example.meetingapp.R;
-import com.example.meetingapp.activities.BottomNavigationActivity;
 import com.example.meetingapp.activities.EventActivity;
 import com.example.meetingapp.api.UserClient;
 import com.example.meetingapp.models.Event;
-import com.example.meetingapp.models.Test;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;

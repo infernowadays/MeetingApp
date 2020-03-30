@@ -12,7 +12,6 @@ import com.example.meetingapp.R;
 import com.example.meetingapp.api.UserClient;
 import com.example.meetingapp.models.Login;
 import com.example.meetingapp.models.User;
-import com.example.meetingapp.utils.PreferenceUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
 
 //
 //        if (PreferenceUtils.getEmail(this)){
-//            Intent intent = new Intent(LoginActivity.this, BottomNavigationActivity.class);
+//            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 //            startActivity(intent);
 //
 //        }
@@ -87,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, response.body().getToken(), Toast.LENGTH_SHORT).show();
 
 
-                    Intent intent = new Intent(getContext(), BottomNavigationActivity.class);
+                    Intent intent = new Intent(getContext(), MainActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
@@ -100,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "error :(", Toast.LENGTH_SHORT).show();
                 // t.fillInStackTrace();
 
-                Intent intent = new Intent(getContext(), BottomNavigationActivity.class);
+                Intent intent = new Intent(getContext(), MainActivity.class);
                 startActivity(intent);
                 finish();
             }

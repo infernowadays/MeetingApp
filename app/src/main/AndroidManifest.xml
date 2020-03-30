@@ -27,7 +27,8 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:fullBackupContent"
         tools:targetApi="m">
-        <activity android:name=".activities.PassEventBetweenStepsActivity"></activity>
+        <activity android:name=".activities.GroupMessageActivity"></activity>
+        <activity android:name=".activities.PassEventBetweenStepsActivity" />
         <activity android:name=".activities.EventActivity" />
         <activity android:name=".activities.StepperActivity" />
         <activity
@@ -90,7 +91,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.BottomNavigationActivity"
+            android:name=".activities.MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_bottom_navigation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -105,7 +107,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MainActivity">
+        <activity android:name=".activities.LALALALALAActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

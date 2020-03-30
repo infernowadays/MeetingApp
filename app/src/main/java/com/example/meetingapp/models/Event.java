@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Event {
     private int id;
+    private ChatUser creator;
     private String name;
     private String description;
     private String date;
@@ -12,8 +13,9 @@ public class Event {
     private List<Category> categories;
 
 
-    public Event(int id, String name, String description, String date, String time, GeoPoint geoPoint, List<Category> categories) {
+    public Event(int id, ChatUser creator, String name, String description, String date, String time, GeoPoint geoPoint, List<Category> categories) {
         this.id = id;
+        this.creator = creator;
         this.name = name;
         this.description = description;
         this.date = date;
@@ -79,5 +81,13 @@ public class Event {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public ChatUser getCreator() {
+        return creator;
+    }
+
+    public void setCreator(ChatUser creator) {
+        this.creator = creator;
     }
 }

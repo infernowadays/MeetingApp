@@ -1,38 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".activities.EventActivity">
+    tools:context=".activities.EventActivity"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textViewEventName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:text="Event"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textViewEventId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewEventName"
-        android:layout_marginTop="15dp"
-        android:text="Description"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chip_group"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewEventId"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal"
-        app:chipSpacing="10dp" />
+        android:layout_height="wrap_content" />
 
-</RelativeLayout>
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

@@ -12,7 +12,7 @@ public class OAUTHApplication extends Application {
         @Override
         public void onVKAccessTokenChanged(VKAccessToken oldToken, VKAccessToken newToken) {
             if (newToken == null) {
-                Intent intent = new Intent(OAUTHApplication.this, MainActivity.class);
+                Intent intent = new Intent(OAUTHApplication.this, LALALALALAActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }

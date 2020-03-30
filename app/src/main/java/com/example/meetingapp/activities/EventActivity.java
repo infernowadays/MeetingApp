@@ -1,7 +1,12 @@
 package com.example.meetingapp.activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,10 +14,15 @@ import android.widget.TextView;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.api.UserClient;
+import com.example.meetingapp.fragments.EventChatFragment;
+import com.example.meetingapp.fragments.EventInfoFragment;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,48 +46,57 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
-        textViewEventId = findViewById(R.id.textViewEventId);
-        textViewEventName = findViewById(R.id.textViewEventName);
-        chipGroup = findViewById(R.id.chip_group);
-        context = this;
 
-        loadEvent();
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        ViewPager viewPager = findViewById(R.id.view_pager);
+
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+
+
+        viewPagerAdapter.addFragment(new EventInfoFragment(), "Информация");
+        viewPagerAdapter.addFragment(new EventChatFragment(), "Чат");
+
+
+        viewPager.setAdapter(viewPagerAdapter);
+
+        tabLayout.setupWithViewPager(viewPager);
+
+
     }
 
-    private void loadEvent() {
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create());
 
-        Retrofit retrofit = builder.build();
-        UserClient userClient = retrofit.create(UserClient.class);
 
-        String pk = getIntent().getStringExtra("eventId");
-        Call<Event> call = userClient.getEvent(pk, "Token 9ba875f0b1b909484e327292bd5d01be30c75791");
+    class ViewPagerAdapter extends FragmentPagerAdapter {
 
-        call.enqueue(new Callback<Event>() {
-            @Override
-            public void onResponse(Call<Event> call, Response<Event> response) {
-                event = response.body();
+        private ArrayList<Fragment> fragments;
+        private ArrayList<String> titles;
 
-                assert event != null;
-                for(Category category : event.getCategories()){
-                    Chip chip = (Chip) getLayoutInflater().inflate(R.layout.category_item, chipGroup, false);
-                    chip.setText(category.getName());
-                    chipGroup.addView(chip);
-                }
-                putEvent();
-            }
+        ViewPagerAdapter(FragmentManager fm) {
+            super(fm);
+            this.fragments = new ArrayList<>();
+            this.titles = new ArrayList<>();
+        }
 
-            @Override
-            public void onFailure(Call<Event> call, Throwable t) {
+        @Override
+        public Fragment getItem(int position) {
+            return fragments.get(position);
+        }
 
-            }
-        });
-    }
+        @Override
+        public int getCount() {
+            return fragments.size();
+        }
 
-    private void putEvent(){
-        textViewEventId.setText(String.valueOf(event.getId()));
-        textViewEventName.setText(event.getName());
+        void addFragment(Fragment fragment, String title) {
+            fragments.add(fragment);
+            titles.add(title);
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titles.get(position);
+        }
     }
 }

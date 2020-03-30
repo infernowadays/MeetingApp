@@ -1,114 +1,105 @@
 package com.example.meetingapp.activities;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Intent;
-import android.os.Build;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.meetingapp.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.vk.sdk.VKAccessToken;
-import com.vk.sdk.VKCallback;
-import com.vk.sdk.VKScope;
-import com.vk.sdk.VKSdk;
-import com.vk.sdk.api.VKError;
-import com.vk.sdk.util.VKUtil;
-
-import java.util.Arrays;
-import java.util.Objects;
-
+import com.example.meetingapp.fragments.EventsFragment;
+import com.example.meetingapp.fragments.MessagesFragment;
+import com.example.meetingapp.fragments.TicketsFragment;
+import com.example.meetingapp.models.Message;
+import com.example.meetingapp.ui.home.HomeFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
-    private String[] scope = new String[]{VKScope.EMAIL, VKScope.FRIENDS};
+    final Fragment homeFragment = new HomeFragment();
+    final Fragment eventsFragment = new EventsFragment();
+    final Fragment ticketsFragment = new TicketsFragment();
+    final Fragment messagesFragment = new MessagesFragment();
+    final FragmentManager fm = getSupportFragmentManager();
+
+    private Fragment active = homeFragment;
+
+    private BottomNavigationView navigation;
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = item -> {
+        switch (item.getItemId()) {
+            case R.id.navigation_home:
+                fm.beginTransaction().hide(active).show(homeFragment).commit();
+                active = homeFragment;
+                return true;
+            case R.id.navigation_events:
+                fm.beginTransaction().hide(active).show(eventsFragment).commit();
+                active = eventsFragment;
+                return true;
+            case R.id.navigation_tickets:
+                fm.beginTransaction().hide(active).show(ticketsFragment).commit();
+                active = ticketsFragment;
+                return true;
+            case R.id.navigation_messages:
+                fm.beginTransaction().hide(active).show(messagesFragment).commit();
+                active = messagesFragment;
+//                navigation.removeBadge(R.id.navigation_messages);
+
+                return true;
+        }
+        return false;
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        navigation = findViewById(R.id.nav_view);
 
-        if (!VKSdk.isLoggedIn()) {
-            VKSdk.login(this, scope);
-        }
-        else {
-            //user авторизован
-        }
+//        navigation.getOrCreateBadge(R.id.navigation_home).setNumber(5);
+
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        fm.beginTransaction().add(R.id.main_container, messagesFragment, "4").hide(messagesFragment).commit();
+        fm.beginTransaction().add(R.id.main_container, eventsFragment, "3").hide(eventsFragment).commit();
+        fm.beginTransaction().add(R.id.main_container, ticketsFragment, "2").hide(ticketsFragment).commit();
+        fm.beginTransaction().add(R.id.main_container, homeFragment, "1").commit();
 
 
-//        String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
-//        System.out.println("lalala");
-//        System.out.println(Arrays.asList(fingerprints));
-    }
 
-    private void initFirebase(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel =
-                    new NotificationChannel("MyNotifications", "MyNotifications", NotificationManager.IMPORTANCE_HIGH);
-
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            assert manager != null;
-            manager.createNotificationChannel(channel);
-        }
-
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "getInstanceId failed", task.getException());
-                            return;
-                        }
-
-                        // Get new Instance ID token
-                        String token = Objects.requireNonNull(task.getResult()).getToken();
-
-                        // Log and toast
-                        String msg = "ok";
-                        Log.d(TAG, msg);
-                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        FirebaseMessaging.getInstance().subscribeToTopic("general")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        String msg = "ok";
-                        if (!task.isSuccessful()) {
-                            msg = "failed";
-                        }
-                        Log.d(TAG, msg);
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                    }
-                });
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Request");
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                navigation.getOrCreateBadge(R.id.navigation_messages);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (!VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
-            @Override
-            public void onResult(VKAccessToken res) {
-                Toast.makeText(getApplicationContext(), "Good", Toast.LENGTH_SHORT).show();
-            }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.bottom_nav_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
-            @Override
-            public void onError(VKError error) {
-                Toast.makeText(getApplicationContext(), "ЧОРТ", Toast.LENGTH_SHORT).show();
-            }
-        })) {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 }
