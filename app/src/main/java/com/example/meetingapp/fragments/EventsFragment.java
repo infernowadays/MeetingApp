@@ -50,13 +50,11 @@ public class EventsFragment extends Fragment {
             startActivity(intent);
         });
 
-
         create_event_btn = root.findViewById(R.id.new_event);
         create_event_btn.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), PassEventBetweenStepsActivity.class);
             startActivity(intent);
         });
-
 
         rvEvents = root.findViewById(R.id.my_recycler_view);
         rvEvents.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -73,7 +71,7 @@ public class EventsFragment extends Fragment {
         Retrofit retrofit = builder.build();
         UserClient userClient = retrofit.create(UserClient.class);
 
-        Call<List<Event>> call = userClient.getEvents("Token 9ba875f0b1b909484e327292bd5d01be30c75791");
+        Call<List<Event>> call = userClient.getEvents("Token asasddfgdhjkhlkjhkgjhf");
 
         call.enqueue(new Callback<List<Event>>() {
             @Override

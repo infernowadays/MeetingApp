@@ -27,7 +27,14 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:fullBackupContent"
         tools:targetApi="m">
-        <activity android:name=".activities.GroupMessageActivity"></activity>
+        <activity android:name=".activities.WebSocketActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activities.GroupMessageActivity" />
         <activity android:name=".activities.PassEventBetweenStepsActivity" />
         <activity android:name=".activities.EventActivity" />
         <activity android:name=".activities.StepperActivity" />

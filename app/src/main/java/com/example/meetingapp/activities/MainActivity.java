@@ -1,6 +1,5 @@
 package com.example.meetingapp.activities;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,14 +13,8 @@ import com.example.meetingapp.R;
 import com.example.meetingapp.fragments.EventsFragment;
 import com.example.meetingapp.fragments.MessagesFragment;
 import com.example.meetingapp.fragments.TicketsFragment;
-import com.example.meetingapp.models.Message;
 import com.example.meetingapp.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -75,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         fm.beginTransaction().add(R.id.main_container, eventsFragment, "3").hide(eventsFragment).commit();
         fm.beginTransaction().add(R.id.main_container, ticketsFragment, "2").hide(ticketsFragment).commit();
         fm.beginTransaction().add(R.id.main_container, homeFragment, "1").commit();
-
 
 
 //        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Request");

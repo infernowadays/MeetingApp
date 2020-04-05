@@ -52,7 +52,9 @@ public class MessagesFragment extends Fragment {
                 notifications.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Notification notification = snapshot.getValue(Notification.class);
-                    if (notification != null && notification.getCreator_id().equals(firebaseUser.getUid())) {
+                    if (notification != null &&
+                            notification.getCreator_id().equals(firebaseUser.getUid()) &&
+                            !notification.getDecision().equals("DECLINE")) {
                         notifications.add(notification);
                     }
                     notificationsAdapter = new NotificationsAdapter(getContext(), notifications);

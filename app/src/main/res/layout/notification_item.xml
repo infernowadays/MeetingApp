@@ -18,13 +18,14 @@
         android:layout_toEndOf="@id/profile_image">
 
         <TextView
-            android:id="@+id/username"
+            android:id="@+id/notification_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Username хочет пойти с вами."
             android:textSize="16sp" />
 
         <RelativeLayout
+            android:id="@+id/decision_buttons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true">

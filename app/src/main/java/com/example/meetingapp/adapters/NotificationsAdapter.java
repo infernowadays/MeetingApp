@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +19,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     private List<Notification> notifications;
     private Context mContext;
+    private final String acceptMessage = "";
+    private final String noAnswerMessage = "";
 
     public NotificationsAdapter(Context mContext, List<Notification> notifications) {
         this.notifications = notifications;
@@ -33,6 +37,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Notification notification = notifications.get(position);
+        if (notification.getDecision().equals("ACCEPT")){
+            holder.decisionButtons.setVisibility(View.GONE);
+            holder.username.setText("");
+        }
     }
 
     @Override
@@ -42,10 +50,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        private TextView username;
+        private RelativeLayout decisionButtons;
+
         ViewHolder(View itemView) {
             super(itemView);
 
-
+            username = itemView.findViewById(R.id.notification_username);
+            decisionButtons = itemView.findViewById(R.id.decision_buttons);
         }
     }
 }
