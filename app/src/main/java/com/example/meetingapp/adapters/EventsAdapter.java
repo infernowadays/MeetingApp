@@ -14,8 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.EventActivity;
+import com.example.meetingapp.api.DjangoClient;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
+import com.example.meetingapp.models.Test3;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,10 +31,17 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
 
     private List<Event> mEvents;
     private Context mContext;
+    static final String BASE_URL = "http://10.0.2.2:8000/";
 
     public EventsAdapter(Context mContext, List<Event> events) {
         this.mEvents = events;
@@ -75,7 +84,29 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             mEvents.remove(position);
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, getItemCount());
-//            notifyItemRangeRemoved(position, getItemCount());
+
+
+            Retrofit.Builder builder = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create());
+
+            Retrofit retrofit = builder.build();
+            DjangoClient userClient = retrofit.create(DjangoClient.class);
+
+            Test3 test3 = new Test3(String.valueOf(event.getId()), "1");
+            Call<String> call = userClient.sendRequest(test3, "Token 1586545104000");
+
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+
+                }
+            });
         });
     }
 
