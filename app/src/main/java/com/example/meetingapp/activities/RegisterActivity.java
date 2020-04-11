@@ -83,7 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                         databaseReference.setValue(hashMap).addOnCompleteListener(task1 -> {
                             if(task1.isSuccessful()){
-                                Intent intent = new Intent(RegisterActivity.this, Main2Activity.class);
+                                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 finish();

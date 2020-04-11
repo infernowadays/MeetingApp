@@ -1,16 +1,9 @@
 package com.example.meetingapp.fragments;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,22 +13,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.activities.MapsActivity;
-import com.example.meetingapp.api.UserClient;
+import com.example.meetingapp.api.DjangoClient;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
@@ -120,10 +107,10 @@ public class EventInfoFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create());
 
         Retrofit retrofit = builder.build();
-        UserClient userClient = retrofit.create(UserClient.class);
+        DjangoClient userClient = retrofit.create(DjangoClient.class);
 
         String pk = Objects.requireNonNull(getActivity()).getIntent().getStringExtra("eventId");
-        Call<Event> call = userClient.getEvent(pk, "Token 9ba875f0b1b909484e327292bd5d01be30c75791");
+        Call<Event> call = userClient.getEvent(pk, "Token 1586545104000");
 
         call.enqueue(new Callback<Event>() {
             @Override

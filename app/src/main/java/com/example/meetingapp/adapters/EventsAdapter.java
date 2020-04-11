@@ -16,7 +16,6 @@ import com.example.meetingapp.R;
 import com.example.meetingapp.activities.EventActivity;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
-import com.example.meetingapp.models.Notification;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
@@ -71,7 +70,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         });
 
         holder.sendRequestButton.setOnClickListener(v -> {
-            sendRequest(event.getId(), "FfO8eOMug1PMondcKrfALb3Piu03");
+            sendRequest(event.getId(), "edcFW6rqOhTZfZ1HiRjCfxex9ay1");
+
+            mEvents.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, getItemCount());
+//            notifyItemRangeRemoved(position, getItemCount());
         });
     }
 
@@ -85,6 +89,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         hashMap.put("creator_id", creator_id);
         hashMap.put("event_id", event_id);
         hashMap.put("decision", "NO_ANSWER");
+        hashMap.put("seen", false);
 
         reference.child("Request").push().setValue(hashMap);
         Toast.makeText(mContext, "Запрос отправлен!", Toast.LENGTH_SHORT).show();

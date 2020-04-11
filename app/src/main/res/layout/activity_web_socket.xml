@@ -17,12 +17,20 @@
         android:text="Start !"
         android:layout_marginTop="40dp"
         android:textSize="17sp"/>
+    <Button
+        android:id="@+id/send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Send"
+        android:layout_marginTop="90dp"
+        android:textSize="17sp"/>
     <TextView
         android:id="@+id/output"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/start"
         android:layout_centerHorizontal="true"
-        android:textSize="16sp"
-        android:layout_marginTop="30dp"/>
+        android:textSize="2sp"
+        android:layout_marginTop="70dp"/>
 </RelativeLayout>

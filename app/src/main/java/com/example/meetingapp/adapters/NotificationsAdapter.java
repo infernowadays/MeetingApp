@@ -4,27 +4,45 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.meetingapp.NotificationListener;
 import com.example.meetingapp.R;
-import com.example.meetingapp.models.Notification;
+import com.example.meetingapp.models.Chat;
+import com.example.meetingapp.models.EventRequest;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.ViewHolder> {
 
-    private List<Notification> notifications;
+    private List<EventRequest> eventRequests;
     private Context mContext;
     private final String acceptMessage = "";
     private final String noAnswerMessage = "";
 
-    public NotificationsAdapter(Context mContext, List<Notification> notifications) {
-        this.notifications = notifications;
+    FirebaseUser firebaseUser;
+    DatabaseReference databaseReference;
+    ValueEventListener requestListener;
+
+    public NotificationsAdapter(Context mContext, List<EventRequest> eventRequests) {
+        this.eventRequests = eventRequests;
         this.mContext = mContext;
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @NonNull
@@ -36,28 +54,87 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final Notification notification = notifications.get(position);
-        if (notification.getDecision().equals("ACCEPT")){
+        final EventRequest eventRequest = eventRequests.get(position);
+        if (eventRequest.getCreator_id().equals(firebaseUser.getUid()) && eventRequest.getDecision().equals("ACCEPT")){
             holder.decisionButtons.setVisibility(View.GONE);
-            holder.username.setText("");
+            holder.username.setText("вы приняли этого кореша )0");
         }
+        else if(eventRequest.getCreator_id().equals(firebaseUser.getUid()) && eventRequest.getDecision().equals("DECLINE")){
+            holder.decisionButtons.setVisibility(View.GONE);
+            holder.username.setText("ну и правильно, нахер он вам");
+        }
+        else if (eventRequest.getUid().equals(firebaseUser.getUid()) && eventRequest.getDecision().equals("ACCEPT")){
+            holder.decisionButtons.setVisibility(View.GONE);
+            holder.username.setText("тебя приняли, брат)");
+        }
+        else if(eventRequest.getUid().equals(firebaseUser.getUid()) && eventRequest.getDecision().equals("DECLINE")){
+            holder.decisionButtons.setVisibility(View.GONE);
+            holder.username.setText("ну и хер с ними, сам погуляешб 000000");
+        }
+
+//        NotificationListener notificationListener = (NotificationListener) mContext;
+//        if (notificationListener != null && !eventRequest.isSeen()) {
+//            notificationListener.addNotificationBadge(1);
+//        }
+
+        holder.acceptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                answerRequest(eventRequest.getUid(), "ACCEPT");
+            }
+        });
+
+        holder.declineButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                answerRequest(eventRequest.getUid(), "DECLINE");
+            }
+        });
+    }
+
+    private void answerRequest(String userId, String asnwer){
+        databaseReference = FirebaseDatabase.getInstance().getReference("Request");
+        requestListener = databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    EventRequest eventRequest = snapshot.getValue(EventRequest.class);
+
+                    if (eventRequest.getCreator_id().equals(firebaseUser.getUid()) && eventRequest.getUid().equals(userId)) {
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put("decision", asnwer);
+                        snapshot.getRef().updateChildren(hashMap);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     @Override
     public int getItemCount() {
-        return notifications.size();
+        return eventRequests.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView username;
         private RelativeLayout decisionButtons;
+        private Button acceptButton;
+        private Button declineButton;
 
         ViewHolder(View itemView) {
             super(itemView);
 
             username = itemView.findViewById(R.id.notification_username);
             decisionButtons = itemView.findViewById(R.id.decision_buttons);
+            acceptButton = itemView.findViewById(R.id.acceptButton);
+            declineButton = itemView.findViewById(R.id.declineButton);
         }
     }
 }

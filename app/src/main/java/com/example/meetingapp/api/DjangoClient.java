@@ -2,6 +2,7 @@ package com.example.meetingapp.api;
 
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.Login;
+import com.example.meetingapp.models.Test3;
 import com.example.meetingapp.models.User;
 import com.example.meetingapp.models.Test;
 
@@ -15,7 +16,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
-public interface UserClient {
+public interface DjangoClient {
 
     @Headers("Content-Type: application/json")
     @POST("token_auth/auth")
@@ -32,4 +33,8 @@ public interface UserClient {
     @Headers("Content-Type: application/json")
     @POST("api/events")
     Call<Event> createEvent(@Body Event event, @Header("Authorization") String authToken);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/requests")
+    Call<String> sendRequest(@Body Test3 test3, @Header("Authorization") String authToken);
 }

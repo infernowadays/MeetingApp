@@ -9,7 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.api.UserClient;
+import com.example.meetingapp.api.DjangoClient;
 import com.example.meetingapp.models.Login;
 import com.example.meetingapp.models.User;
 
@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create());
 
         Retrofit retrofit = builder.build();
-        UserClient userClient = retrofit.create(UserClient.class);
+        DjangoClient userClient = retrofit.create(DjangoClient.class);
 
         Login login = new Login("admin", "admin");
         Call<User> call = userClient.login(login);
@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
 //                .addConverterFactory(GsonConverterFactory.create());
 //
 //        Retrofit retrofit = builder.build();
-//        UserClient userClient = retrofit.create(UserClient.class);
+//        DjangoClient userClient = retrofit.create(DjangoClient.class);
 //
 //        Call<List<User>> call = userClient.getUsers("Token 75e1ebffabf37f98db48544c90ecb57af4053972");
 //

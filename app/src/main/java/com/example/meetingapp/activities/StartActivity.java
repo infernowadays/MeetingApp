@@ -23,7 +23,7 @@ public class StartActivity extends AppCompatActivity {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if(firebaseUser != null){
-            Intent intent = new Intent(StartActivity.this, Main2Activity.class);
+            Intent intent = new Intent(StartActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }
@@ -36,7 +36,7 @@ public class StartActivity extends AppCompatActivity {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if(firebaseUser != null){
-            Intent intent = new Intent(StartActivity.this, Main2Activity.class);
+            Intent intent = new Intent(StartActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }
@@ -44,18 +44,7 @@ public class StartActivity extends AppCompatActivity {
         login = findViewById(R.id.myLoginButton);
         register = findViewById(R.id.myRegisterButton);
 
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(StartActivity.this, Login2Activity.class));
-            }
-        });
-
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(StartActivity.this, RegisterActivity.class));
-            }
-        });
+        login.setOnClickListener(v -> startActivity(new Intent(StartActivity.this, Login2Activity.class)));
+        register.setOnClickListener(v -> startActivity(new Intent(StartActivity.this, RegisterActivity.class)));
     }
 }

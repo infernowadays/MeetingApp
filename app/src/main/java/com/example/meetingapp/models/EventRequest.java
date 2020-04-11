@@ -1,20 +1,20 @@
 package com.example.meetingapp.models;
 
-public class Notification {
+public class EventRequest {
     private String uid;
     private String creator_id;
     private long event_id;
     private String decision;
     private boolean seen;
 
-    public Notification(String uid, String creator_id, long event_id, String decision) {
+    public EventRequest(String uid, String creator_id, long event_id, String decision) {
         this.uid = uid;
         this.creator_id = creator_id;
         this.event_id = event_id;
         this.decision = decision;
     }
 
-    public Notification() {
+    public EventRequest() {
     }
 
     public String getUid() {

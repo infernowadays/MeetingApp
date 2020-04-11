@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.example.meetingapp.EventManager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.EventActivity;
-import com.example.meetingapp.api.UserClient;
+import com.example.meetingapp.api.DjangoClient;
 import com.example.meetingapp.models.Event;
 import com.google.android.material.textview.MaterialTextView;
 import com.stepstone.stepper.BlockingStep;
@@ -67,7 +67,7 @@ public class EventPublishStepperFragment extends Fragment implements BlockingSte
                 .addConverterFactory(GsonConverterFactory.create());
 
         Retrofit retrofit = builder.build();
-        UserClient userClient = retrofit.create(UserClient.class);
+        DjangoClient userClient = retrofit.create(DjangoClient.class);
 
         Call<Event> call = userClient.createEvent(event, "Token 9ba875f0b1b909484e327292bd5d01be30c75791");
         call.enqueue(new Callback<Event>() {

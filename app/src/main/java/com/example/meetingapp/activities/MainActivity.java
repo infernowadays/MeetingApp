@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.meetingapp.NotificationListener;
 import com.example.meetingapp.R;
 import com.example.meetingapp.fragments.EventsFragment;
 import com.example.meetingapp.fragments.MessagesFragment;
@@ -16,7 +17,7 @@ import com.example.meetingapp.fragments.TicketsFragment;
 import com.example.meetingapp.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NotificationListener {
 
     final Fragment homeFragment = new HomeFragment();
     final Fragment eventsFragment = new EventsFragment();
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     final Fragment messagesFragment = new MessagesFragment();
     final FragmentManager fm = getSupportFragmentManager();
 
+    private int notSeenNotifications = 0;
     private Fragment active = homeFragment;
 
     private BottomNavigationView navigation;
@@ -60,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
         navigation = findViewById(R.id.nav_view);
 
-//        navigation.getOrCreateBadge(R.id.navigation_home).setNumber(5);
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -93,5 +94,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void addNotificationBadge(int number) {
+        navigation.getOrCreateBadge(R.id.navigation_messages).setNumber(number);
+    }
+
+    @Override
+    public void removeNotificationBadge() {
+        navigation.removeBadge(R.id.navigation_messages);
     }
 }

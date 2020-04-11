@@ -54,7 +54,7 @@ public class Login2Activity extends AppCompatActivity {
                 firebaseAuth.signInWithEmailAndPassword(txt_email, txt_password)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                Intent intent = new Intent(Login2Activity.this, Main2Activity.class);
+                                Intent intent = new Intent(Login2Activity.this, MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 finish();
