@@ -1,8 +1,6 @@
 package com.example.meetingapp.fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,12 +16,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.meetingapp.R;
-import com.example.meetingapp.activities.MessageActivity;
 import com.example.meetingapp.adapters.MessageAdapter;
 import com.example.meetingapp.models.Chat;
-import com.example.meetingapp.models.ChatUser;
+import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.models.Message;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -140,15 +136,15 @@ public class EventChatFragment extends Fragment {
 
     private void getChatUsers(List<Message> messages) {
         databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-        List<ChatUser> users = new ArrayList<>();
+        List<UserProfile> users = new ArrayList<>();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ChatUser chatUser = snapshot.getValue(ChatUser.class);
+                    UserProfile userProfile = snapshot.getValue(UserProfile.class);
                     for(Message message : messages){
-                        if(message.getUid().equals(chatUser.getId())){
-                            users.add(chatUser);
+                        if(message.getUid().equals(userProfile.getId())){
+                            users.add(userProfile);
                         }
                     }
                 }

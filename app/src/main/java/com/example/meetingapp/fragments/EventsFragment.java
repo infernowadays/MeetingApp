@@ -2,7 +2,6 @@ package com.example.meetingapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,84 +18,84 @@ import com.example.meetingapp.R;
 import com.example.meetingapp.activities.MapsActivity;
 import com.example.meetingapp.activities.PassEventBetweenStepsActivity;
 import com.example.meetingapp.adapters.EventsAdapter;
-import com.example.meetingapp.api.DjangoClient;
+import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Event;
+import com.example.meetingapp.utils.PreferenceUtils;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.stepstone.stepper.StepperLayout;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class EventsFragment extends Fragment {
 
-    static final String BASE_URL = "http://10.0.2.2:8000/";
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
 
-    private RecyclerView rvEvents;
-    private Button geo_btn;
-    private Button create_event_btn;
+    @BindView(R.id.button_create_event)
+    Button buttonCreateEvent;
+
+    @BindView(R.id.swipe_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+
+    private FirebaseUser firebaseUser;
+    private DatabaseReference databaseReference;
     private StepperLayout mStepperLayout;
     private FragmentActivity myContext;
-    private SwipeRefreshLayout swipeRefreshLayout;
-
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_events, container, false);
+        View view = inflater.inflate(R.layout.fragment_events, container, false);
+        ButterKnife.bind(this, view);
 
-        swipeRefreshLayout = root.findViewById(R.id.swipe);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                events();
-                swipeRefreshLayout.setRefreshing(false);
-
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        swipeRefreshLayout.setRefreshing(false);
-//                    }
-//                }, 2000);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            events();
+            swipeRefreshLayout.setRefreshing(false);
         });
 
-        geo_btn = root.findViewById(R.id.geo_btn);
-        geo_btn.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), MapsActivity.class);
-            startActivity(intent);
-        });
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(new EventsAdapter(getContext(), new ArrayList<>()));
 
-        create_event_btn = root.findViewById(R.id.new_event);
-        create_event_btn.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), PassEventBetweenStepsActivity.class);
-            startActivity(intent);
-        });
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        rvEvents = root.findViewById(R.id.my_recycler_view);
-        rvEvents.setLayoutManager(new LinearLayoutManager(getContext()));
         events();
 
-        return root;
+        return view;
+    }
+
+    @OnClick(R.id.button_open_map)
+    void buttonOpenMap() {
+        Intent intent = new Intent(getActivity(), MapsActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.button_create_event)
+    void buttonCreateEvent() {
+        Intent intent = new Intent(getActivity(), PassEventBetweenStepsActivity.class);
+        startActivity(intent);
     }
 
     private void events() {
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create());
-
-        Retrofit retrofit = builder.build();
-        DjangoClient userClient = retrofit.create(DjangoClient.class);
-
-        Call<List<Event>> call = userClient.getEvents("Token 1586545104000");
+        Call<List<Event>> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(Objects.requireNonNull(getContext())))
+                .getApi()
+                .getEvents();
 
         call.enqueue(new Callback<List<Event>>() {
             @Override
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
                 List<Event> events = response.body();
-                rvEvents.setAdapter(new EventsAdapter(getContext(), events));
+                recyclerView.setAdapter(new EventsAdapter(getContext(), events));
             }
 
             @Override

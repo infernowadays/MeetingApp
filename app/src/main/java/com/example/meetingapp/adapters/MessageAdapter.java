@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.meetingapp.R;
-import com.example.meetingapp.models.ChatUser;
+import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.models.Message;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,11 +25,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     private static final int MSG_TYPE_RIGHT = 1;
     private FirebaseUser firebaseUser;
     private Context context;
-    private List<ChatUser> users;
+    private List<UserProfile> users;
     private List<Message> messages;
     private String imageURL;
 
-    public MessageAdapter(Context mContext, List<Message> messages, List<ChatUser> users) {
+    public MessageAdapter(Context mContext, List<Message> messages, List<UserProfile> users) {
         this.messages = messages;
         this.users = users;
         this.context = mContext;
@@ -53,12 +53,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         Message message = messages.get(position);
 
         holder.show_message.setText(message.getMessage());
-        for(ChatUser chatUser : users){
-            if(message.getUid().equals(chatUser.getId())){
-                if (chatUser.getImageURL().equals("default")) {
+        for(UserProfile userProfile : users){
+            if(message.getUid().equals(userProfile.getId())){
+                if (userProfile.getImageURL().equals("default")) {
                     holder.profile_image.setImageResource(R.mipmap.ic_launcher);
                 } else {
-                    Glide.with(context).load(chatUser.getImageURL()).into(holder.profile_image);
+                    Glide.with(context).load(userProfile.getImageURL()).into(holder.profile_image);
                 }
             }
         }

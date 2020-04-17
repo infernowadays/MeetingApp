@@ -1,10 +1,12 @@
 package com.example.meetingapp.api;
 
 import com.example.meetingapp.models.Event;
+import com.example.meetingapp.models.EventRequest;
 import com.example.meetingapp.models.Login;
 import com.example.meetingapp.models.Test3;
+import com.example.meetingapp.models.Token;
 import com.example.meetingapp.models.User;
-import com.example.meetingapp.models.Test;
+import com.example.meetingapp.models.Users;
 
 import java.util.List;
 
@@ -16,25 +18,29 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
-public interface DjangoClient {
+public interface Api {
 
     @Headers("Content-Type: application/json")
     @POST("token_auth/auth")
-    Call<User> login(@Body Login login);
+    Call<Token> login(@Body Login login);
+
+    @Headers("Content-Type: application/json")
+    @POST("token_auth/users")
+    Call<User> users(@Body Users users);
 
     @Headers("Content-Type: application/json")
     @GET("api/events")
-    Call<List<Event>> getEvents(@Header("Authorization") String authToken);
+    Call<List<Event>> getEvents();
 
     @Headers("Content-Type: application/json")
     @GET("api/events/{pk}")
-    Call<Event> getEvent(@Path("pk") String pk, @Header("Authorization") String authToken);
+    Call<Event> getEvent(@Path("pk") String pk);
 
     @Headers("Content-Type: application/json")
     @POST("api/events")
-    Call<Event> createEvent(@Body Event event, @Header("Authorization") String authToken);
+    Call<Event> createEvent(@Body Event event);
 
     @Headers("Content-Type: application/json")
     @POST("api/requests")
-    Call<String> sendRequest(@Body Test3 test3, @Header("Authorization") String authToken);
+    Call<EventRequest> sendRequest(@Body EventRequest eventRequest);
 }

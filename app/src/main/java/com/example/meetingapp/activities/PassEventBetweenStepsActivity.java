@@ -31,17 +31,10 @@ public class PassEventBetweenStepsActivity extends AppCompatActivity implements 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("Stepper sample");
-
         setContentView(R.layout.step);
-
-//        int startingStepPosition = savedInstanceState != null ? savedInstanceState.getInt(CURRENT_STEP_POSITION_KEY) : 0;
-//        mData = savedInstanceState != null ? savedInstanceState.getString(DATA) : null;
 
         mStepperLayout = findViewById(R.id.stepperLayout);
         StepperAdapter mStepperAdapter = new StepperAdapter(getSupportFragmentManager(), this);
-
-
         mStepperLayout.setAdapter(mStepperAdapter);
     }
 

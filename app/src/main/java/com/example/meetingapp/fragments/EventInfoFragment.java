@@ -1,22 +1,19 @@
 package com.example.meetingapp.fragments;
 
 import android.content.Context;
-import android.location.Location;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import com.example.meetingapp.R;
-import com.example.meetingapp.api.DjangoClient;
+import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
-import com.google.android.gms.location.FusedLocationProviderClient;
+import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -28,59 +25,51 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.util.Objects;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class EventInfoFragment extends Fragment {
 
-    private TextView eventDescription;
-    private TextView eventLocation;
-    private TextView eventDate;
-    private TextView eventTime;
 
-    private ChipGroup chipGroup;
+    @BindView(R.id.text_event_description)
+    TextView textEventDescription;
+
+    @BindView(R.id.text_event_location)
+    TextView textEventLocation;
+
+    @BindView(R.id.text_event_date)
+    TextView textEventDate;
+
+    @BindView(R.id.text_event_time)
+    TextView textEventTime;
+
+    @BindView(R.id.map_view)
+    MapView mapView;
+
+    @BindView(R.id.chip_group)
+    ChipGroup chipGroup;
+
     private Event event;
     private Context context;
-    private RecyclerView recyclerView;
-    static final String BASE_URL = "http://10.0.2.2:8000/";
-
-    private static final int REQUEST_CODE = 101;
-    private Location currentLocation;
-    private FusedLocationProviderClient fusedLocationProviderClient;
-    private GoogleMap map;
-
-
-    private MapView mMapView;
     private GoogleMap googleMap;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event, container, false);
+        ButterKnife.bind(this, view);
 
         loadEvent();
-
-        mMapView = view.findViewById(R.id.mapView);
-        mMapView.onCreate(savedInstanceState);
-
-        eventDescription = view.findViewById(R.id.eventDescription);
-        eventLocation = view.findViewById(R.id.eventLocation);
-        eventDate = view.findViewById(R.id.eventDate);
-        eventTime = view.findViewById(R.id.eventTime);
-
-        chipGroup = view.findViewById(R.id.chipGroup);
-
-
+        mapView.onCreate(savedInstanceState);
 
         return view;
     }
 
     private void initMapView() {
-        mMapView.onResume();
+        mapView.onResume();
 
         try {
             MapsInitializer.initialize(Objects.requireNonNull(getActivity()).getApplicationContext());
@@ -88,7 +77,7 @@ public class EventInfoFragment extends Fragment {
             e.printStackTrace();
         }
 
-        mMapView.getMapAsync(mMap -> {
+        mapView.getMapAsync(mMap -> {
             googleMap = mMap;
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
             googleMap.getUiSettings().setCompassEnabled(false);
@@ -96,21 +85,17 @@ public class EventInfoFragment extends Fragment {
 
             LatLng latLng = new LatLng(event.getGeoPoint().getLatitude(), event.getGeoPoint().getLongitude());
             googleMap.addMarker(new MarkerOptions().position(latLng).title("Событие начнется здесь!"));
-
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
         });
     }
 
     private void loadEvent() {
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create());
+        String pk = Objects.requireNonNull(getActivity()).getIntent().getStringExtra("EXTRA_EVENT_ID");
 
-        Retrofit retrofit = builder.build();
-        DjangoClient userClient = retrofit.create(DjangoClient.class);
-
-        String pk = Objects.requireNonNull(getActivity()).getIntent().getStringExtra("eventId");
-        Call<Event> call = userClient.getEvent(pk, "Token 1586545104000");
+        Call<Event> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(Objects.requireNonNull(getContext())))
+                .getApi()
+                .getEvent(pk);
 
         call.enqueue(new Callback<Event>() {
             @Override
@@ -118,7 +103,7 @@ public class EventInfoFragment extends Fragment {
                 event = response.body();
 
                 assert event != null;
-                for(Category category : event.getCategories()){
+                for (Category category : event.getCategories()) {
                     Chip chip = (Chip) getLayoutInflater().inflate(R.layout.category_item, chipGroup, false);
                     chip.setText(category.getName());
                     chipGroup.addView(chip);
@@ -133,11 +118,11 @@ public class EventInfoFragment extends Fragment {
         });
     }
 
-    private void putEvent(){
-        eventDescription.setText(String.valueOf(event.getDescription()));
-        eventLocation.setText(String.valueOf(event.getGeoPoint().getAddress()));
-        eventDate.setText(event.getDate());
-        eventTime.setText(event.getTime());
+    private void putEvent() {
+        textEventDescription.setText(String.valueOf(event.getDescription()));
+        textEventLocation.setText(String.valueOf(event.getGeoPoint().getAddress()));
+        textEventDate.setText(event.getDate());
+        textEventTime.setText(event.getTime());
         initMapView();
     }
 }

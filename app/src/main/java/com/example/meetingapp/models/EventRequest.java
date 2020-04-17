@@ -1,36 +1,26 @@
 package com.example.meetingapp.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class EventRequest {
-    private String uid;
-    private String creator_id;
-    private long event_id;
+
+    @SerializedName("from_user")
+    private String fromUser;
+
+    @SerializedName("to_user")
+    private String toUser;
+
+    private long event;
     private String decision;
     private boolean seen;
 
-    public EventRequest(String uid, String creator_id, long event_id, String decision) {
-        this.uid = uid;
-        this.creator_id = creator_id;
-        this.event_id = event_id;
-        this.decision = decision;
+    public EventRequest(String fromUser, String toUser, long event) {
+        this.fromUser = fromUser;
+        this.toUser = toUser;
+        this.event = event;
     }
 
     public EventRequest() {
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    public long getEvent_id() {
-        return event_id;
-    }
-
-    public void setEvent_id(long event_id) {
-        this.event_id = event_id;
     }
 
     public String getDecision() {
@@ -49,11 +39,27 @@ public class EventRequest {
         this.seen = seen;
     }
 
-    public String getCreator_id() {
-        return creator_id;
+    public String getFromUser() {
+        return fromUser;
     }
 
-    public void setCreator_id(String creator_id) {
-        this.creator_id = creator_id;
+    public void setFromUser(String fromUser) {
+        this.fromUser = fromUser;
+    }
+
+    public String getToUser() {
+        return toUser;
+    }
+
+    public void setToUser(String toUser) {
+        this.toUser = toUser;
+    }
+
+    public long getEvent() {
+        return event;
+    }
+
+    public void setEvent(long event) {
+        this.event = event;
     }
 }

@@ -1,7 +1,6 @@
 package com.example.meetingapp.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.meetingapp.R;
-import com.example.meetingapp.activities.MessageActivity;
-import com.example.meetingapp.models.ChatUser;
 import com.example.meetingapp.models.GroupChat;
 
 import java.util.List;

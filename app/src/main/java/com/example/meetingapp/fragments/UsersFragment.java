@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.UsersAdapter;
-import com.example.meetingapp.models.ChatUser;
+import com.example.meetingapp.models.UserProfile;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -33,7 +33,7 @@ public class UsersFragment extends Fragment {
     EditText search_users;
     private RecyclerView recyclerView;
     private UsersAdapter usersAdapter;
-    private List<ChatUser> chatUsers;
+    private List<UserProfile> userProfiles;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,7 +45,7 @@ public class UsersFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        chatUsers = new ArrayList<>();
+        userProfiles = new ArrayList<>();
         readUsers();
 
         search_users = view.findViewById(R.id.search_users);
@@ -79,18 +79,18 @@ public class UsersFragment extends Fragment {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                chatUsers.clear();
+                userProfiles.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ChatUser user = snapshot.getValue(ChatUser.class);
+                    UserProfile user = snapshot.getValue(UserProfile.class);
 
                     assert user != null;
                     assert fuser != null;
                     if (!user.getId().equals(fuser.getUid())) {
-                        chatUsers.add(user);
+                        userProfiles.add(user);
                     }
                 }
 
-                usersAdapter = new UsersAdapter(getContext(), chatUsers, false);
+                usersAdapter = new UsersAdapter(getContext(), userProfiles, false);
                 recyclerView.setAdapter(usersAdapter);
             }
 
@@ -109,17 +109,17 @@ public class UsersFragment extends Fragment {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                chatUsers.clear();
+                userProfiles.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ChatUser chatUser = snapshot.getValue(ChatUser.class);
+                    UserProfile userProfile = snapshot.getValue(UserProfile.class);
 
-                    assert chatUser != null;
+                    assert userProfile != null;
                     assert firebaseUser != null;
-                    if (!chatUser.getId().equals(firebaseUser.getUid())) {
-                        chatUsers.add(chatUser);
+                    if (!userProfile.getId().equals(firebaseUser.getUid())) {
+                        userProfiles.add(userProfile);
                     }
 
-                    usersAdapter = new UsersAdapter(getContext(), chatUsers, false);
+                    usersAdapter = new UsersAdapter(getContext(), userProfiles, false);
                     recyclerView.setAdapter(usersAdapter);
                 }
             }

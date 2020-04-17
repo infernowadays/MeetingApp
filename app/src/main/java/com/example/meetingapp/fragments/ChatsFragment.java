@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.UsersAdapter;
 import com.example.meetingapp.models.ChatList;
-import com.example.meetingapp.models.ChatUser;
+import com.example.meetingapp.models.UserProfile;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,7 +31,7 @@ public class ChatsFragment extends Fragment {
     private RecyclerView recyclerView;
 
     private UsersAdapter userAdapter;
-    private List<ChatUser> mUsers;
+    private List<UserProfile> mUsers;
 
     private FirebaseUser firebaseUser;
     private DatabaseReference databaseReference;
@@ -83,7 +83,7 @@ public class ChatsFragment extends Fragment {
                 mUsers.clear();
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ChatUser user = snapshot.getValue(ChatUser.class);
+                    UserProfile user = snapshot.getValue(UserProfile.class);
                     for (ChatList chatlist : usersList) {
                         assert user != null;
                         if (user.getId().equals(chatlist.getId())) {

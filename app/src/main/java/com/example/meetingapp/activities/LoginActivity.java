@@ -3,34 +3,46 @@ package com.example.meetingapp.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.api.DjangoClient;
+import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Login;
-import com.example.meetingapp.models.User;
+import com.example.meetingapp.models.Token;
+import com.example.meetingapp.utils.PreferenceUtils;
+import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Objects;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
     static final String BASE_URL = "http://10.0.2.2:8000/";
-    private EditText editTextEmail;
-    private EditText editTextPassword;
-    private Context context = this;
+
+    @BindView(R.id.editTextEmail)
+    public EditText editTextEmail;
+
+    @BindView(R.id.editTextPassword)
+    public EditText editTextPassword;
+
+    private Context mContext = this;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        ButterKnife.bind(this);
 //
 //        if (PreferenceUtils.getEmail(this)){
 //            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -38,14 +50,19 @@ public class LoginActivity extends AppCompatActivity {
 //
 //        }
 
-        editTextEmail = findViewById(R.id.editTextEmail);
-        editTextPassword = findViewById(R.id.editTextPassword);
-
-        findViewById(R.id.buttonLogin).setOnClickListener((view) -> {
-            login();
-        });
+//        editTextEmail = findViewById(R.id.editTextEmail);
+//        editTextPassword = findViewById(R.id.editTextPassword);
+//
+//        findViewById(R.id.buttonLogin).setOnClickListener((view) -> {
+//            login();
+//        });
 //        findViewById(R.id.button).setOnClickListener((view) -> { users(); });
 
+    }
+
+    @OnClick(R.id.buttonLogin)
+    public void buttonLogin() {
+        login();
     }
 
 //    @Override
@@ -61,51 +78,122 @@ public class LoginActivity extends AppCompatActivity {
 //        return super.onKeyDown(keyCode, event);
 //    }
 
+
+    private String getToken() {
+        return PreferenceUtils.getToken(this);
+    }
+
+    private void saveToken(String token) {
+        PreferenceUtils.saveToken(token, getContext());
+    }
+
     private void login() {
-        // String email = editTextEmail.getText().toString().trim();
-        // String password = editTextPassword.getText().toString().trim();
-//
-//        PreferenceUtils.saveEmail("admin", this);
-//        PreferenceUtils.savePassword("admin", this);
+        Call<Token> call = RetrofitClient
+                .getInstance(getToken())
+                .getApi()
+                .login(new Login(editTextEmail.getText().toString(), editTextPassword.getText().toString()));
 
-
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create());
-
-        Retrofit retrofit = builder.build();
-        DjangoClient userClient = retrofit.create(DjangoClient.class);
-
-        Login login = new Login("admin", "admin");
-        Call<User> call = userClient.login(login);
-
-        call.enqueue(new Callback<User>() {
+        call.enqueue(new Callback<Token>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<Token> call, Response<Token> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, response.body().getToken(), Toast.LENGTH_SHORT).show();
+                    if (response.body() != null) {
 
 
-                    Intent intent = new Intent(getContext(), MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                        PreferenceUtils.saveToken(response.body().getToken(), getContext());
+                        RetrofitClient.needsHeader(true);
+                        RetrofitClient.setToken(response.body().getToken());
+
+//                        firebaseLogin(editTextEmail.getText().toString(), editTextPassword.getText().toString());
+//                        PreferenceUtils.saveToken(response.body().getToken(), getContext());
+
+
+//                        Intent intent = new Intent(getContext(), MainActivity.class);
+//                        startActivity(intent);
+//                        finish();
+                    }
                 } else {
-                    Toast.makeText(LoginActivity.this, "login or password is incorrect :(", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(LoginActivity.this, "Убедись, что ввели данные корректно.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "error :(", Toast.LENGTH_SHORT).show();
-                // t.fillInStackTrace();
-
-                Intent intent = new Intent(getContext(), MainActivity.class);
-                startActivity(intent);
-                finish();
+            public void onFailure(Call<Token> call, Throwable t) {
+//                Toast.makeText(LoginActivity.this, "Нет соединения с интернетом :(", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
+
+    public void firebaseLogin(String txt_email, String txt_password) {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
+//        String txt_email = Objects.requireNonNull(editTextEmail.getText()).toString();
+//        String txt_password = Objects.requireNonNull(editTextPassword.getText()).toString();
+
+        if (TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password))
+            Toast.makeText(LoginActivity.this, "Заполни все поля!", Toast.LENGTH_SHORT).show();
+        else
+            firebaseAuth.signInWithEmailAndPassword(txt_email, txt_password)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Auth failed!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+    }
+
+
+//    private void login() {
+//        // String email = editTextEmail.getText().toString().trim();
+//        // String password = editTextPassword.getText().toString().trim();
+////
+////        PreferenceUtils.saveEmail("admin", this);
+////        PreferenceUtils.savePassword("admin", this);
+//
+//
+//        Retrofit.Builder builder = new Retrofit.Builder()
+//                .baseUrl(BASE_URL)
+//                .addConverterFactory(GsonConverterFactory.create());
+//
+//        Retrofit retrofit = builder.build();
+//        Api userClient = retrofit.create(Api.class);
+//
+//        Login login = new Login("admin", "admin");
+//        Call<User> call = userClient.login(login);
+//
+//        call.enqueue(new Callback<User>() {
+//            @Override
+//            public void onResponse(Call<User> call, Response<User> response) {
+//                if (response.isSuccessful()) {
+//                    Toast.makeText(LoginActivity.this, response.body().getToken(), Toast.LENGTH_SHORT).show();
+//
+//                    PreferenceUtils.saveToken(response.body().getToken(), getContext());
+//
+//                    firebaseLogin();
+////                    Intent intent = new Intent(getContext(), MainActivity.class);
+////                    startActivity(intent);
+////                    finish();
+//                } else {
+//                    Toast.makeText(LoginActivity.this, "login or password is incorrect :(", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<User> call, Throwable t) {
+//                Toast.makeText(LoginActivity.this, "error :(", Toast.LENGTH_SHORT).show();
+//                // t.fillInStackTrace();
+//
+//                Intent intent = new Intent(getContext(), MainActivity.class);
+//                startActivity(intent);
+//                finish();
+//            }
+//        });
+//
+//    }
 
 //    private void users() {
 //        // String email = editTextEmail.getText().toString().trim();
@@ -116,7 +204,7 @@ public class LoginActivity extends AppCompatActivity {
 //                .addConverterFactory(GsonConverterFactory.create());
 //
 //        Retrofit retrofit = builder.build();
-//        DjangoClient userClient = retrofit.create(DjangoClient.class);
+//        Api userClient = retrofit.create(Api.class);
 //
 //        Call<List<User>> call = userClient.getUsers("Token 75e1ebffabf37f98db48544c90ecb57af4053972");
 //
@@ -134,6 +222,6 @@ public class LoginActivity extends AppCompatActivity {
 //    }
 
     public Context getContext() {
-        return context;
+        return mContext;
     }
 }

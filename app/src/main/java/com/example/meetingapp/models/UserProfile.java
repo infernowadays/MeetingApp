@@ -1,6 +1,11 @@
 package com.example.meetingapp.models;
 
-public class ChatUser {
+import com.google.gson.annotations.SerializedName;
+
+public class UserProfile {
+
+    @SerializedName("firebase_uid")
+    private String firebaseUid;
 
     private String id;
     private String username;
@@ -8,7 +13,7 @@ public class ChatUser {
     private String status;
     private String search;
 
-    public ChatUser(String id, String username, String imageURL, String status, String search) {
+    public UserProfile(String id, String username, String imageURL, String status, String search) {
         this.id = id;
         this.username = username;
         this.imageURL = imageURL;
@@ -16,7 +21,7 @@ public class ChatUser {
         this.search = search;
     }
 
-    public ChatUser() {
+    public UserProfile() {
 
     }
 
@@ -58,5 +63,13 @@ public class ChatUser {
 
     public void setSearch(String search) {
         this.search = search;
+    }
+
+    public String getFirebaseUid() {
+        return firebaseUid;
+    }
+
+    public void setFirebaseUid(String firebaseUid) {
+        this.firebaseUid = firebaseUid;
     }
 }

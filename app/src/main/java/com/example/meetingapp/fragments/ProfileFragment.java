@@ -17,11 +17,8 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.meetingapp.R;
-import com.example.meetingapp.models.ChatUser;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.meetingapp.models.UserProfile;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -70,12 +67,12 @@ public class ProfileFragment extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ChatUser chatUser = dataSnapshot.getValue(ChatUser.class);
-                username.setText(chatUser.getUsername());
-                if (chatUser.getImageURL().equals("default")) {
+                UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
+                username.setText(userProfile.getUsername());
+                if (userProfile.getImageURL().equals("default")) {
                     image_profile.setImageResource(R.mipmap.ic_launcher);
                 } else {
-                    Glide.with(getContext()).load(chatUser.getImageURL()).into(image_profile);
+                    Glide.with(getContext()).load(userProfile.getImageURL()).into(image_profile);
                 }
             }
 

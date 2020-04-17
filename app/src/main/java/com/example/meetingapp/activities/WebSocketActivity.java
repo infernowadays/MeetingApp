@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.api.DjangoClient;
+import com.example.meetingapp.api.Api;
 import com.example.meetingapp.models.Test2;
 import com.example.meetingapp.models.Test3;
 import com.google.gson.Gson;
@@ -59,27 +59,27 @@ public class WebSocketActivity extends AppCompatActivity {
 
     private void send(){
 
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("https://fuck123123.herokuapp.com/")
-                .addConverterFactory(GsonConverterFactory.create());
-
-        Retrofit retrofit = builder.build();
-        DjangoClient userClient = retrofit.create(DjangoClient.class);
-
-        Test3 test3 = new Test3("1", "1");
-        Call<String> call = userClient.sendRequest(test3, "Token 123124fwefwhtrhergee1t2y4");
-
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-                int a = 5;
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-
-            }
-        });
+//        Retrofit.Builder builder = new Retrofit.Builder()
+//                .baseUrl("https://fuck123123.herokuapp.com/")
+//                .addConverterFactory(GsonConverterFactory.create());
+//
+//        Retrofit retrofit = builder.build();
+//        Api userClient = retrofit.create(Api.class);
+//
+//        Test3 test3 = new Test3("1", "1");
+//        Call<String> call = userClient.sendRequest(test3, "Token 123124fwefwhtrhergee1t2y4");
+//
+//        call.enqueue(new Callback<String>() {
+//            @Override
+//            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+//                int a = 5;
+//            }
+//
+//            @Override
+//            public void onFailure(Call<String> call, Throwable t) {
+//
+//            }
+//        });
     }
 
     private void output(final String txt) {

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -34,8 +35,9 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
+
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(firebaseUser != null){
+        if(firebaseUser != null && PreferenceUtils.hasToken(this)){
             Intent intent = new Intent(StartActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -44,7 +46,7 @@ public class StartActivity extends AppCompatActivity {
         login = findViewById(R.id.myLoginButton);
         register = findViewById(R.id.myRegisterButton);
 
-        login.setOnClickListener(v -> startActivity(new Intent(StartActivity.this, Login2Activity.class)));
+        login.setOnClickListener(v -> startActivity(new Intent(StartActivity.this, LoginActivity.class)));
         register.setOnClickListener(v -> startActivity(new Intent(StartActivity.this, RegisterActivity.class)));
     }
 }

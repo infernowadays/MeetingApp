@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.MessageActivity;
 import com.example.meetingapp.models.Chat;
-import com.example.meetingapp.models.ChatUser;
+import com.example.meetingapp.models.UserProfile;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,10 +29,10 @@ import java.util.List;
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> {
     private String theLastMessage;
     private Context mContext;
-    private List<ChatUser> mUsers;
+    private List<UserProfile> mUsers;
     private boolean is_chat;
 
-    public UsersAdapter(Context mContext, List<ChatUser> mUsers, boolean is_chat) {
+    public UsersAdapter(Context mContext, List<UserProfile> mUsers, boolean is_chat) {
         this.mUsers = mUsers;
         this.mContext = mContext;
         this.is_chat = is_chat;
@@ -48,7 +48,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        final ChatUser user = mUsers.get(position);
+        final UserProfile user = mUsers.get(position);
 
         holder.username.setText(user.getUsername());
         if (user.getImageURL().equals("default")) {

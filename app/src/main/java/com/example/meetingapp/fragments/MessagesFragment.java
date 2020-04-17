@@ -46,37 +46,37 @@ public class MessagesFragment extends Fragment {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Request");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                eventRequests.clear();
-                int notSeenNotifications = 0;
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    EventRequest eventRequest = snapshot.getValue(EventRequest.class);
-                    if (eventRequest != null &&
-                            eventRequest.getCreator_id().equals(firebaseUser.getUid())) {
-                        eventRequests.add(eventRequest);
-
-                        if (!eventRequest.isSeen()) {
-                            notSeenNotifications++;
-                        }
-                    }
-                    NotificationListener notificationListener = (NotificationListener) getActivity();
-                    if (notificationListener != null) {
-                        notificationListener.addNotificationBadge(notSeenNotifications);
-                    }
-
-                    notificationsAdapter = new NotificationsAdapter(getContext(), eventRequests);
-                    recyclerView.setAdapter(notificationsAdapter);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Request");
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                eventRequests.clear();
+//                int notSeenNotifications = 0;
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    EventRequest eventRequest = snapshot.getValue(EventRequest.class);
+//                    if (eventRequest != null &&
+//                            eventRequest.getToUser().equals(firebaseUser.getUid())) {
+//                        eventRequests.add(eventRequest);
+//
+//                        if (!eventRequest.isSeen()) {
+//                            notSeenNotifications++;
+//                        }
+//                    }
+//                    NotificationListener notificationListener = (NotificationListener) getActivity();
+//                    if (notificationListener != null) {
+//                        notificationListener.addNotificationBadge(notSeenNotifications);
+//                    }
+//
+//                    notificationsAdapter = new NotificationsAdapter(getContext(), eventRequests);
+//                    recyclerView.setAdapter(notificationsAdapter);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         return view;
     }

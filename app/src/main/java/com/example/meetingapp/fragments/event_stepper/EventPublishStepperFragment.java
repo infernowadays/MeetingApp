@@ -15,8 +15,10 @@ import androidx.fragment.app.Fragment;
 import com.example.meetingapp.EventManager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.EventActivity;
-import com.example.meetingapp.api.DjangoClient;
+import com.example.meetingapp.api.Api;
+import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Event;
+import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.material.textview.MaterialTextView;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
@@ -42,6 +44,7 @@ public class EventPublishStepperFragment extends Fragment implements BlockingSte
     private MaterialTextView address;
     private Event event;
     private Event createdEvent;
+    private Context context;
 
     public static EventPublishStepperFragment newInstance() {
         return new EventPublishStepperFragment();
@@ -62,14 +65,11 @@ public class EventPublishStepperFragment extends Fragment implements BlockingSte
     }
 
     private void publishEvent() {
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create());
+        Call<Event> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(Objects.requireNonNull(context)))
+                .getApi()
+                .createEvent(event);
 
-        Retrofit retrofit = builder.build();
-        DjangoClient userClient = retrofit.create(DjangoClient.class);
-
-        Call<Event> call = userClient.createEvent(event, "Token 9ba875f0b1b909484e327292bd5d01be30c75791");
         call.enqueue(new Callback<Event>() {
             @Override
             public void onResponse(Call<Event> call, Response<Event> response) {
@@ -98,6 +98,7 @@ public class EventPublishStepperFragment extends Fragment implements BlockingSte
     @Override
     public void onAttach(@androidx.annotation.NonNull Context context) {
         super.onAttach(context);
+        this.context = context;
         if (context instanceof EventManager) {
             eventManager = (EventManager) context;
         } else {

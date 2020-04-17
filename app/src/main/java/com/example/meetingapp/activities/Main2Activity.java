@@ -23,7 +23,7 @@ import com.example.meetingapp.fragments.ChatsFragment;
 import com.example.meetingapp.fragments.GroupChatsFragment;
 import com.example.meetingapp.fragments.ProfileFragment;
 import com.example.meetingapp.fragments.UsersFragment;
-import com.example.meetingapp.models.ChatUser;
+import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.services.KillAppService;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -73,13 +73,13 @@ public class Main2Activity extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ChatUser chatUser = dataSnapshot.getValue(ChatUser.class);
-                assert chatUser != null;
-                username.setText(chatUser.getUsername());
-                if (chatUser.getImageURL().equals("default")) {
+                UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
+                assert userProfile != null;
+                username.setText(userProfile.getUsername());
+                if (userProfile.getImageURL().equals("default")) {
                     profile_image.setImageResource(R.mipmap.ic_launcher);
                 } else {
-                    Glide.with(getApplicationContext()).load(chatUser.getImageURL()).into(profile_image);
+                    Glide.with(getApplicationContext()).load(userProfile.getImageURL()).into(profile_image);
                 }
             }
 

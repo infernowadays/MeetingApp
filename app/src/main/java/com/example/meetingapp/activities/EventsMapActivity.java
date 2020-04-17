@@ -78,7 +78,6 @@ public class EventsMapActivity extends FragmentActivity implements OnMapReadyCal
                         if (mapFragment != null)
                             mapFragment.getMapAsync(EventsMapActivity.this);
 
-//                        initArea();
                         settingGeoFire();
                     }
 

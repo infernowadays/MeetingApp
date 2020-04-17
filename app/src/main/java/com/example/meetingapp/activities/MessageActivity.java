@@ -18,7 +18,7 @@ import com.example.meetingapp.MyHandler;
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.MessageAdapter;
 import com.example.meetingapp.models.Chat;
-import com.example.meetingapp.models.ChatUser;
+import com.example.meetingapp.models.UserProfile;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -100,15 +100,15 @@ public class MessageActivity extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ChatUser chatUser = dataSnapshot.getValue(ChatUser.class);
-                assert chatUser != null;
-                username.setText(chatUser.getUsername());
-                if (chatUser.getImageURL().equals("default")) {
+                UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
+                assert userProfile != null;
+                username.setText(userProfile.getUsername());
+                if (userProfile.getImageURL().equals("default")) {
                     profile_image.setImageResource(R.mipmap.ic_launcher);
                 } else {
-                    Glide.with(getApplicationContext()).load(chatUser.getImageURL()).into(profile_image);
+                    Glide.with(getApplicationContext()).load(userProfile.getImageURL()).into(profile_image);
                 }
-                readMessages(firebaseUser.getUid(), user_id, chatUser.getImageURL());
+                readMessages(firebaseUser.getUid(), user_id, userProfile.getImageURL());
             }
 
             @Override

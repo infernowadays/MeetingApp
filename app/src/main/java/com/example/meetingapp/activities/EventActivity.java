@@ -17,6 +17,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 
+
 public class EventActivity extends AppCompatActivity {
 
     @Override
@@ -43,7 +44,7 @@ public class EventActivity extends AppCompatActivity {
         private ArrayList<String> titles;
 
         ViewPagerAdapter(FragmentManager fm) {
-            super(fm);
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             this.fragments = new ArrayList<>();
             this.titles = new ArrayList<>();
         }

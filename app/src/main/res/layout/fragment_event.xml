@@ -7,21 +7,21 @@
     tools:context=".fragments.EventInfoFragment">
 
     <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
+        android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="192dp" />
 
     <LinearLayout
-        android:id="@+id/descriptionLayout"
+        android:id="@+id/event_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/mapView"
+        android:layout_below="@id/map_view"
         android:layout_marginTop="16dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/eventDescriptionIcon"
+            android:id="@+id/icon_event_description"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginEnd="8dp"
@@ -30,25 +30,24 @@
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/eventDescription"
+            android:id="@+id/text_event_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold" />
-
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/locationLayout"
+        android:id="@+id/event_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/descriptionLayout"
+        android:layout_below="@id/event_description"
         android:layout_marginTop="16dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/eventLocationIcon"
+            android:id="@+id/icon_event_location"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginEnd="8dp"
@@ -57,25 +56,24 @@
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/eventLocation"
+            android:id="@+id/text_event_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold" />
-
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/dateLayout"
+        android:id="@+id/event_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/locationLayout"
+        android:layout_below="@id/event_location"
         android:layout_marginTop="16dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/eventDateIcon"
+            android:id="@+id/icon_event_date"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginEnd="8dp"
@@ -84,25 +82,24 @@
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/eventDate"
+            android:id="@+id/text_event_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold" />
-
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/timeLayout"
+        android:id="@+id/event_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/dateLayout"
+        android:layout_below="@id/event_date"
         android:layout_marginTop="16dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/eventTimeIcon"
+            android:id="@+id/icon_event_time"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginEnd="8dp"
@@ -111,21 +108,19 @@
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/eventTime"
+            android:id="@+id/text_event_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold" />
-
     </LinearLayout>
 
     <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chipGroup"
+        android:id="@+id/chip_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/dateLayout"
+        android:layout_below="@id/event_time"
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
         app:chipSpacing="10dp" />
-
 </RelativeLayout>

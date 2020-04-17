@@ -1,21 +1,24 @@
 package com.example.meetingapp.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class Event {
+    @SerializedName("geo_point")
+    private GeoPoint geoPoint;
+
     private int id;
-    private ChatUser creator;
+    private UserProfile userProfile;
     private String name;
     private String description;
     private String date;
     private String time;
-    private GeoPoint geoPoint;
     private List<Category> categories;
 
-
-    public Event(int id, ChatUser creator, String name, String description, String date, String time, GeoPoint geoPoint, List<Category> categories) {
+    public Event(int id, UserProfile userProfile, String name, String description, String date, String time, GeoPoint geoPoint, List<Category> categories) {
         this.id = id;
-        this.creator = creator;
+        this.userProfile = userProfile;
         this.name = name;
         this.description = description;
         this.date = date;
@@ -83,11 +86,11 @@ public class Event {
         this.date = date;
     }
 
-    public ChatUser getCreator() {
-        return creator;
+    public UserProfile getUserProfile() {
+        return userProfile;
     }
 
-    public void setCreator(ChatUser creator) {
-        this.creator = creator;
+    public void setUserProfile(UserProfile userProfile) {
+        this.userProfile = userProfile;
     }
 }
