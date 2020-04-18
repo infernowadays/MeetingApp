@@ -9,14 +9,14 @@ public class UserProfile {
 
     private String id;
     private String username;
-    private String imageURL;
+    private String imageUrl;
     private String status;
     private String search;
 
-    public UserProfile(String id, String username, String imageURL, String status, String search) {
+    public UserProfile(String id, String username, String imageUrl, String status, String search) {
         this.id = id;
         this.username = username;
-        this.imageURL = imageURL;
+        this.imageUrl = imageUrl;
         this.status = status;
         this.search = search;
     }
@@ -41,12 +41,12 @@ public class UserProfile {
         this.username = username;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getStatus() {

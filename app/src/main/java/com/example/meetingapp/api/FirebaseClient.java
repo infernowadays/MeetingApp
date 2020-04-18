@@ -12,13 +12,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 public class FirebaseClient {
 
     private FirebaseUser firebaseUser;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference databaseReference;
     private Context context;
 
     public FirebaseClient(Context context) {
@@ -27,38 +25,23 @@ public class FirebaseClient {
         firebaseAuth = FirebaseAuth.getInstance();
     }
 
-    public String getUid(){
+    public String getUid() {
         return firebaseUser.getUid();
     }
 
-    public void register(String email, String password) {
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                        if (firebaseUser != null) {
-                            String userId = firebaseUser.getUid();
-                            databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+    public void createFirebaseUser(String firebaseUid, String email) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUid);
 
-                            HashMap<String, String> hashMap = new HashMap<>();
-                            hashMap.put("id", userId);
-                            hashMap.put("email", email);
-                            hashMap.put("imageUrl", "default");
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("firebaseUid", firebaseUid);
+        hashMap.put("email", email);
+        hashMap.put("imageUrl", "default");
 
-                            databaseReference.setValue(hashMap).addOnCompleteListener(task1 -> {
-                                if (task1.isSuccessful()) {
-                                    Intent intent = new Intent(context, MainActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    context.startActivity(intent);
-                                    ((Activity) context).finish();
-                                }
-                            });
-                        }
+        databaseReference.setValue(hashMap).addOnCompleteListener(task1 -> {
+            if (task1.isSuccessful()) {
 
-                    } else {
-                        Toast.makeText(context, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+            }
+        });
     }
 
     public void login(String email, String password) {
@@ -76,6 +59,8 @@ public class FirebaseClient {
     }
 
     public void sendRequest(String toUser, long event) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("fromUser", firebaseUser.getUid());
         hashMap.put("toUser", toUser);
@@ -84,5 +69,18 @@ public class FirebaseClient {
         hashMap.put("seen", false);
 
         databaseReference.child("Request").push().setValue(hashMap);
+    }
+
+    public void sendMessage(Long eventId, String message, String date, String time) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("firebaseUid", firebaseUser.getUid());
+        hashMap.put("eventId", eventId);
+        hashMap.put("message", message);
+        hashMap.put("date", date);
+        hashMap.put("time", time);
+
+        databaseReference.child("Message").push().setValue(hashMap);
     }
 }

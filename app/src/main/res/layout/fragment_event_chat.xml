@@ -8,32 +8,35 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom"
-        android:id="@+id/recycler_view"
-        android:padding="5dp" />
+        android:layout_above="@+id/message_box"
+        android:id="@+id/recycle_view"
+        android:padding="5dp"
+        tools:ignore="UnknownIdInLayout" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/bottom"
+        android:id="@+id/message_box"
         android:layout_alignParentBottom="true"
         android:padding="5dp">
 
         <EditText
-            android:id="@+id/text_send"
+            android:id="@+id/text_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/btn_send"
-            android:hint="Напишите сообщение..." />
+            android:layout_toStartOf="@id/button_send"
+            android:hint="@string/write_message"
+            android:importantForAutofill="no" />
 
         <ImageButton
-            android:id="@+id/btn_send"
+            android:id="@+id/button_send"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:background="@drawable/ic_action_name" />
+            android:background="@drawable/ic_action_name"
+            tools:ignore="RtlHardcoded" />
 
     </RelativeLayout>
 

@@ -85,6 +85,7 @@ public class RegisterActivity extends AppCompatActivity {
                     RetrofitClient.needsHeader(true);
 
                     FirebaseClient firebaseClient = new FirebaseClient(getContext());
+                    firebaseClient.createFirebaseUser(response.body().getFirebaseUid(), email);
                     firebaseClient.login(email, password);
                 } else {
                     Toast.makeText(RegisterActivity.this, ":(", Toast.LENGTH_SHORT).show();

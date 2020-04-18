@@ -1,36 +1,20 @@
 package com.example.meetingapp.models;
 
 public class Message {
-    private String uid;
-    private Long event_id;
+    private String firebaseUid;
+    private Long eventId;
     private String message;
     private String date;
     private String time;
 
-    public Message(String uid, Long event_id, String message, String date) {
-        this.uid = uid;
-        this.event_id = event_id;
+    public Message(String firebaseUid, Long eventId, String message, String date) {
+        this.firebaseUid = firebaseUid;
+        this.eventId = eventId;
         this.message = message;
         this.date = date;
     }
 
     public Message() {
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    public Long getEvent_id() {
-        return event_id;
-    }
-
-    public void setEvent_id(Long event_id) {
-        this.event_id = event_id;
     }
 
     public String getMessage() {
@@ -55,5 +39,21 @@ public class Message {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public Long getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
+    }
+
+    public String getFirebaseUid() {
+        return firebaseUid;
+    }
+
+    public void setFirebaseUid(String firebaseUid) {
+        this.firebaseUid = firebaseUid;
     }
 }

@@ -50,7 +50,7 @@ public class MessageActivity extends AppCompatActivity {
     MessageAdapter messageAdapter;
     List<Chat> mchat;
 
-    String user_id;
+    String userId;
 
     RecyclerView recyclerView;
     ValueEventListener seenListener;
@@ -82,12 +82,12 @@ public class MessageActivity extends AppCompatActivity {
         textSend = findViewById(R.id.text_send);
 
         intent = getIntent();
-        user_id = intent.getStringExtra("userId");
+        userId = intent.getStringExtra("EXTRA_USER_ID");
 
         sendButton.setOnClickListener(v -> {
             String msg = textSend.getText().toString();
             if (!msg.equals("")) {
-                sendMessage(firebaseUser.getUid(), user_id, msg);
+                sendMessage(firebaseUser.getUid(), userId, msg);
             } else {
                 Toast.makeText(getApplicationContext(), "You can't send empty message", Toast.LENGTH_SHORT).show();
             }
@@ -95,7 +95,7 @@ public class MessageActivity extends AppCompatActivity {
         });
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -103,12 +103,12 @@ public class MessageActivity extends AppCompatActivity {
                 UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
                 assert userProfile != null;
                 username.setText(userProfile.getUsername());
-                if (userProfile.getImageURL().equals("default")) {
+                if (userProfile.getImageUrl().equals("default")) {
                     profile_image.setImageResource(R.mipmap.ic_launcher);
                 } else {
-                    Glide.with(getApplicationContext()).load(userProfile.getImageURL()).into(profile_image);
+                    Glide.with(getApplicationContext()).load(userProfile.getImageUrl()).into(profile_image);
                 }
-                readMessages(firebaseUser.getUid(), user_id, userProfile.getImageURL());
+                readMessages(firebaseUser.getUid(), userId, userProfile.getImageUrl());
             }
 
             @Override
@@ -117,10 +117,10 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
-        seenMessage(user_id);
+        seenMessage(userId);
     }
 
-    private void seenMessage(final String user_id) {
+    private void seenMessage(final String userId) {
         databaseReference = FirebaseDatabase.getInstance().getReference("Chats");
         seenListener = databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -128,7 +128,7 @@ public class MessageActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Chat chat = snapshot.getValue(Chat.class);
                     assert chat != null;
-                    if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getSender().equals(user_id)) {
+                    if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getSender().equals(userId)) {
                         HashMap<String, Object> hashMap = new HashMap<>();
                         hashMap.put("seen", true);
                         snapshot.getRef().updateChildren(hashMap);
@@ -157,13 +157,13 @@ public class MessageActivity extends AppCompatActivity {
 
         DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("ChatList")
                 .child(firebaseUser.getUid())
-                .child(user_id);
+                .child(userId);
 
         chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists()){
-                    chatRef.child("id").setValue(user_id);
+                    chatRef.child("id").setValue(userId);
                 }
             }
 
@@ -174,7 +174,7 @@ public class MessageActivity extends AppCompatActivity {
         });
 
         DatabaseReference chatRefReceiver = FirebaseDatabase.getInstance().getReference("ChatList")
-                .child(user_id)
+                .child(userId)
                 .child(firebaseUser.getUid());
         chatRefReceiver.child("id").setValue(firebaseUser.getUid());
     }

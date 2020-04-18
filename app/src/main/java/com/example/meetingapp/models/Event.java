@@ -9,16 +9,16 @@ public class Event {
     private GeoPoint geoPoint;
 
     private int id;
-    private UserProfile userProfile;
+    private UserProfile creator;
     private String name;
     private String description;
     private String date;
     private String time;
     private List<Category> categories;
 
-    public Event(int id, UserProfile userProfile, String name, String description, String date, String time, GeoPoint geoPoint, List<Category> categories) {
+    public Event(int id, UserProfile creator, String name, String description, String date, String time, GeoPoint geoPoint, List<Category> categories) {
         this.id = id;
-        this.userProfile = userProfile;
+        this.creator = creator;
         this.name = name;
         this.description = description;
         this.date = date;
@@ -86,11 +86,11 @@ public class Event {
         this.date = date;
     }
 
-    public UserProfile getUserProfile() {
-        return userProfile;
+    public UserProfile getCreator() {
+        return creator;
     }
 
-    public void setUserProfile(UserProfile userProfile) {
-        this.userProfile = userProfile;
+    public void setCreator(UserProfile creator) {
+        this.creator = creator;
     }
 }

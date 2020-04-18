@@ -12,27 +12,32 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.meetingapp.R;
-import com.example.meetingapp.models.UserProfile;
+import com.example.meetingapp.api.FirebaseClient;
 import com.example.meetingapp.models.Message;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.meetingapp.models.UserProfile;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
     private static final int MSG_TYPE_LEFT = 0;
     private static final int MSG_TYPE_RIGHT = 1;
-    private FirebaseUser firebaseUser;
-    private Context context;
+
     private List<UserProfile> users;
     private List<Message> messages;
-    private String imageURL;
 
-    public MessageAdapter(Context mContext, List<Message> messages, List<UserProfile> users) {
+    private Context context;
+    private FirebaseClient firebaseClient;
+
+    public MessageAdapter(Context context, List<Message> messages, List<UserProfile> users) {
         this.messages = messages;
         this.users = users;
-        this.context = mContext;
+        this.context = context;
+        firebaseClient = new FirebaseClient(context);
     }
 
     @NonNull
@@ -49,20 +54,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder holder, int position) {
-
         Message message = messages.get(position);
+        holder.textMessage.setText(message.getMessage());
 
-        holder.show_message.setText(message.getMessage());
-        for(UserProfile userProfile : users){
-            if(message.getUid().equals(userProfile.getId())){
-                if (userProfile.getImageURL().equals("default")) {
-                    holder.profile_image.setImageResource(R.mipmap.ic_launcher);
-                } else {
-                    Glide.with(context).load(userProfile.getImageURL()).into(holder.profile_image);
-                }
+        for (UserProfile userProfile : users) {
+            if (message.getFirebaseUid().equals(userProfile.getFirebaseUid())) {
+//                if (userProfile.getImageUrl().equals("default")) {
+//                    holder.imageProfile.setImageResource(R.mipmap.ic_launcher);
+//                } else {
+//                    Glide.with(context).load(userProfile.getImageUrl()).into(holder.imageProfile);
+//                }
             }
         }
-
 
 
 //        if(position == chats.size() - 1){
@@ -83,8 +86,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (messages.get(position).getUid().equals(firebaseUser.getUid())) {
+        if (messages.get(position).getFirebaseUid().equals(firebaseClient.getUid())) {
             return MSG_TYPE_RIGHT;
         } else {
             return MSG_TYPE_LEFT;
@@ -92,14 +94,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView show_message;
-        private ImageView profile_image;
+
+        @BindView(R.id.text_message)
+        TextView textMessage;
+
+        @BindView(R.id.image_profile)
+        ImageView imageProfile;
 
         ViewHolder(View itemView) {
             super(itemView);
-
-            show_message = itemView.findViewById(R.id.show_message);
-            profile_image = itemView.findViewById(R.id.profile_image);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

@@ -49,8 +49,8 @@ public class EventGeoLocationStepperFragment extends Fragment implements Blockin
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (data != null && data.hasExtra("newLocation")) {
-            geoPoint = data.getParcelableExtra("newLocation");
+        if (data != null && data.hasExtra("EXTRA_NEW_LOCATION")) {
+            geoPoint = data.getParcelableExtra("EXTRA_NEW_LOCATION");
             String address = null;
             if (geoPoint != null) {
                 address = geoPoint.getAddress();
@@ -70,7 +70,7 @@ public class EventGeoLocationStepperFragment extends Fragment implements Blockin
         MaterialButton locationButton = view.findViewById(R.id.openGeo);
         locationButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), MapsActivity.class);
-            intent.putExtra("prevLocation", geoPoint);
+            intent.putExtra("EXTA_PREV_LOCATION", geoPoint);
             startActivityForResult(intent, 1);
         });
 

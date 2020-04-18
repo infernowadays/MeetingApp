@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -46,6 +47,9 @@ public class EventInfoFragment extends Fragment {
 
     @BindView(R.id.text_event_time)
     TextView textEventTime;
+
+    @BindView(R.id.event_time)
+    LinearLayout layoutEventTime;
 
     @BindView(R.id.map_view)
     MapView mapView;
@@ -90,12 +94,12 @@ public class EventInfoFragment extends Fragment {
     }
 
     private void loadEvent() {
-        String pk = Objects.requireNonNull(getActivity()).getIntent().getStringExtra("EXTRA_EVENT_ID");
+        String eventId = Objects.requireNonNull(getActivity()).getIntent().getStringExtra("EXTRA_EVENT_ID");
 
         Call<Event> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(Objects.requireNonNull(getContext())))
                 .getApi()
-                .getEvent(pk);
+                .getEvent(eventId);
 
         call.enqueue(new Callback<Event>() {
             @Override
@@ -122,7 +126,11 @@ public class EventInfoFragment extends Fragment {
         textEventDescription.setText(String.valueOf(event.getDescription()));
         textEventLocation.setText(String.valueOf(event.getGeoPoint().getAddress()));
         textEventDate.setText(event.getDate());
-        textEventTime.setText(event.getTime());
+        if(event.getTime() != null){
+            layoutEventTime.setVisibility(View.VISIBLE);
+            textEventTime.setText(event.getTime());
+        }
+
         initMapView();
     }
 }

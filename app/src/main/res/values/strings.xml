@@ -28,6 +28,11 @@
     <string name="tickets">Tickets</string>
     <string name="events">Events</string>
     <string name="messages">Messages</string>
+    <string name="write_message">Напишите сообщение...</string>
+    <string name="today">Сегодня</string>
+    <string name="tomorrow">Завтра</string>
+    <string name="date">Дата</string>
+    <string name="time_optional">Время (необязательно)</string>
 
 
 </resources>

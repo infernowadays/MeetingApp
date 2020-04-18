@@ -51,10 +51,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         final UserProfile user = mUsers.get(position);
 
         holder.username.setText(user.getUsername());
-        if (user.getImageURL().equals("default")) {
+        if (user.getImageUrl().equals("default")) {
             holder.profile_image.setImageResource(R.mipmap.ic_launcher);
         } else {
-            Glide.with(mContext).load(user.getImageURL()).into(holder.profile_image);
+            Glide.with(mContext).load(user.getImageUrl()).into(holder.profile_image);
         }
 
         if (is_chat) {
@@ -78,7 +78,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, MessageActivity.class);
-            intent.putExtra("userId", user.getId());
+            intent.putExtra("EXTRA_USER_ID", user.getId());
 
             mContext.startActivity(intent);
         });

@@ -57,12 +57,12 @@ public class GroupMessageActivity extends AppCompatActivity {
 //
 //                if (chatUser != null) {
 //                    username.setText(chatUser.getUsername());
-//                    if (chatUser.getImageURL().equals("default")) {
+//                    if (chatUser.getImageUrl().equals("default")) {
 //                        profile_image.setImageResource(R.mipmap.ic_launcher);
 //                    } else {
-//                        Glide.with(getApplicationContext()).load(chatUser.getImageURL()).into(profile_image);
+//                        Glide.with(getApplicationContext()).load(chatUser.getImageUrl()).into(profile_image);
 //                    }
-//                    readMessages(firebaseUser.getUid(), user_id, chatUser.getImageURL());
+//                    readMessages(firebaseUser.getUid(), user_id, chatUser.getImageUrl());
 //                }
 //            }
 //

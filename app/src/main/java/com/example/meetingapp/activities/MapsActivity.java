@@ -50,7 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void checkPrevLocation() {
         Intent intent = getIntent();
-        GeoPoint prevLocation = intent.getParcelableExtra("prevLocation");
+        GeoPoint prevLocation = intent.getParcelableExtra("EXTRA_PREV_LOCATION");
         if (prevLocation != null) {
             currentLocation.setLatitude(prevLocation.getLatitude());
             currentLocation.setLongitude(prevLocation.getLongitude());
@@ -78,7 +78,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         map.getCameraPosition().target.latitude,
                         map.getCameraPosition().target.longitude,
                         addresses.get(0).getAddressLine(0));
-                intent.putExtra("newLocation", geoPoint);
+                intent.putExtra("EXTRA_NEW_LOCATION", geoPoint);
                 setResult(0, intent);
             }
 

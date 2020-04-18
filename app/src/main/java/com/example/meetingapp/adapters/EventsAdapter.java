@@ -79,7 +79,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         });
 
         holder.buttonSendRequest.setOnClickListener(v -> {
-            sendRequest(event.getUserProfile().getFirebaseUid(), event.getId());
+            sendRequest(event.getCreator().getFirebaseUid(), event.getId());
             removeItemAfterRequest(position);
         });
     }
