@@ -51,10 +51,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         final UserProfile user = mUsers.get(position);
 
         holder.username.setText(user.getUsername());
-        if (user.getImageUrl().equals("default")) {
+        if (user.getPhoto().equals("default")) {
             holder.profile_image.setImageResource(R.mipmap.ic_launcher);
         } else {
-            Glide.with(mContext).load(user.getImageUrl()).into(holder.profile_image);
+            Glide.with(mContext).load(user.getPhoto()).into(holder.profile_image);
         }
 
         if (is_chat) {
@@ -63,18 +63,18 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             holder.last_msg.setVisibility(View.GONE);
         }
 
-        if (is_chat) {
-            if (user.getStatus().equals("online")) {
-                holder.img_on.setVisibility(View.VISIBLE);
-                holder.img_off.setVisibility(View.GONE);
-            } else {
-                holder.img_on.setVisibility(View.GONE);
-                holder.img_off.setVisibility(View.VISIBLE);
-            }
-        } else {
-            holder.img_on.setVisibility(View.GONE);
-            holder.img_off.setVisibility(View.GONE);
-        }
+//        if (is_chat) {
+//            if (user.getStatus().equals("online")) {
+//                holder.img_on.setVisibility(View.VISIBLE);
+//                holder.img_off.setVisibility(View.GONE);
+//            } else {
+//                holder.img_on.setVisibility(View.GONE);
+//                holder.img_off.setVisibility(View.VISIBLE);
+//            }
+//        } else {
+//            holder.img_on.setVisibility(View.GONE);
+//            holder.img_off.setVisibility(View.GONE);
+//        }
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, MessageActivity.class);

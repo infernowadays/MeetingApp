@@ -13,14 +13,20 @@
     <style name="CustomChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">
         <item name="chipBackgroundColor">@color/bg_chip_state_list</item>
 
-
         <item name="chipSurfaceColor">@color/quantum_googred800</item>
         <item name="rippleColor">@color/quantum_googred800</item>
         <item name="chipStrokeColor">@color/quantum_googred800</item>
 
-
         <item name="android:checkable">false</item>
         <item name="android:clickable">true</item>
+    </style>
+    
+    <style name="EventsFilterDialogTheme" parent="Theme.AppCompat.DayNight.DialogWhenLarge">
+
+        <item name="android:statusBarColor">#280680</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@style/Theme.AppCompat.Dialog</item>
+
     </style>
 
 </resources>

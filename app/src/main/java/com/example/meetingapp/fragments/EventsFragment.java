@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,11 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.activities.MapsActivity;
 import com.example.meetingapp.activities.PassEventBetweenStepsActivity;
 import com.example.meetingapp.adapters.EventsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Event;
+import com.example.meetingapp.models.User;
+import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -59,7 +64,7 @@ public class EventsFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            events();
+            events(null);
             swipeRefreshLayout.setRefreshing(false);
         });
 
@@ -68,7 +73,8 @@ public class EventsFragment extends Fragment {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        events();
+        meProfile();
+//        events();
 
         return view;
     }
@@ -85,11 +91,19 @@ public class EventsFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void events() {
+    @OnClick(R.id.button_filter_events)
+    void buttonCreateFilterDialog(){
+        EventsFilterDialog dialog = EventsFilterDialog.newInstance();
+        dialog.setTargetFragment(EventsFragment.this, 1337);
+        dialog.setCallback(this::events);
+        dialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "tag");
+    }
+
+    private void events(List<String> categories) {
         Call<List<Event>> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(Objects.requireNonNull(getContext())))
                 .getApi()
-                .getEvents();
+                .getEvents(categories);
 
         call.enqueue(new Callback<List<Event>>() {
             @Override
@@ -100,6 +114,25 @@ public class EventsFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Event>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void meProfile(){
+        Call<UserProfile> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(Objects.requireNonNull(getContext())))
+                .getApi()
+                .meProfile();
+
+        call.enqueue(new Callback<UserProfile>() {
+            @Override
+            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
+                UserProfileManager.getInstance(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<UserProfile> call, Throwable t) {
 
             }
         });

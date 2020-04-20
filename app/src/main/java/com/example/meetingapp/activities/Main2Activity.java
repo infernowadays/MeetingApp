@@ -76,10 +76,10 @@ public class Main2Activity extends AppCompatActivity {
                 UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
                 assert userProfile != null;
                 username.setText(userProfile.getUsername());
-                if (userProfile.getImageUrl().equals("default")) {
+                if (userProfile.getPhoto().equals("default")) {
                     profile_image.setImageResource(R.mipmap.ic_launcher);
                 } else {
-                    Glide.with(getApplicationContext()).load(userProfile.getImageUrl()).into(profile_image);
+                    Glide.with(getApplicationContext()).load(userProfile.getPhoto()).into(profile_image);
                 }
             }
 

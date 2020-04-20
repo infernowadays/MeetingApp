@@ -60,7 +60,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         final Event event = events.get(position);
 
         TextView textCreatorName = holder.textCreatorName;
-        textCreatorName.setText(event.getName());
+        textCreatorName.setText(event.getCreator().getUsername());
 
         TextView textEventDescription = holder.textEventDescription;
         textEventDescription .setText(event.getDescription());

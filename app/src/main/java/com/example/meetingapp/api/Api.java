@@ -1,11 +1,13 @@
 package com.example.meetingapp.api;
 
+import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.EventRequest;
 import com.example.meetingapp.models.Login;
 import com.example.meetingapp.models.Test3;
 import com.example.meetingapp.models.Token;
 import com.example.meetingapp.models.User;
+import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.models.Users;
 
 import java.util.List;
@@ -17,6 +19,7 @@ import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface Api {
 
@@ -29,8 +32,12 @@ public interface Api {
     Call<User> users(@Body Users users);
 
     @Headers("Content-Type: application/json")
+    @GET("token_auth/profile/me")
+    Call<UserProfile> meProfile();
+
+    @Headers("Content-Type: application/json")
     @GET("api/events")
-    Call<List<Event>> getEvents();
+    Call<List<Event>> getEvents(@Query("category")List<String> categories);
 
     @Headers("Content-Type: application/json")
     @GET("api/events/{pk}")

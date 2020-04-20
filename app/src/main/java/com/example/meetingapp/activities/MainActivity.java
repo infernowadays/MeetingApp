@@ -1,5 +1,6 @@
 package com.example.meetingapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,11 +12,15 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.meetingapp.NotificationListener;
 import com.example.meetingapp.R;
+import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.fragments.EventsFragment;
 import com.example.meetingapp.fragments.MessagesFragment;
 import com.example.meetingapp.fragments.TicketsFragment;
 import com.example.meetingapp.ui.home.HomeFragment;
+import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NotificationListener {
 
@@ -48,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
             case R.id.navigation_messages:
                 fm.beginTransaction().hide(active).show(messagesFragment).commit();
                 active = messagesFragment;
-//                navigation.removeBadge(R.id.navigation_messages);
 
                 return true;
         }
@@ -61,8 +65,6 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         setContentView(R.layout.activity_main);
 
         navigation = findViewById(R.id.nav_view);
-
-
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         fm.beginTransaction().add(R.id.main_container, messagesFragment, "4").hide(messagesFragment).commit();

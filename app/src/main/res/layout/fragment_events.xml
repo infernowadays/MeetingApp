@@ -7,7 +7,16 @@
     tools:context=".fragments.EventsFragment">
 
     <Button
+        android:id="@+id/button_filter_events"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:text="FILTER"
+        android:textStyle="bold" />
+
+    <Button
         android:id="@+id/button_open_map"
+        android:layout_below="@id/button_filter_events"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="25dp"

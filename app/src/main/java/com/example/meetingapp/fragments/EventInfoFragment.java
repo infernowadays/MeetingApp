@@ -106,13 +106,14 @@ public class EventInfoFragment extends Fragment {
             public void onResponse(Call<Event> call, Response<Event> response) {
                 event = response.body();
 
-                assert event != null;
-                for (Category category : event.getCategories()) {
-                    Chip chip = (Chip) getLayoutInflater().inflate(R.layout.category_item, chipGroup, false);
-                    chip.setText(category.getName());
-                    chipGroup.addView(chip);
+                if (event != null) {
+                    for (Category category : event.getCategories()) {
+                        Chip chip = (Chip) getLayoutInflater().inflate(R.layout.category_item, chipGroup, false);
+                        chip.setText(category.getName());
+                        chipGroup.addView(chip);
+                    }
+                    putEvent();
                 }
-                putEvent();
             }
 
             @Override

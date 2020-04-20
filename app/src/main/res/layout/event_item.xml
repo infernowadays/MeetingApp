@@ -42,7 +42,7 @@
                         android:id="@+id/text_creator_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Event"
+                        android:text="Creator Name"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
