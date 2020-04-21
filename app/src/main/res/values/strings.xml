@@ -33,6 +33,10 @@
     <string name="tomorrow">Завтра</string>
     <string name="date">Дата</string>
     <string name="time_optional">Время (необязательно)</string>
+    <string name="edit">Редактировать</string>
+    <string name="interests">Интересы</string>
+    <string name="little_about_me">Немного обо мне</string>
+    <string name="rus_events">События</string>
 
 
 </resources>

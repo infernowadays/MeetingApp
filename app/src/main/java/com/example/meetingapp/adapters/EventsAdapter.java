@@ -19,6 +19,7 @@ import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.EventRequest;
 import com.example.meetingapp.utils.PreferenceUtils;
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,11 +43,14 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     private List<Event> events;
     private Context context;
     private FirebaseClient firebaseClient;
+    private List<Integer> eventsIds;
 
     public EventsAdapter(Context context, List<Event> events) {
         this.events = events;
         this.context = context;
         firebaseClient = new FirebaseClient(context);
+
+        eventsIds = new ArrayList<>();
     }
 
     @NonNull
@@ -57,7 +62,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+//        holder.setIsRecyclable(false);
+
         final Event event = events.get(position);
+
 
         TextView textCreatorName = holder.textCreatorName;
         textCreatorName.setText(event.getCreator().getUsername());
@@ -65,11 +73,14 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         TextView textEventDescription = holder.textEventDescription;
         textEventDescription .setText(event.getDescription());
 
-        for (Category category : event.getCategories()) {
-            Chip chip = (Chip) LayoutInflater.from(context).inflate(R.layout.category_item, holder.chipGroup, false);
-            chip.setText(category.getName());
-            holder.chipGroup.addView(chip);
+        if(!ArrayUtils.contains(eventsIds.toArray(), events.get(position).getId())){
+            for (Category category : event.getCategories()) {
+                Chip chip = (Chip) LayoutInflater.from(context).inflate(R.layout.category_item, holder.chipGroup, false);
+                chip.setText(category.getName());
+                holder.chipGroup.addView(chip);
+            }
         }
+        eventsIds.add(events.get(position).getId());
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, EventActivity.class);
@@ -105,14 +116,27 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     private void removeItemAfterRequest(int position) {
         events.remove(position);
+        eventsIds = new ArrayList<>();
+
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, getItemCount());
+//        notifyDataSetChanged();
     }
 
 
     @Override
     public int getItemCount() {
         return events.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

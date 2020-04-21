@@ -74,7 +74,7 @@ public class EventsFragment extends Fragment {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         meProfile();
-//        events();
+        events(null);
 
         return view;
     }
