@@ -122,25 +122,25 @@ public class MessageActivity extends AppCompatActivity {
 
     private void seenMessage(final String userId) {
         databaseReference = FirebaseDatabase.getInstance().getReference("Chats");
-        seenListener = databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Chat chat = snapshot.getValue(Chat.class);
-                    assert chat != null;
-                    if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getSender().equals(userId)) {
-                        HashMap<String, Object> hashMap = new HashMap<>();
-                        hashMap.put("seen", true);
-                        snapshot.getRef().updateChildren(hashMap);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//        seenListener = databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    Chat chat = snapshot.getValue(Chat.class);
+//                    assert chat != null;
+//                    if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getSender().equals(userId)) {
+//                        HashMap<String, Object> hashMap = new HashMap<>();
+//                        hashMap.put("seen", true);
+//                        snapshot.getRef().updateChildren(hashMap);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 
     private void sendMessage(String sender, final String receiver, String message) {
@@ -190,10 +190,10 @@ public class MessageActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Chat chat = snapshot.getValue(Chat.class);
                     assert chat != null;
-                    if (chat.getReceiver().equals(myid) && chat.getSender().equals(userid) ||
-                            chat.getReceiver().equals(userid) && chat.getSender().equals(myid)) {
-                        mchat.add(chat);
-                    }
+//                    if (chat.getReceiver().equals(myid) && chat.getSender().equals(userid) ||
+//                            chat.getReceiver().equals(userid) && chat.getSender().equals(myid)) {
+//                        mchat.add(chat);
+//                    }
 
 //                    messageAdapter = new MessageAdapter(MessageActivity.this, mchat, imageurl);
 //                    recyclerView.setAdapter(messageAdapter);

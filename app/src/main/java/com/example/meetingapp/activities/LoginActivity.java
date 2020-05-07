@@ -1,5 +1,6 @@
 package com.example.meetingapp.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,14 +10,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.meetingapp.AuthService;
 import com.example.meetingapp.R;
+import com.example.meetingapp.api.FirebaseClient;
 import com.example.meetingapp.api.RetrofitClient;
-import com.example.meetingapp.models.Login;
+import com.example.meetingapp.models.LoginData;
 import com.example.meetingapp.models.Token;
+import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +38,8 @@ public class LoginActivity extends AppCompatActivity {
     public EditText editTextPassword;
 
     private Context mContext = this;
+    private static LoginActivity instance;
+    private FirebaseClient firebaseClient;
 
 
     @Override
@@ -43,6 +47,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        firebaseClient = new FirebaseClient(getContext());
+
 //
 //        if (PreferenceUtils.getEmail(this)){
 //            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -60,23 +66,14 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    @OnClick(R.id.buttonLogin)
-    public void buttonLogin() {
-        login();
+    public static LoginActivity getInstance(){
+        return instance;
     }
 
-//    @Override
-//    public void onBackPressed() {
-////        moveTaskToBack(true);
-//    }
-//
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if(keyCode== KeyEvent.KEYCODE_BACK) {
-//            return false;
-//        }
-//        return super.onKeyDown(keyCode, event);
-//    }
+    @OnClick(R.id.buttonLogin)
+    public void buttonLogin() {
+        login(editTextEmail.getText().toString(), editTextPassword.getText().toString());
+    }
 
 
     private String getToken() {
@@ -87,41 +84,54 @@ public class LoginActivity extends AppCompatActivity {
         PreferenceUtils.saveToken(token, getContext());
     }
 
-    private void login() {
-        Call<Token> call = RetrofitClient
-                .getInstance(getToken())
-                .getApi()
-                .login(new Login(editTextEmail.getText().toString(), editTextPassword.getText().toString()));
+    public void login(String email, String password) {
+        RetrofitClient.needsHeader(false);
 
-        call.enqueue(new Callback<Token>() {
-            @Override
-            public void onResponse(Call<Token> call, Response<Token> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-
-
-                        PreferenceUtils.saveToken(response.body().getToken(), getContext());
-                        RetrofitClient.needsHeader(true);
-                        RetrofitClient.setToken(response.body().getToken());
-
-//                        firebaseLogin(editTextEmail.getText().toString(), editTextPassword.getText().toString());
+        Toast.makeText(LoginActivity.this, "Входим в профиль...", Toast.LENGTH_SHORT).show();
+        AuthService authService = new AuthService(getContext());
+        authService.authenticate(email, password);
+//        firebaseClient.saveRegistrationToken();
+//        firebaseClient.login(email, password);
+//
+//        Call<Token> call = RetrofitClient
+//                .getInstance(getToken())
+//                .getApi()
+//                .login(new LoginData(email, password));
+//
+//        call.enqueue(new Callback<Token>() {
+//            @Override
+//            public void onResponse(Call<Token> call, Response<Token> response) {
+//                if (response.isSuccessful()) {
+//                    if (response.body() != null) {
+//
+//
 //                        PreferenceUtils.saveToken(response.body().getToken(), getContext());
-
-
+//                        RetrofitClient.needsHeader(true);
+//                        RetrofitClient.setToken(response.body().getToken());
+//
 //                        Intent intent = new Intent(getContext(), MainActivity.class);
-//                        startActivity(intent);
-//                        finish();
-                    }
-                } else {
-//                    Toast.makeText(LoginActivity.this, "Убедись, что ввели данные корректно.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Token> call, Throwable t) {
-//                Toast.makeText(LoginActivity.this, "Нет соединения с интернетом :(", Toast.LENGTH_SHORT).show();
-            }
-        });
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                        getContext().startActivity(intent);
+//                        ((Activity) getContext()).finish();
+//
+////                        firebaseLogin(editTextEmail.getText().toString(), editTextPassword.getText().toString());
+////                        PreferenceUtils.saveToken(response.body().getToken(), getContext());
+//
+//
+////                        Intent intent = new Intent(getContext(), MainActivity.class);
+////                        startActivity(intent);
+////                        finish();
+//                    }
+//                } else {
+////                    Toast.makeText(LoginActivity.this, "Убедись, что ввели данные корректно.", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Token> call, Throwable t) {
+////                Toast.makeText(LoginActivity.this, "Нет соединения с интернетом :(", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     public void firebaseLogin(String txt_email, String txt_password) {

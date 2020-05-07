@@ -1,6 +1,7 @@
 package com.example.meetingapp.activities;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,21 +10,28 @@ import androidx.fragment.app.FragmentManager;
 import com.example.meetingapp.EventManager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.StepperAdapter;
+import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.GeoPoint;
 import com.stepstone.stepper.StepperLayout;
+
+import java.util.Objects;
 
 public class PassEventBetweenStepsActivity extends AppCompatActivity implements EventManager {
 
     private static final String CURRENT_STEP_POSITION_KEY = "position";
     private static final String DESCRIPTION = "description";
     private static final String DATE = "date";
+    private static final String ID = "id";
     private static final String TIME = "time";
     private static final String LOCATION = "location";
+    private static final String ACTION = "action";
 
 
     private StepperLayout mStepperLayout;
 
+    private String action;
     private String mDescription;
+    private int id;
     private String mDate;
     private String mTime;
     private GeoPoint mLocation;
@@ -36,6 +44,25 @@ public class PassEventBetweenStepsActivity extends AppCompatActivity implements 
         mStepperLayout = findViewById(R.id.stepperLayout);
         StepperAdapter mStepperAdapter = new StepperAdapter(getSupportFragmentManager(), this);
         mStepperLayout.setAdapter(mStepperAdapter);
+
+        loadEvent();
+    }
+
+    private void loadEvent(){
+
+        Intent intent = getIntent();
+        this.saveAction(intent.getStringExtra("action"));
+
+        if(intent.hasExtra("EVENT")){
+            Event event = intent.getParcelableExtra("EVENT");
+            if(event != null){
+                this.saveId(event.getId());
+                this.saveDescription(event.getDescription());
+                this.saveDate(event.getDate());
+                this.saveTime(event.getTime());
+                this.saveLocation(event.getGeoPoint());
+            }
+        }
     }
 
     public Fragment getLatestFragment(){
@@ -48,10 +75,14 @@ public class PassEventBetweenStepsActivity extends AppCompatActivity implements 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(CURRENT_STEP_POSITION_KEY, mStepperLayout.getCurrentStepPosition());
+
+        outState.putInt(ID, id);
         outState.putString(DESCRIPTION, mDescription);
         outState.putString(DATE, mDate);
         outState.putString(TIME, mTime);
-        outState.putParcelable(DESCRIPTION, mLocation);
+        outState.putParcelable(LOCATION, mLocation);
+
+
         super.onSaveInstanceState(outState);
     }
 
@@ -63,6 +94,26 @@ public class PassEventBetweenStepsActivity extends AppCompatActivity implements 
         } else {
             finish();
         }
+    }
+
+    @Override
+    public void saveAction(String action) {
+        this.action = action;
+    }
+
+    @Override
+    public String getAction() {
+        return action;
+    }
+
+    @Override
+    public void saveId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public int getId() {
+        return id;
     }
 
     @Override

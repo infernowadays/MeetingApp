@@ -12,15 +12,13 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.meetingapp.NotificationListener;
 import com.example.meetingapp.R;
-import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.fragments.EventsFragment;
 import com.example.meetingapp.fragments.MessagesFragment;
 import com.example.meetingapp.fragments.TicketsFragment;
+import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.ui.home.HomeFragment;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NotificationListener {
 
@@ -72,6 +70,11 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         fm.beginTransaction().add(R.id.main_container, ticketsFragment, "2").hide(ticketsFragment).commit();
         fm.beginTransaction().add(R.id.main_container, homeFragment, "1").commit();
 
+        Intent intent = new Intent(this, WebSocketListenerService.class);
+        intent.putExtra("EXTRA_TOKEN", PreferenceUtils.getToken(this));
+        startService(intent);
+
+
 
 //        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Request");
 //        databaseReference.addValueEventListener(new ValueEventListener() {
@@ -86,18 +89,6 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
 //            }
 //        });
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.bottom_nav_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
 
     @Override
     public void addNotificationBadge(int number) {

@@ -66,15 +66,27 @@ public class EventGeoLocationStepperFragment extends Fragment implements Blockin
         initAutoComplete();
 
         geoPoint = null;
+        if(eventManager.getAction().equals("edit"))
+            loadGeoPoint();
 
         MaterialButton locationButton = view.findViewById(R.id.openGeo);
         locationButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), MapsActivity.class);
-            intent.putExtra("EXTA_PREV_LOCATION", geoPoint);
+            intent.putExtra("EXTRA_PREV_LOCATION", geoPoint);
             startActivityForResult(intent, 1);
         });
 
         return view;
+    }
+
+    private void loadGeoPoint() {
+        geoPoint = new GeoPoint(
+                eventManager.getLocation().getLatitude(),
+                eventManager.getLocation().getLongitude(),
+                eventManager.getLocation().getAddress()
+        );
+
+        autocompleteFragment.setText(eventManager.getLocation().getAddress());
     }
 
     private void initAutoComplete() {
@@ -82,19 +94,24 @@ public class EventGeoLocationStepperFragment extends Fragment implements Blockin
         if (!Places.isInitialized()) {
             Places.initialize(mContext.getApplicationContext(), apiKey);
         }
-        Places.createClient(Objects.requireNonNull(getActivity()));
+        Places.createClient(requireActivity());
 
         autocompleteFragment = (AutocompleteSupportFragment)
                 getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
         autocompleteFragment.setHint("Адрес");
 
-        assert autocompleteFragment != null;
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME));
 
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(@androidx.annotation.NonNull Place place) {
                 autocompleteFragment.setText(place.getAddress());
+
+                geoPoint = new GeoPoint(
+                        place.getLatLng().latitude,
+                        place.getLatLng().longitude,
+                        place.getAddress()
+                );
             }
 
             @Override

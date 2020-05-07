@@ -54,18 +54,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder holder, int position) {
-        Message message = messages.get(position);
-        holder.textMessage.setText(message.getMessage());
-
-        for (UserProfile userProfile : users) {
-            if (message.getFirebaseUid().equals(userProfile.getFirebaseUid())) {
-//                if (userProfile.getImageUrl().equals("default")) {
-//                    holder.imageProfile.setImageResource(R.mipmap.ic_launcher);
-//                } else {
-//                    Glide.with(context).load(userProfile.getImageUrl()).into(holder.imageProfile);
-//                }
-            }
-        }
+//        Message message = messages.get(position);
+//        holder.textMessage.setText(message.getMessage());
+//
+//        for (UserProfile userProfile : users) {
+//            if (message.getFirebaseUid().equals(userProfile.getFirebaseUid())) {
+////                if (userProfile.getImageUrl().equals("default")) {
+////                    holder.imageProfile.setImageResource(R.mipmap.ic_launcher);
+////                } else {
+////                    Glide.with(context).load(userProfile.getImageUrl()).into(holder.imageProfile);
+////                }
+//            }
+//        }
 
 
 //        if(position == chats.size() - 1){
@@ -86,11 +86,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        if (messages.get(position).getFirebaseUid().equals(firebaseClient.getUid())) {
-            return MSG_TYPE_RIGHT;
-        } else {
-            return MSG_TYPE_LEFT;
-        }
+        return 0;
+//        if (messages.get(position).getFirebaseUid().equals(firebaseClient.getUid())) {
+//            return MSG_TYPE_RIGHT;
+//        } else {
+//            return MSG_TYPE_LEFT;
+//        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

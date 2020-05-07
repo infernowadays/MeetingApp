@@ -56,13 +56,13 @@ public class SetAddressFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void checkUserLocationPermission() {
-        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Request_User_Location_Code);
         }
     }
 
     private synchronized void buildGoogleApiClient() {
-        googleApiClient = new GoogleApiClient.Builder(Objects.requireNonNull(getActivity()))
+        googleApiClient = new GoogleApiClient.Builder(requireActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -103,7 +103,7 @@ public class SetAddressFragment extends Fragment implements OnMapReadyCallback,
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
 
-        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }

@@ -7,14 +7,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.meetingapp.NotificationListener;
 import com.example.meetingapp.R;
-import com.example.meetingapp.models.Chat;
 import com.example.meetingapp.models.EventRequest;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,16 +24,19 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.ViewHolder> {
 
-    private List<EventRequest> eventRequests;
-    private Context mContext;
     private final String acceptMessage = "";
     private final String noAnswerMessage = "";
-
     FirebaseUser firebaseUser;
     DatabaseReference databaseReference;
     ValueEventListener requestListener;
+    private List<EventRequest> eventRequests;
+    private Context mContext;
 
     public NotificationsAdapter(Context mContext, List<EventRequest> eventRequests) {
         this.eventRequests = eventRequests;
@@ -49,34 +49,31 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.notification_item, parent, false);
-        return new NotificationsAdapter.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final EventRequest eventRequest = eventRequests.get(position);
-        if (eventRequest.getToUser().equals(firebaseUser.getUid()) && eventRequest.getDecision().equals("ACCEPT")){
+        if (eventRequest.getToUser().equals(firebaseUser.getUid()) && eventRequest.getDecision().equals("ACCEPT")) {
             holder.decisionButtons.setVisibility(View.GONE);
             holder.username.setText("вы приняли этого кореша )0");
-        }
-        else if(eventRequest.getToUser().equals(firebaseUser.getUid()) && eventRequest.getDecision().equals("DECLINE")){
+        } else if (eventRequest.getToUser().equals(firebaseUser.getUid()) && eventRequest.getDecision().equals("DECLINE")) {
             holder.decisionButtons.setVisibility(View.GONE);
             holder.username.setText("ну и правильно, нахер он вам");
-        }
-        else if (eventRequest.getFromUser().equals(firebaseUser.getUid()) && eventRequest.getDecision().equals("ACCEPT")){
+        } else if (eventRequest.getFromUser().equals(firebaseUser.getUid()) && eventRequest.getDecision().equals("ACCEPT")) {
             holder.decisionButtons.setVisibility(View.GONE);
             holder.username.setText("тебя приняли, брат)");
-        }
-        else if(eventRequest.getFromUser().equals(firebaseUser.getUid()) && eventRequest.getDecision().equals("DECLINE")){
+        } else if (eventRequest.getFromUser().equals(firebaseUser.getUid()) && eventRequest.getDecision().equals("DECLINE")) {
             holder.decisionButtons.setVisibility(View.GONE);
             holder.username.setText("ну и хер с ними, сам погуляешб 000000");
         }
 
-        holder.acceptButton.setOnClickListener(v -> answerRequest(eventRequest.getFromUser(), "ACCEPT"));
-        holder.declineButton.setOnClickListener(v -> answerRequest(eventRequest.getFromUser(), "DECLINE"));
+        holder.acceptButton.setOnClickListener(v -> answerRequest(eventRequest.getFromUser(), "ACCEPT", eventRequest.getEvent()));
+        holder.declineButton.setOnClickListener(v -> answerRequest(eventRequest.getFromUser(), "DECLINE", eventRequest.getEvent()));
     }
 
-    private void answerRequest(String userId, String asnwer){
+    private void answerRequest(String userId, String answer, long eventId) {
         databaseReference = FirebaseDatabase.getInstance().getReference("Request");
         requestListener = databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -84,9 +81,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     EventRequest eventRequest = snapshot.getValue(EventRequest.class);
 
-                    if (eventRequest.getToUser().equals(firebaseUser.getUid()) && eventRequest.getFromUser().equals(userId)) {
+                    if (eventRequest != null
+                            && eventRequest.getToUser().equals(firebaseUser.getUid())
+                            && eventRequest.getFromUser().equals(userId)
+                            && eventRequest.getEvent() == eventId) {
                         HashMap<String, Object> hashMap = new HashMap<>();
-                        hashMap.put("decision", asnwer);
+                        hashMap.put("decision", answer);
                         snapshot.getRef().updateChildren(hashMap);
                     }
                 }
@@ -105,20 +105,23 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         return eventRequests.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView username;
-        private RelativeLayout decisionButtons;
-        private Button acceptButton;
-        private Button declineButton;
+        @BindView(R.id.notification_username)
+        TextView username;
+
+        @BindView(R.id.decision_buttons)
+        RelativeLayout decisionButtons;
+
+        @BindView(R.id.acceptButton)
+        Button acceptButton;
+
+        @BindView(R.id.declineButton)
+        Button declineButton;
 
         ViewHolder(View itemView) {
             super(itemView);
-
-            username = itemView.findViewById(R.id.notification_username);
-            decisionButtons = itemView.findViewById(R.id.decision_buttons);
-            acceptButton = itemView.findViewById(R.id.acceptButton);
-            declineButton = itemView.findViewById(R.id.declineButton);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

@@ -97,13 +97,13 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Chat chat = snapshot.getValue(Chat.class);
-                    if (firebaseUser != null && chat != null) {
-                        if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getSender().equals(userid) ||
-                                chat.getReceiver().equals(userid) && chat.getSender().equals(firebaseUser.getUid())) {
-                            theLastMessage = chat.getMessage();
-                        }
-                    }
+//                    Chat chat = snapshot.getValue(Chat.class);
+//                    if (firebaseUser != null && chat != null) {
+//                        if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getSender().equals(userid) ||
+//                                chat.getReceiver().equals(userid) && chat.getSender().equals(firebaseUser.getUid())) {
+////                            theLastMessage = chat.getMessage();
+//                        }
+//                    }
                 }
                 last_msg.setText(theLastMessage);
             }

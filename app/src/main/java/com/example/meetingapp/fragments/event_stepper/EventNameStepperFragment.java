@@ -29,11 +29,15 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.TimeZone;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class EventNameStepperFragment extends Fragment implements BlockingStep {
 
     private EventManager eventManager;
-    private MaterialEditText editEventName;
+    @BindView(R.id.event_name_creation)
+    MaterialEditText editEventName;
 
     public static EventNameStepperFragment newInstance() {
         return new EventNameStepperFragment();
@@ -41,23 +45,29 @@ public class EventNameStepperFragment extends Fragment implements BlockingStep {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        String string = "2020-03-27T16:43:32.749945Z";
-        String defaultTimezone = TimeZone.getDefault().getID();
-        Date date = null;
-        try {
-            date = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ")).parse(string.replaceAll("Z$", "+0000"));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.DEFAULT);
-        String d = dateFormat.format(date);
+//        String string = "2020-03-27T16:43:32.749945Z";
+//        String defaultTimezone = TimeZone.getDefault().getID();
+//        Date date = null;
+//        try {
+//            date = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ")).parse(string.replaceAll("Z$", "+0000"));
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
+//        DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.DEFAULT);
+//        String d = dateFormat.format(date);
 
 
         View view = inflater.inflate(R.layout.fragment_event_name_stepper, container, false);
-        editEventName = view.findViewById(R.id.event_name_creation);
+        ButterKnife.bind(this, view);
+        if(eventManager.getAction().equals("edit"))
+            loadDescription();
 
         return view;
+    }
+
+    private void loadDescription() {
+        editEventName.setText(eventManager.getDescription());
     }
 
     @Override
@@ -69,6 +79,8 @@ public class EventNameStepperFragment extends Fragment implements BlockingStep {
             throw new IllegalStateException("Activity must implement EventManager interface!");
         }
     }
+
+
 
     @Nullable
     @Override

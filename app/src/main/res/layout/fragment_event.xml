@@ -6,7 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".fragments.EventInfoFragment">
 
+    <ImageButton
+        android:id="@+id/button_edit_event"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentEnd="true"
+        android:background="@color/ms_white"
+        android:visibility="gone"
+        android:src="@drawable/ic_more_horiz_black_24dp"
+
+        tools:ignore="ContentDescription" />
+
     <com.google.android.gms.maps.MapView
+        android:layout_below="@id/button_edit_event"
         android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="192dp" />

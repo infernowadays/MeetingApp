@@ -27,6 +27,11 @@ public class PreferenceUtils {
         return preferences.getString(Constants.KEY_TOKEN, "");
     }
 
+    public static void removeToken(Context context) {
+        SharedPreferences.Editor preferencesEditor = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE).edit();
+        preferencesEditor.remove(Constants.KEY_TOKEN).apply();
+    }
+
     public static boolean hasEmail(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE);
         return preferences.contains(Constants.KEY_EMAIL);

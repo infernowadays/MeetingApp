@@ -37,7 +37,6 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
 
     private List<Event> events;
@@ -62,10 +61,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-//        holder.setIsRecyclable(false);
-
         final Event event = events.get(position);
-
 
         TextView textCreatorName = holder.textCreatorName;
         textCreatorName.setText(event.getCreator().getUsername());

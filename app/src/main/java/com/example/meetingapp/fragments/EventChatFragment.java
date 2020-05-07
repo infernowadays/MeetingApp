@@ -60,13 +60,13 @@ public class EventChatFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         recycleView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(Objects.requireNonNull(getActivity()).getApplicationContext());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
         recycleView.setLayoutManager(linearLayoutManager);
 
         firebaseClient = new FirebaseClient(getContext());
 
-        eventId = getActivity().getIntent().getStringExtra("EXTRA_EVENT_ID");
+        eventId = requireActivity().getIntent().getStringExtra("EXTRA_EVENT_ID");
         readMessages();
 
         return view;
@@ -80,7 +80,7 @@ public class EventChatFragment extends Fragment {
             String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
             firebaseClient.sendMessage(Long.valueOf(eventId), message, currentDate, currentTime);
         } else {
-            Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "You can't send empty message", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity().getApplicationContext(), "You can't send empty message", Toast.LENGTH_SHORT).show();
         }
         textMessage.setText("");
     }
@@ -120,9 +120,9 @@ public class EventChatFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     UserProfile userProfile = snapshot.getValue(UserProfile.class);
                     for (Message message : messages) {
-                        if (userProfile != null && message.getFirebaseUid().equals(userProfile.getFirebaseUid())) {
-                            users.add(userProfile);
-                        }
+//                        if (userProfile != null && message.getFirebaseUid().equals(userProfile.getFirebaseUid())) {
+//                            users.add(userProfile);
+//                        }
                     }
                 }
                 messageAdapter = new MessageAdapter(getContext(), messages, users);

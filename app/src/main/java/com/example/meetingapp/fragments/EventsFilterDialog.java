@@ -26,6 +26,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
+
 public class EventsFilterDialog extends DialogFragment implements View.OnClickListener {
 
     @BindView(R.id.chip_group)

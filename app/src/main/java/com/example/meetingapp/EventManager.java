@@ -4,6 +4,14 @@ import com.example.meetingapp.models.GeoPoint;
 
 public interface EventManager {
 
+    void saveAction(String action);
+
+    String getAction();
+
+    void saveId(int id);
+
+    int getId();
+
     void saveDescription(String description);
 
     String getDescription();

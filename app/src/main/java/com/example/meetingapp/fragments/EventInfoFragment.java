@@ -2,15 +2,23 @@ package com.example.meetingapp.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.api.FirebaseClient;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
@@ -28,13 +36,12 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
 public class EventInfoFragment extends Fragment {
-
 
     @BindView(R.id.text_event_description)
     TextView textEventDescription;
@@ -57,9 +64,25 @@ public class EventInfoFragment extends Fragment {
     @BindView(R.id.chip_group)
     ChipGroup chipGroup;
 
-    private Event event;
+    @BindView(R.id.button_edit_event)
+    ImageButton buttonEditEvent;
+
+    private static Event event;
     private Context context;
     private GoogleMap googleMap;
+    private static EventInfoFragment instance;
+
+    public static EventInfoFragment getInstance(){
+        return instance;
+    }
+
+    public static Event getEvent(){
+        return event;
+    }
+
+    public static void setEvent(Event updatedEvent){
+        event = updatedEvent;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,14 +92,20 @@ public class EventInfoFragment extends Fragment {
         loadEvent();
         mapView.onCreate(savedInstanceState);
 
+        instance = this;
         return view;
+    }
+
+    @OnClick(R.id.button_edit_event)
+    void editEvent(){
+
     }
 
     private void initMapView() {
         mapView.onResume();
 
         try {
-            MapsInitializer.initialize(Objects.requireNonNull(getActivity()).getApplicationContext());
+            MapsInitializer.initialize(requireActivity().getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,11 +122,17 @@ public class EventInfoFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadEvent();
+    }
+
     private void loadEvent() {
-        String eventId = Objects.requireNonNull(getActivity()).getIntent().getStringExtra("EXTRA_EVENT_ID");
+        String eventId = requireActivity().getIntent().getStringExtra("EXTRA_EVENT_ID");
 
         Call<Event> call = RetrofitClient
-                .getInstance(PreferenceUtils.getToken(Objects.requireNonNull(getContext())))
+                .getInstance(PreferenceUtils.getToken(requireContext()))
                 .getApi()
                 .getEvent(eventId);
 

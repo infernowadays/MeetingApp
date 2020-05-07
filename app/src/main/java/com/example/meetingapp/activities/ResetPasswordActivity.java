@@ -49,7 +49,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
                         Toast.makeText(ResetPasswordActivity.this, "Please check you Email", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(ResetPasswordActivity.this, Login2Activity.class));
+                        startActivity(new Intent(ResetPasswordActivity.this, LoginActivity.class));
                     } else {
                         String error = Objects.requireNonNull(task.getException()).getMessage();
                         Toast.makeText(ResetPasswordActivity.this, error, Toast.LENGTH_SHORT).show();

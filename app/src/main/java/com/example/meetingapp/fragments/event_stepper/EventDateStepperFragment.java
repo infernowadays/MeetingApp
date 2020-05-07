@@ -26,9 +26,12 @@ import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -53,6 +56,7 @@ public class EventDateStepperFragment extends Fragment implements BlockingStep, 
     private EventManager eventManager;
     private String pattern = "yyyy-MM-dd";
     private DateFormat dateFormat;
+    private Date date;
 
     public static EventDateStepperFragment newInstance() {
         return new EventDateStepperFragment();
@@ -63,9 +67,22 @@ public class EventDateStepperFragment extends Fragment implements BlockingStep, 
         View view = inflater.inflate(R.layout.fragment_event_date_stepper, container, false);
         ButterKnife.bind(this, view);
 
-        defaultDate();
+        date = new Date();
+        if(eventManager.getAction().equals("edit"))
+            setDateFromString(eventManager.getDate());
+
+        defaultDate(date);
 
         return view;
+    }
+
+    private void setDateFromString(String dateString){
+        DateFormat format = new SimpleDateFormat(pattern, Locale.ENGLISH);
+        try {
+            date = format.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @OnClick(R.id.text_date)
@@ -90,6 +107,7 @@ public class EventDateStepperFragment extends Fragment implements BlockingStep, 
 
                     String dateString = dateFormat.format(new Date());
                     textDate.setText(dateString);
+                    setDateFromString(dateString);
                 }
                 break;
             case R.id.button_tomorrow:
@@ -104,37 +122,42 @@ public class EventDateStepperFragment extends Fragment implements BlockingStep, 
                     String dateString = dateFormat.format(calendar.getTime());
 
                     textDate.setText(dateString);
+                    setDateFromString(dateString);
                 }
                 break;
         }
     }
 
     @SuppressLint("SimpleDateFormat")
-    private void defaultDate(){
+    private void defaultDate(Date date){
         buttonToday.setTextColor(Color.RED);
 
         dateFormat = new SimpleDateFormat(pattern);
-        String dateString = dateFormat.format(new Date());
+        String dateString = dateFormat.format(date);
         textDate.setText(dateString);
     }
 
     private void showDatePickerDialog() {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+
         DatePickerDialog datePickerDialog = new DatePickerDialog(
-                Objects.requireNonNull(getActivity()),
+                requireActivity(),
                 this,
-                Calendar.getInstance().get(Calendar.YEAR),
-                Calendar.getInstance().get(Calendar.MONTH),
-                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
         );
+        datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
         datePickerDialog.show();
     }
 
     @SuppressLint("SetTextI18n")
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        String strMonth = String.valueOf(month);
+        String strMonth = String.valueOf(month + 1);
         if (month < 10) {
-            strMonth = "0" + month;
+            strMonth = "0" + (month + 1);
         }
 
         String strDay = String.valueOf(day);
@@ -142,12 +165,15 @@ public class EventDateStepperFragment extends Fragment implements BlockingStep, 
             strDay = "0" + day;
         }
 
-        textDate.setText(year + "-" + strMonth + "-" + strDay);
+        String dateString = year + "-" + strMonth + "-" + strDay;
+        textDate.setText(dateString);
+        setDateFromString(dateString);
+
     }
 
     private void showTimePickerDialog() {
         TimePickerDialog timePickerDialog = new TimePickerDialog(
-                Objects.requireNonNull(getActivity()),
+                requireActivity(),
                 this,
                 Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
                 Calendar.getInstance().get(Calendar.MINUTE),

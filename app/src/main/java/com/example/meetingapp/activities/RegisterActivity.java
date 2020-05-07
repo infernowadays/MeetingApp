@@ -6,16 +6,18 @@ import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.meetingapp.AuthService;
+import com.example.meetingapp.CustomCallback;
 import com.example.meetingapp.R;
 import com.example.meetingapp.api.FirebaseClient;
 import com.example.meetingapp.api.RetrofitClient;
-import com.example.meetingapp.models.User;
-import com.example.meetingapp.models.Users;
+import com.example.meetingapp.models.RegisterData;
+import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
@@ -23,7 +25,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -37,6 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     public Toolbar toolbar;
 
+    private FirebaseClient firebaseClient;
     private Context mContext = this;
 
     @Override
@@ -44,6 +46,8 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
+
+        firebaseClient = new FirebaseClient(getContext());
 
         initToolbar();
     }
@@ -71,29 +75,42 @@ public class RegisterActivity extends AppCompatActivity {
     private void register(String username, String email, String password) {
         RetrofitClient.needsHeader(false);
 
-        Call<User> call = RetrofitClient
+
+        Toast.makeText(RegisterActivity.this, "Создаем аккаунт...", Toast.LENGTH_SHORT).show();
+
+        Call<UserProfile> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(getContext()))
                 .getApi()
-                .users(new Users(email, username, password));
+                .users(new RegisterData(email, username, password));
 
-        call.enqueue(new Callback<User>() {
+        call.enqueue(new CustomCallback<UserProfile>(getContext()) {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    PreferenceUtils.saveToken(response.body().getToken(), getContext());
-                    RetrofitClient.setToken(response.body().getToken());
-                    RetrofitClient.needsHeader(true);
+            public void onResponse(@NonNull Call<UserProfile> call, @NonNull Response<UserProfile> response) {
+                super.onResponse(call, response);
 
-                    FirebaseClient firebaseClient = new FirebaseClient(getContext());
-                    firebaseClient.createFirebaseUser(response.body().getFirebaseUid(), email);
-                    firebaseClient.login(email, password);
+                if (response.isSuccessful() && response.body() != null) {
+                    Toast.makeText(RegisterActivity.this, "Аккаунт создан!", Toast.LENGTH_SHORT).show();
+
+                    UserProfile userProfile = response.body();
+
+//                    PreferenceUtils.saveToken(userProfile.getFirebaseToken(), getContext());
+//                    RetrofitClient.setToken(userProfile.getFirebaseToken());
+//                    RetrofitClient.needsHeader(true);
+
+//                    firebaseClient.createFirebaseUser(userProfile.getFirebaseUid(), email);
+
+
+                    AuthService authService = new AuthService(getContext());
+                    authService.authenticate(email, password);
+
+
                 } else {
                     Toast.makeText(RegisterActivity.this, ":(", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(@NonNull Call<UserProfile> call, @NonNull Throwable t) {
                 Toast.makeText(RegisterActivity.this, "error :(", Toast.LENGTH_SHORT).show();
             }
         });

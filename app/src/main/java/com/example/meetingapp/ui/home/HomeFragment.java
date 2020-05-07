@@ -1,5 +1,7 @@
 package com.example.meetingapp.ui.home;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,16 +9,15 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.fragments.ChatsFragment;
-import com.example.meetingapp.fragments.EventChatFragment;
-import com.example.meetingapp.fragments.EventInfoFragment;
-import com.example.meetingapp.fragments.EventsFragment;
+import com.example.meetingapp.activities.SettingsActivity;
+import com.example.meetingapp.fragments.HomeEventsFragment;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -24,26 +25,27 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
+import butterknife.OnClick;
 
 public class HomeFragment extends Fragment {
-
-    @BindView(R.id.tab_layout)
-    TabLayout tabLayout;
 
     @BindView(R.id.view_pager)
     ViewPager viewPager;
 
+    @BindView(R.id.tab_layout)
+    TabLayout tabLayout;
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
 
-        HomeFragment.ViewPagerAdapter viewPagerAdapter = new HomeFragment.ViewPagerAdapter(Objects.requireNonNull(getActivity()).getSupportFragmentManager());
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
 
-        viewPagerAdapter.addFragment(new EventsFragment(), "Все");
-        viewPagerAdapter.addFragment(new EventsFragment(), "Мои");
-        viewPagerAdapter.addFragment(new EventsFragment(), "Иду");
-        viewPagerAdapter.addFragment(new EventsFragment(), "Был");
+        viewPagerAdapter.addFragment(new HomeEventsFragment("all"), "Все");
+        viewPagerAdapter.addFragment(new HomeEventsFragment("creator"), "Мои");
+        viewPagerAdapter.addFragment(new HomeEventsFragment("member"), "Иду");
+        viewPagerAdapter.addFragment(new HomeEventsFragment("passed"), "Был(-а)");
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -51,10 +53,17 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
+    @OnClick(R.id.button_settings)
+    void openSettings(){
+        Intent intent = new Intent(getActivity(), SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    static class ViewPagerAdapter extends FragmentPagerAdapter {
 
         private ArrayList<Fragment> fragments;
         private ArrayList<String> titles;
+        private int mCurrentPosition = -1;
 
         ViewPagerAdapter(FragmentManager fm) {
             super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
@@ -65,6 +74,7 @@ public class HomeFragment extends Fragment {
         @NonNull
         @Override
         public Fragment getItem(int position) {
+
             return fragments.get(position);
         }
 

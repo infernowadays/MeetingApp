@@ -6,17 +6,25 @@ import java.util.List;
 
 public class UserProfile {
 
+    @SerializedName("id")
+    private String id;
     @SerializedName("firebase_uid")
     private String firebaseUid;
-
     @SerializedName("date_of_birth")
     private String dateOfBirth;
-
-    private String id;
+    @SerializedName("firebase_registration_token")
+    private String firebaseToken;
+    @SerializedName("token")
+    private String token;
+    @SerializedName("username")
     private String username;
+    @SerializedName("email")
     private String email;
+    @SerializedName("photo")
     private String photo;
+    @SerializedName("sex")
     private String sex;
+    @SerializedName("categories")
     private List<Category> categories;
 
     public UserProfile(String firebaseUid, String dateOfBirth, String id, String username, String email, String photo, String sex, List<Category> categories) {
@@ -95,5 +103,21 @@ public class UserProfile {
 
     public void setCategories(List<Category> categories) {
         this.categories = categories;
+    }
+
+    public String getFirebaseToken() {
+        return firebaseToken;
+    }
+
+    public void setFirebaseToken(String firebaseToken) {
+        this.firebaseToken = firebaseToken;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

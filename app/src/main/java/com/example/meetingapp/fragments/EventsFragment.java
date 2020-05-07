@@ -1,11 +1,13 @@
 package com.example.meetingapp.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -59,9 +61,13 @@ public class EventsFragment extends Fragment {
     private StepperLayout mStepperLayout;
     private FragmentActivity myContext;
 
+    ProgressBar progressBar;
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_events, container, false);
         ButterKnife.bind(this, view);
+
+        progressBar = view.findViewById(R.id.progress_bar);
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             events(null);
@@ -69,7 +75,7 @@ public class EventsFragment extends Fragment {
         });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new EventsAdapter(getContext(), new ArrayList<>()));
+//        recyclerView.setAdapter(new EventsAdapter(getContext(), new ArrayList<>()));
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -88,6 +94,8 @@ public class EventsFragment extends Fragment {
     @OnClick(R.id.button_create_event)
     void buttonCreateEvent() {
         Intent intent = new Intent(getActivity(), PassEventBetweenStepsActivity.class);
+        intent.putExtra("action", "create");
+
         startActivity(intent);
     }
 
@@ -96,20 +104,26 @@ public class EventsFragment extends Fragment {
         EventsFilterDialog dialog = EventsFilterDialog.newInstance();
         dialog.setTargetFragment(EventsFragment.this, 1337);
         dialog.setCallback(this::events);
-        dialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "tag");
+        dialog.show(requireActivity().getSupportFragmentManager(), "tag");
     }
 
     private void events(List<String> categories) {
+
         Call<List<Event>> call = RetrofitClient
-                .getInstance(PreferenceUtils.getToken(Objects.requireNonNull(getContext())))
+                .getInstance(PreferenceUtils.getToken(requireContext()))
                 .getApi()
-                .getEvents(categories);
+                .getEvents(categories, null);
 
         call.enqueue(new Callback<List<Event>>() {
             @Override
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
                 List<Event> events = response.body();
-                recyclerView.setAdapter(new EventsAdapter(getContext(), events));
+                if(events != null)
+                    recyclerView.setAdapter(new EventsAdapter(getContext(), events));
+
+
+
+
             }
 
             @Override
@@ -121,7 +135,7 @@ public class EventsFragment extends Fragment {
 
     private void meProfile(){
         Call<UserProfile> call = RetrofitClient
-                .getInstance(PreferenceUtils.getToken(Objects.requireNonNull(getContext())))
+                .getInstance(PreferenceUtils.getToken(requireContext()))
                 .getApi()
                 .meProfile();
 

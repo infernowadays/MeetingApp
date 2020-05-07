@@ -1,44 +1,31 @@
 package com.example.meetingapp.models;
 
 public class Message {
-    private String firebaseUid;
+    private String fromUser;
     private Long eventId;
-    private String message;
-    private String date;
-    private String time;
+    private String text;
+    private String created;
+    private String seen;
+    private Chat chat;
 
-    public Message(String firebaseUid, Long eventId, String message, String date) {
-        this.firebaseUid = firebaseUid;
+    public Message(String fromUser, Long eventId, String text, String created, String seen, Chat chat) {
+        this.fromUser = fromUser;
         this.eventId = eventId;
-        this.message = message;
-        this.date = date;
+        this.text = text;
+        this.created = created;
+        this.seen = seen;
+        this.chat = chat;
     }
 
     public Message() {
     }
 
-    public String getMessage() {
-        return message;
+    public String getFromUser() {
+        return fromUser;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
+    public void setFromUser(String fromUser) {
+        this.fromUser = fromUser;
     }
 
     public Long getEventId() {
@@ -49,11 +36,36 @@ public class Message {
         this.eventId = eventId;
     }
 
-    public String getFirebaseUid() {
-        return firebaseUid;
+    public String getText() {
+        return text;
     }
 
-    public void setFirebaseUid(String firebaseUid) {
-        this.firebaseUid = firebaseUid;
+    public void setText(String text) {
+        this.text = text;
     }
+
+    public String getCreated() {
+        return created;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
+    }
+
+    public String getSeen() {
+        return seen;
+    }
+
+    public void setSeen(String seen) {
+        this.seen = seen;
+    }
+
+    public Chat getChat() {
+        return chat;
+    }
+
+    public void setChat(Chat chat) {
+        this.chat = chat;
+    }
+
 }

@@ -66,7 +66,7 @@ public class EventPublishStepperFragment extends Fragment implements BlockingSte
 
     private void publishEvent() {
         Call<Event> call = RetrofitClient
-                .getInstance(PreferenceUtils.getToken(Objects.requireNonNull(context)))
+                .getInstance(PreferenceUtils.getToken(requireContext()))
                 .getApi()
                 .createEvent(event);
 
@@ -87,12 +87,39 @@ public class EventPublishStepperFragment extends Fragment implements BlockingSte
         });
     }
 
+    private void updateEvent() {
+        Call<Event> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(requireContext()))
+                .getApi()
+                .updateEvent(String.valueOf(event.getId()), event);
+
+        call.enqueue(new Callback<Event>() {
+            @Override
+            public void onResponse(Call<Event> call, Response<Event> response) {
+                Event updatedEvent = response.body();
+                if(updatedEvent != null){
+                    Toast.makeText(getActivity(), "Событие успешно отредактировано!", Toast.LENGTH_SHORT).show();
+                    finishActivity();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Event> call, Throwable t) {
+                Toast.makeText(getActivity(), "Что-то случилось :(", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void openCreatedEvent() {
         Intent intent = new Intent(getActivity(), EventActivity.class);
         intent.putExtra("EXTRA_EVENT_ID", String.valueOf(createdEvent.getId()));
 
-        Objects.requireNonNull(getActivity()).finish();
+        finishActivity();
         startActivity(intent);
+    }
+
+    private void finishActivity(){
+        requireActivity().finish();
     }
 
     @Override
@@ -114,6 +141,8 @@ public class EventPublishStepperFragment extends Fragment implements BlockingSte
 
     @Override
     public void onSelected() {
+        event.setId(eventManager.getId());
+
         event.setDescription(eventManager.getDescription());
         description.setText(eventManager.getDescription());
 
@@ -142,7 +171,10 @@ public class EventPublishStepperFragment extends Fragment implements BlockingSte
 
     @Override
     public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {
-        publishEvent();
+        if(eventManager.getAction().equals("create"))
+            publishEvent();
+        else if(eventManager.getAction().equals("edit"))
+            updateEvent();
     }
 
     @Override
