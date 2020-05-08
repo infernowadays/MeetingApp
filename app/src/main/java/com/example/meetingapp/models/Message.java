@@ -1,39 +1,41 @@
 package com.example.meetingapp.models;
 
+import android.content.Intent;
+
+import com.google.gson.annotations.SerializedName;
+
 public class Message {
-    private String fromUser;
-    private Long eventId;
+    @SerializedName("from_user")
+    private UserProfile fromUser;
     private String text;
     private String created;
-    private String seen;
-    private Chat chat;
+    private boolean seen;
+    private int event;
 
-    public Message(String fromUser, Long eventId, String text, String created, String seen, Chat chat) {
-        this.fromUser = fromUser;
-        this.eventId = eventId;
+    public Message(String text, String created, boolean seen, int event) {
         this.text = text;
         this.created = created;
         this.seen = seen;
-        this.chat = chat;
+        this.event = event;
+    }
+
+
+    public Message(UserProfile fromUser, String text, String created, boolean seen) {
+        this.fromUser = fromUser;
+        this.text = text;
+        this.created = created;
+        this.seen = seen;
     }
 
     public Message() {
     }
 
-    public String getFromUser() {
+    public UserProfile getFromUser() {
         return fromUser;
     }
 
-    public void setFromUser(String fromUser) {
+    public void setFromUser(UserProfile fromUser) {
         this.fromUser = fromUser;
-    }
-
-    public Long getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(Long eventId) {
-        this.eventId = eventId;
     }
 
     public String getText() {
@@ -52,20 +54,19 @@ public class Message {
         this.created = created;
     }
 
-    public String getSeen() {
+    public boolean getSeen() {
         return seen;
     }
 
-    public void setSeen(String seen) {
+    public void setSeen(boolean seen) {
         this.seen = seen;
     }
 
-    public Chat getChat() {
-        return chat;
+    public int getEvent() {
+        return event;
     }
 
-    public void setChat(Chat chat) {
-        this.chat = chat;
+    public void setEvent(int event) {
+        this.event = event;
     }
-
 }

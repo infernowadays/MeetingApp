@@ -8,9 +8,17 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class Event implements Parcelable {
+    public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
+        public Event createFromParcel(Parcel in) {
+            return new Event(in);
+        }
+
+        public Event[] newArray(int size) {
+            return new Event[size];
+        }
+    };
     @SerializedName("geo_point")
     private GeoPoint geoPoint;
-
     private int id;
     private UserProfile creator;
     private String name;
@@ -33,6 +41,14 @@ public class Event implements Parcelable {
     }
 
     public Event() {
+    }
+
+    public Event(Parcel in) {
+        id = in.readInt();
+        description = in.readString();
+        date = in.readString();
+        time = in.readString();
+        geoPoint = in.readParcelable(getClass().getClassLoader());
     }
 
     public List<Category> getCategories() {
@@ -119,23 +135,5 @@ public class Event implements Parcelable {
         dest.writeString(date);
         dest.writeString(time);
         dest.writeParcelable(geoPoint, flags);
-    }
-
-    public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
-        public Event createFromParcel(Parcel in) {
-            return new Event(in);
-        }
-
-        public Event[] newArray(int size) {
-            return new Event[size];
-        }
-    };
-
-    public Event(Parcel in) {
-        id = in.readInt();
-        description = in.readString();
-        date = in.readString();
-        time = in.readString();
-        geoPoint = in.readParcelable(getClass().getClassLoader());
     }
 }

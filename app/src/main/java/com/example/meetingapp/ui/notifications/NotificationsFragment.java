@@ -24,7 +24,6 @@ import com.example.meetingapp.utils.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,48 +31,36 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-
 public class NotificationsFragment extends Fragment {
 
-    private static NotificationsFragment notificationsFragment;
-    private static NotificationsAdapter notificationsAdapter;
+    private NotificationsAdapter notificationsAdapter;
     private static List<EventRequest> eventRequests;
     @BindView(R.id.recycle_view)
-    RecyclerView recyclerView;
+    RecyclerView recycleView;
 
     private BroadcastReceiver broadcastReceiver;
-
-    public static NotificationsFragment getInstance() {
-        return notificationsFragment;
-    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
         ButterKnife.bind(this, view);
 
-        notificationsFragment = this;
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
-        recyclerView.setLayoutManager(linearLayoutManager);
+        recycleView.setLayoutManager(linearLayoutManager);
 
         eventRequests = new ArrayList<>();
         notificationsAdapter = new NotificationsAdapter(getContext(), eventRequests);
 
         loadNotifications();
 
-
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                EventRequest eventRequest =  intent.getParcelableExtra(WebSocketListenerService.COPA_MESSAGE);
+                EventRequest eventRequest = intent.getParcelableExtra(WebSocketListenerService.EXTRA_REQUEST);
                 eventRequests.add(eventRequest);
                 notificationsAdapter.notifyItemInserted(0);
-                recyclerView.scrollToPosition(0);
+                recycleView.scrollToPosition(0);
             }
         };
-
-
 
         return view;
     }
@@ -82,7 +69,7 @@ public class NotificationsFragment extends Fragment {
     public void onStart() {
         super.onStart();
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver((broadcastReceiver),
-                new IntentFilter(WebSocketListenerService.COPA_RESULT)
+                new IntentFilter(WebSocketListenerService.EXTRA_RESULT)
         );
     }
 
@@ -90,36 +77,6 @@ public class NotificationsFragment extends Fragment {
     public void onStop() {
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver);
         super.onStop();
-    }
-
-    public void updateData(EventRequest eventRequest) {
-        new Thread() {
-            public void run() {
-
-                try {
-                    runOnUiThread(() -> {
-                            eventRequests.add(eventRequest);
-                            notificationsAdapter.notifyItemInserted(eventRequests.size() - 1);
-                        });
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
-                }
-            }
-        }.start();
-
-//        Thread updaterThread = new Thread() {
-//            public void run() {
-//                try {
-//                    runOnUiThread(() -> {
-//                        eventRequests.add(eventRequest);
-//                        notificationsAdapter.notifyItemInserted(eventRequests.size() - 1);
-//                    });
-//                } catch (Throwable throwable) {
-//                    throwable.printStackTrace();
-//                }
-//            }
-//        };
-//        updaterThread.start();
     }
 
     private void loadNotifications() {
@@ -134,11 +91,8 @@ public class NotificationsFragment extends Fragment {
                 eventRequests = response.body();
                 if (eventRequests != null) {
                     notificationsAdapter = new NotificationsAdapter(getContext(), eventRequests);
-                    recyclerView.setAdapter(notificationsAdapter);
-//                    notificationsAdapter.notifyItemRangeInserted(0, eventRequests.size());
-
+                    recycleView.setAdapter(notificationsAdapter);
                 }
-
             }
 
             @Override

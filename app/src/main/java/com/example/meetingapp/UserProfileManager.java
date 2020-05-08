@@ -10,16 +10,18 @@ public class UserProfileManager {
     private UserProfileManager() {
     }
 
-    public static UserProfile getMyProfile() {
+    public static UserProfileManager getInstance() {
+        if (instance == null)
+            instance = new UserProfileManager();
+
+        return instance;
+    }
+
+    public UserProfile getMyProfile() {
         return myProfile;
     }
 
-    public static UserProfileManager getInstance(UserProfile userProfile) {
-        if (instance == null) {
-            instance = new UserProfileManager();
-            myProfile = userProfile;
-        }
-
-        return instance;
+    public void initialize(UserProfile userProfile) {
+        myProfile = userProfile;
     }
 }

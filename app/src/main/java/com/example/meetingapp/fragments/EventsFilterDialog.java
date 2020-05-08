@@ -64,7 +64,7 @@ public class EventsFilterDialog extends DialogFragment implements View.OnClickLi
         Button apply = view.findViewById(R.id.fullscreen_dialog_action);
         apply.setOnClickListener(this);
 
-        UserProfile userProfile = UserProfileManager.getMyProfile();
+        UserProfile userProfile = UserProfileManager.getInstance().getMyProfile();
         if (userProfile != null) {
             for (Category category : userProfile.getCategories()) {
                 Chip chip = (Chip) getLayoutInflater().inflate(R.layout.category_item, chipGroup, false);

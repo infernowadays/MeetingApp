@@ -73,21 +73,6 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         Intent intent = new Intent(this, WebSocketListenerService.class);
         intent.putExtra("EXTRA_TOKEN", PreferenceUtils.getToken(this));
         startService(intent);
-
-
-
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Request");
-//        databaseReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                navigation.getOrCreateBadge(R.id.navigation_messages);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
     }
 
     @Override

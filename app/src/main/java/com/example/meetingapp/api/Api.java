@@ -3,6 +3,7 @@ package com.example.meetingapp.api;
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.EventRequest;
 import com.example.meetingapp.models.LoginData;
+import com.example.meetingapp.models.Message;
 import com.example.meetingapp.models.Password;
 import com.example.meetingapp.models.RegisterData;
 import com.example.meetingapp.models.Token;
@@ -66,4 +67,12 @@ public interface Api {
     @Headers("Content-Type: application/json")
     @POST("token_auth/profile/me/")
     Call<Token> changePassword(@Body Password password);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/messages")
+    Call<Message> sendMessage(@Body Message message);
+
+    @Headers("Content-Type: application/json")
+    @GET("api/messages/{event_id}")
+    Call<List<Message>> getEventMessages(@Path("event_id") String event_id);
 }

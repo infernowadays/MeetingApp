@@ -75,36 +75,36 @@ public class ChatsFragment extends Fragment {
     }
 
     private void chatList() {
-        mUsers = new ArrayList<>();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mUsers.clear();
-
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    UserProfile user = snapshot.getValue(UserProfile.class);
-                    for (ChatList chatlist : usersList) {
-                        assert user != null;
-                        if (user.getId().equals(chatlist.getId())) {
-                            mUsers.add(user);
-                        }
-                    }
-                }
-
-                if (userAdapter == null) {
-                    userAdapter = new UsersAdapter(getContext(), mUsers, true);
-                    recyclerView.setAdapter(userAdapter);
-                } else {
-                    userAdapter.notifyDataSetChanged();
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//        mUsers = new ArrayList<>();
+//        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                mUsers.clear();
+//
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    UserProfile user = snapshot.getValue(UserProfile.class);
+//                    for (ChatList chatlist : usersList) {
+//                        assert user != null;
+//                        if (user.getId().equals(chatlist.getId())) {
+//                            mUsers.add(user);
+//                        }
+//                    }
+//                }
+//
+//                if (userAdapter == null) {
+//                    userAdapter = new UsersAdapter(getContext(), mUsers, true);
+//                    recyclerView.setAdapter(userAdapter);
+//                } else {
+//                    userAdapter.notifyDataSetChanged();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 }

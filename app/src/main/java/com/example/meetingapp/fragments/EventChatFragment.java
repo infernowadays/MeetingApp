@@ -1,5 +1,11 @@
 package com.example.meetingapp.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import com.google.gson.Gson;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,14 +16,20 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.adapters.MessageAdapter;
-import com.example.meetingapp.api.FirebaseClient;
+import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.models.Event;
+import com.example.meetingapp.models.EventRequest;
 import com.example.meetingapp.models.Message;
 import com.example.meetingapp.models.UserProfile;
+import com.example.meetingapp.services.WebSocketListenerService;
+import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,11 +41,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class EventChatFragment extends Fragment {
@@ -50,9 +64,12 @@ public class EventChatFragment extends Fragment {
     private MessageAdapter messageAdapter;
     private List<Message> messages;
 
-    private FirebaseClient firebaseClient;
     private DatabaseReference databaseReference;
     private String eventId;
+    private BroadcastReceiver broadcastReceiver;
+
+    private Event event;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,12 +81,34 @@ public class EventChatFragment extends Fragment {
         linearLayoutManager.setStackFromEnd(true);
         recycleView.setLayoutManager(linearLayoutManager);
 
-        firebaseClient = new FirebaseClient(getContext());
+        loadEvent();
 
-        eventId = requireActivity().getIntent().getStringExtra("EXTRA_EVENT_ID");
-        readMessages();
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Gson gson = new Gson();
+                Message message = gson.fromJson(intent.getStringExtra(WebSocketListenerService.EXTRA_MESSAGE), Message.class);
+                messages.add(message);
+                messageAdapter.notifyItemInserted(messages.size() - 1);
+                recycleView.scrollToPosition(messages.size() - 1);
+            }
+        };
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver((broadcastReceiver),
+                new IntentFilter(WebSocketListenerService.EXTRA_RESULT)
+        );
+    }
+
+    @Override
+    public void onStop() {
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver);
+        super.onStop();
     }
 
     @OnClick(R.id.button_send)
@@ -78,59 +117,82 @@ public class EventChatFragment extends Fragment {
         if (!message.equals("")) {
             String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
             String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
-            firebaseClient.sendMessage(Long.valueOf(eventId), message, currentDate, currentTime);
+            sendMessage(message, currentDate);
         } else {
             Toast.makeText(requireActivity().getApplicationContext(), "You can't send empty message", Toast.LENGTH_SHORT).show();
         }
         textMessage.setText("");
     }
 
-    private void readMessages() {
-        messages = new ArrayList<>();
+    private void sendMessage(String text, String date) {
+        Message message = new Message(text, date, false, event.getId());
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Message");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        Call<Message> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(requireContext()))
+                .getApi()
+                .sendMessage(message);
+
+        call.enqueue(new Callback<Message>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                messages.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Message message = snapshot.getValue(Message.class);
-                    if (message != null && String.valueOf(message.getEventId()).equals(eventId)) {
-                        messages.add(message);
-                    }
-
-                    getChatUsers(messages);
+            public void onResponse(@NonNull Call<Message> call, @NonNull Response<Message> response) {
+                Message message = response.body();
+                if (message != null) {
+                    messages.add(message);
+                    recycleView.scrollToPosition(messages.size() - 1);
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onFailure(@NonNull Call<Message> call, @NonNull Throwable t) {
 
             }
         });
     }
 
-    private void getChatUsers(List<Message> messages) {
-        List<UserProfile> users = new ArrayList<>();
+    private void readMessages() {
+        messages = new ArrayList<>();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+
+        Call<List<Message>> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(requireContext()))
+                .getApi()
+                .getEventMessages(String.valueOf(event.getId()));
+
+        call.enqueue(new Callback<List<Message>>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    UserProfile userProfile = snapshot.getValue(UserProfile.class);
-                    for (Message message : messages) {
-//                        if (userProfile != null && message.getFirebaseUid().equals(userProfile.getFirebaseUid())) {
-//                            users.add(userProfile);
-//                        }
-                    }
+            public void onResponse(@NonNull Call<List<Message>> call, @NonNull Response<List<Message>> response) {
+                messages = response.body();
+                if(messages != null){
+                    messageAdapter = new MessageAdapter(getContext(), messages);
+                    recycleView.setAdapter(messageAdapter);
                 }
-                messageAdapter = new MessageAdapter(getContext(), messages, users);
-                recycleView.setAdapter(messageAdapter);
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onFailure(@NonNull Call<List<Message>> call, @NonNull Throwable t) {
+                int a = 5;
+            }
+        });
+    }
+
+    private void loadEvent() {
+        String eventId = requireActivity().getIntent().getStringExtra("EXTRA_EVENT_ID");
+
+        Call<Event> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(requireContext()))
+                .getApi()
+                .getEvent(eventId);
+
+        call.enqueue(new Callback<Event>() {
+            @Override
+            public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
+                event = response.body();
+                readMessages();
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
 
             }
         });

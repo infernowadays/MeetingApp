@@ -71,63 +71,63 @@ public class UsersFragment extends Fragment {
     }
 
     private void searchUsers(String s) {
-        final FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
-        Query query = FirebaseDatabase.getInstance().getReference("Users").orderByChild("search")
-                .startAt(s)
-                .endAt(s + "\uf8ff");
-
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                userProfiles.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    UserProfile user = snapshot.getValue(UserProfile.class);
-
-                    assert user != null;
-                    assert fuser != null;
-                    if (!user.getId().equals(fuser.getUid())) {
-                        userProfiles.add(user);
-                    }
-                }
-
-                usersAdapter = new UsersAdapter(getContext(), userProfiles, false);
-                recyclerView.setAdapter(usersAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//        final FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
+//        Query query = FirebaseDatabase.getInstance().getReference("Users").orderByChild("search")
+//                .startAt(s)
+//                .endAt(s + "\uf8ff");
+//
+//        query.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                userProfiles.clear();
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    UserProfile user = snapshot.getValue(UserProfile.class);
+//
+//                    assert user != null;
+//                    assert fuser != null;
+//                    if (!user.getId().equals(fuser.getUid())) {
+//                        userProfiles.add(user);
+//                    }
+//                }
+//
+//                usersAdapter = new UsersAdapter(getContext(), userProfiles, false);
+//                recyclerView.setAdapter(usersAdapter);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 
     private void readUsers() {
 
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                userProfiles.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    UserProfile userProfile = snapshot.getValue(UserProfile.class);
-
-                    assert userProfile != null;
-                    assert firebaseUser != null;
-                    if (!userProfile.getId().equals(firebaseUser.getUid())) {
-                        userProfiles.add(userProfile);
-                    }
-
-                    usersAdapter = new UsersAdapter(getContext(), userProfiles, false);
-                    recyclerView.setAdapter(usersAdapter);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+//
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                userProfiles.clear();
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    UserProfile userProfile = snapshot.getValue(UserProfile.class);
+//
+//                    assert userProfile != null;
+//                    assert firebaseUser != null;
+//                    if (!userProfile.getId().equals(firebaseUser.getUid())) {
+//                        userProfiles.add(userProfile);
+//                    }
+//
+//                    usersAdapter = new UsersAdapter(getContext(), userProfiles, false);
+//                    recyclerView.setAdapter(usersAdapter);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 }

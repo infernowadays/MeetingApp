@@ -4,6 +4,15 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class GeoPoint implements Parcelable {
+    public static final Parcelable.Creator<GeoPoint> CREATOR = new Parcelable.Creator<GeoPoint>() {
+        public GeoPoint createFromParcel(Parcel in) {
+            return new GeoPoint(in);
+        }
+
+        public GeoPoint[] newArray(int size) {
+            return new GeoPoint[size];
+        }
+    };
     private double latitude;
     private double longitude;
     private String address;
@@ -12,6 +21,12 @@ public class GeoPoint implements Parcelable {
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
+    }
+
+    private GeoPoint(Parcel in) {
+        latitude = in.readDouble();
+        longitude = in.readDouble();
+        address = in.readString();
     }
 
     public double getLatitude() {
@@ -48,21 +63,5 @@ public class GeoPoint implements Parcelable {
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeString(address);
-    }
-
-    public static final Parcelable.Creator<GeoPoint> CREATOR = new Parcelable.Creator<GeoPoint>() {
-        public GeoPoint createFromParcel(Parcel in) {
-            return new GeoPoint(in);
-        }
-
-        public GeoPoint[] newArray(int size) {
-            return new GeoPoint[size];
-        }
-    };
-
-    private GeoPoint(Parcel in) {
-        latitude = in.readDouble();
-        longitude = in.readDouble();
-        address = in.readString();
     }
 }

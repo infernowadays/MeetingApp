@@ -142,7 +142,7 @@ public class EventsFragment extends Fragment {
         call.enqueue(new Callback<UserProfile>() {
             @Override
             public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
-                UserProfileManager.getInstance(response.body());
+                UserProfileManager.getInstance().initialize(response.body());
             }
 
             @Override

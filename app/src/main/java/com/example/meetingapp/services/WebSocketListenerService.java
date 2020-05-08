@@ -10,7 +10,9 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.meetingapp.activities.MainActivity;
 import com.example.meetingapp.models.EventRequest;
+import com.example.meetingapp.models.Message;
 import com.example.meetingapp.models.Test2;
+import com.example.meetingapp.models.WebSocketEvent;
 import com.example.meetingapp.ui.notifications.NotificationsFragment;
 import com.google.gson.Gson;
 
@@ -33,8 +35,9 @@ public class WebSocketListenerService extends Service {
 
     private LocalBroadcastManager broadcaster;
 
-    static final public String COPA_RESULT = "com.controlj.copame.backend.COPAService.REQUEST_PROCESSED";
-    static final public String COPA_MESSAGE = "com.controlj.copame.backend.COPAService.COPA_MSG";
+    static final public String EXTRA_RESULT = "EXTRA_RESULT";
+    static final public String EXTRA_REQUEST = "EXTRA_REQUEST";
+    static final public String EXTRA_MESSAGE = "EXTRA_MESSAGE";
 
     public WebSocketListenerService() {
     }
@@ -87,19 +90,18 @@ public class WebSocketListenerService extends Service {
         @Override
         public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
             Gson gson = new Gson();
+            Intent intent = new Intent(EXTRA_RESULT);
 
+            WebSocketEvent webSocketEvent = gson.fromJson(text, WebSocketEvent.class);
+            if(webSocketEvent.isRequestEvent())
+                intent.putExtra(EXTRA_REQUEST, gson.fromJson(text, EventRequest.class));
+            else if(webSocketEvent.isMessageEvent()){
 
-            Intent intent = new Intent(COPA_RESULT);
-            intent.putExtra(COPA_MESSAGE, gson.fromJson(text, EventRequest.class));
+                Message message = gson.fromJson(text, Message.class);
+                intent.putExtra(EXTRA_MESSAGE, gson.toJson(gson.fromJson(text, Message.class)));
+
+            }
             broadcaster.sendBroadcast(intent);
-
-
-//            NotificationsFragment notificationsFragment = NotificationsFragment.getInstance();
-//            try {
-//                notificationsFragment.updateData(gson.fromJson(text, EventRequest.class));
-//            } catch (Throwable throwable) {
-//                throwable.printStackTrace();
-//            }
         }
 
         @Override

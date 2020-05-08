@@ -7,7 +7,7 @@ import java.util.List;
 public class UserProfile {
 
     @SerializedName("id")
-    private String id;
+    private int id;
     @SerializedName("firebase_uid")
     private String firebaseUid;
     @SerializedName("date_of_birth")
@@ -21,13 +21,13 @@ public class UserProfile {
     @SerializedName("email")
     private String email;
     @SerializedName("photo")
-    private String photo;
+    private ProfilePhoto photo;
     @SerializedName("sex")
     private String sex;
     @SerializedName("categories")
     private List<Category> categories;
 
-    public UserProfile(String firebaseUid, String dateOfBirth, String id, String username, String email, String photo, String sex, List<Category> categories) {
+    public UserProfile(String firebaseUid, String dateOfBirth, int id, String username, String email, ProfilePhoto photo, String sex, List<Category> categories) {
         this.firebaseUid = firebaseUid;
         this.dateOfBirth = dateOfBirth;
         this.id = id;
@@ -36,6 +36,10 @@ public class UserProfile {
         this.photo = photo;
         this.sex = sex;
         this.categories = categories;
+    }
+
+    public UserProfile(int id){
+        this.id = id;
     }
 
     public UserProfile() {
@@ -57,11 +61,11 @@ public class UserProfile {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -81,11 +85,11 @@ public class UserProfile {
         this.email = email;
     }
 
-    public String getPhoto() {
+    public ProfilePhoto getPhoto() {
         return photo;
     }
 
-    public void setPhoto(String photo) {
+    public void setPhoto(ProfilePhoto photo) {
         this.photo = photo;
     }
 

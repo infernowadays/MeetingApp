@@ -48,20 +48,20 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        final UserProfile user = mUsers.get(position);
-
-        holder.username.setText(user.getUsername());
-        if (user.getPhoto().equals("default")) {
-            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
-        } else {
-            Glide.with(mContext).load(user.getPhoto()).into(holder.profile_image);
-        }
-
-        if (is_chat) {
-            lastMessage(user.getId(), holder.last_msg);
-        } else {
-            holder.last_msg.setVisibility(View.GONE);
-        }
+//        final UserProfile user = mUsers.get(position);
+//
+//        holder.username.setText(user.getUsername());
+//        if (user.getPhoto().equals("default")) {
+//            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
+//        } else {
+//            Glide.with(mContext).load(user.getPhoto()).into(holder.profile_image);
+//        }
+//
+//        if (is_chat) {
+//            lastMessage(user.getId(), holder.last_msg);
+//        } else {
+//            holder.last_msg.setVisibility(View.GONE);
+//        }
 
 //        if (is_chat) {
 //            if (user.getStatus().equals("online")) {
@@ -76,12 +76,12 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 //            holder.img_off.setVisibility(View.GONE);
 //        }
 
-        holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(mContext, MessageActivity.class);
-            intent.putExtra("EXTRA_USER_ID", user.getId());
-
-            mContext.startActivity(intent);
-        });
+//        holder.itemView.setOnClickListener(v -> {
+//            Intent intent = new Intent(mContext, MessageActivity.class);
+//            intent.putExtra("EXTRA_USER_ID", user.getId());
+//
+//            mContext.startActivity(intent);
+//        });
     }
 
     @Override
