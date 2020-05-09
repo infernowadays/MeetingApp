@@ -30,11 +30,6 @@ import java.util.ArrayList;
 
 public class EventActivity extends AppCompatActivity {
 
-    private static final String DESCRIPTION = "description";
-    private static final String DATE = "date";
-    private static final String TIME = "time";
-    private static final String LOCATION = "location";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

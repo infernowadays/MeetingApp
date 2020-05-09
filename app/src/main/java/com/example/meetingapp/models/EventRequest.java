@@ -16,6 +16,8 @@ public class EventRequest implements Parcelable {
             return new EventRequest[size];
         }
     };
+    @SerializedName("id")
+    private int id;
     @SerializedName("from_user")
     private String fromUser;
     @SerializedName("to_user")
@@ -25,19 +27,41 @@ public class EventRequest implements Parcelable {
     private String decision;
     private boolean seen;
 
+
+
     public EventRequest(String fromUser, String toUser, long event) {
         this.fromUser = fromUser;
         this.toUser = toUser;
         this.event = event;
     }
 
+    public EventRequest(int id, String fromUser, String toUser, long event) {
+        this.id = id;
+        this.fromUser = fromUser;
+        this.toUser = toUser;
+        this.event = event;
+    }
+
+    public EventRequest(String decision) {
+        this.decision = decision;
+    }
+
     public EventRequest() {
     }
 
     private EventRequest(Parcel in) {
+        id = in.readInt();
         fromUser = in.readString();
         toUser = in.readString();
         event = in.readLong();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getDecision() {
@@ -87,6 +111,7 @@ public class EventRequest implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(fromUser);
         dest.writeString(toUser);
         dest.writeLong(event);

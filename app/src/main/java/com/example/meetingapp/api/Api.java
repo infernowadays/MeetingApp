@@ -61,6 +61,10 @@ public interface Api {
     Call<EventRequest> sendRequest(@Body EventRequest eventRequest);
 
     @Headers("Content-Type: application/json")
+    @PUT("api/requests/{pk}")
+    Call<EventRequest> answerRequest(@Path("pk") String pk, @Body EventRequest decision);
+
+    @Headers("Content-Type: application/json")
     @GET("api/requests")
     Call<List<EventRequest>> getRequests();
 
@@ -75,4 +79,8 @@ public interface Api {
     @Headers("Content-Type: application/json")
     @GET("api/messages/{event_id}")
     Call<List<Message>> getEventMessages(@Path("event_id") String event_id);
+
+    @Headers("Content-Type: application/json")
+    @GET("api/chats")
+    Call<List<Event>> getEventChats();
 }

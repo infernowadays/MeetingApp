@@ -69,22 +69,22 @@ public class WebSocketActivity extends AppCompatActivity {
 
 
     private void send(){
-        Call<EventRequest> call = RetrofitClient
-                .getInstance(PreferenceUtils.getToken(Objects.requireNonNull(this)))
-                .getApi()
-                .sendRequest(new EventRequest("yk3LBB78EAgnIiumrCjMs13Nlsh2", "yk3LBB78EAgnIiumrCjMs13Nlsh2", 66));
-
-        call.enqueue(new Callback<EventRequest>() {
-            @Override
-            public void onResponse(Call<EventRequest> call, retrofit2.Response<EventRequest> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<EventRequest> call, Throwable t) {
-
-            }
-        });
+//        Call<EventRequest> call = RetrofitClient
+//                .getInstance(PreferenceUtils.getToken(Objects.requireNonNull(this)))
+//                .getApi()
+//                .sendRequest(new EventRequest("yk3LBB78EAgnIiumrCjMs13Nlsh2", "yk3LBB78EAgnIiumrCjMs13Nlsh2", 66));
+//
+//        call.enqueue(new Callback<EventRequest>() {
+//            @Override
+//            public void onResponse(Call<EventRequest> call, retrofit2.Response<EventRequest> response) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<EventRequest> call, Throwable t) {
+//
+//            }
+//        });
     }
 
     private void output(final String txt) {

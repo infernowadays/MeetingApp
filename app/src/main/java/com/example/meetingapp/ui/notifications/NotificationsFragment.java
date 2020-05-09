@@ -23,6 +23,8 @@ import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -56,9 +58,10 @@ public class NotificationsFragment extends Fragment {
             @Override
             public void onReceive(Context context, Intent intent) {
                 EventRequest eventRequest = intent.getParcelableExtra(WebSocketListenerService.EXTRA_REQUEST);
-                eventRequests.add(eventRequest);
+
+                eventRequests.add(0, eventRequest);
                 notificationsAdapter.notifyItemInserted(0);
-                recycleView.scrollToPosition(0);
+                recycleView.smoothScrollToPosition(0);
             }
         };
 

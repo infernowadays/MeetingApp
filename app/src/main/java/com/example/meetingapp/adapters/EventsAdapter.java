@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.activities.EventActivity;
 import com.example.meetingapp.api.FirebaseClient;
 import com.example.meetingapp.api.RetrofitClient;
@@ -36,6 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
 
@@ -86,7 +88,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         });
 
         holder.buttonSendRequest.setOnClickListener(v -> {
-            sendRequest(event.getCreator().getFirebaseUid(), event.getId());
+            sendRequest(String.valueOf(event.getCreator().getId()), event.getId());
             removeItemAfterRequest(position);
         });
     }
@@ -95,16 +97,16 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         Call<EventRequest> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(Objects.requireNonNull(context)))
                 .getApi()
-                .sendRequest(new EventRequest(firebaseClient.getUid(), toUser, event));
+                .sendRequest(new EventRequest(String.valueOf(UserProfileManager.getInstance().getMyProfile().getId()), toUser, event));
 
         call.enqueue(new Callback<EventRequest>() {
             @Override
-            public void onResponse(Call<EventRequest> call, retrofit2.Response<EventRequest> response) {
-                firebaseClient.sendRequest(toUser, event);
+            public void onResponse(@NonNull Call<EventRequest> call, @NonNull Response<EventRequest> response) {
+
             }
 
             @Override
-            public void onFailure(Call<EventRequest> call, Throwable t) {
+            public void onFailure(@NonNull Call<EventRequest> call, @NonNull Throwable t) {
 
             }
         });
