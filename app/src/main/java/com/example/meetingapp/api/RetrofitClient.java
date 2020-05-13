@@ -9,7 +9,7 @@ public class RetrofitClient {
 
     private static final String BASE_URL = "http://10.0.2.2:8000/";
     private static String TOKEN;
-    private static RetrofitClient mInstance;
+    private static RetrofitClient instance;
     private static boolean needsHeader = true;
     private Retrofit retrofit;
 
@@ -47,11 +47,11 @@ public class RetrofitClient {
     }
 
     public static synchronized RetrofitClient getInstance(String token) {
-        if (mInstance == null) {
-            mInstance = new RetrofitClient();
+        if (instance == null) {
+            instance = new RetrofitClient();
             setToken(token);
         }
-        return mInstance;
+        return instance;
     }
 
     public Api getApi() {

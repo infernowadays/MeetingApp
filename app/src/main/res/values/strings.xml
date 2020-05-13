@@ -3,23 +3,16 @@
     <string name="login">Login</string>
     <string name="email">email</string>
     <string name="password">password</string>
-    <string name="title_activity_botton_navigation">BottonNavigationActivity</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
     <string name="title_activity_bottom_navigation">BottomNavigationActivity</string>
     <string name="button">Button</string>
-    <integer name="com_vk_sdk_AppId">7334440</integer>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_maps2">Map</string>
     <string name="title_activity_work_please">MapAAAA</string>
     <string name="api_key">AIzaSyDB3CO5OhPS7qyeZFb9PrIOy3m9sIlesvc</string>
     <string name="username">Username</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="enter_account">Войти</string>
-    <string name="forgot_password">Забыли пароль?</string>
     <string name="reset_password_message">By clicking Reset, you will receive an email to reset your password</string>
     <string name="reset">Reset</string>
     <string name="add_location">Добавить</string>
@@ -33,11 +26,9 @@
     <string name="tomorrow">Завтра</string>
     <string name="date">Дата</string>
     <string name="time_optional">Время (необязательно)</string>
-    <string name="edit">Редактировать</string>
     <string name="interests">Интересы</string>
     <string name="little_about_me">Немного обо мне</string>
     <string name="rus_events">События</string>
-    <string name="filters">Фильтры</string>
     <string name="age">Возраст</string>
     <string name="genger">Гендер</string>
     <string name="any">Любой</string>
@@ -45,20 +36,13 @@
     <string name="woman">Женщина</string>
     <string name="title_activity_account_settings">Settings</string>
 
+    <integer name="com_vk_sdk_AppId">7334440</integer>
+
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
 
     <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
 
     <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
 
 </resources>

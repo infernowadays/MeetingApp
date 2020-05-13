@@ -2,6 +2,7 @@ package com.example.meetingapp.adapters;
 
 import android.content.Context;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
@@ -12,16 +13,17 @@ import com.example.meetingapp.fragments.event_stepper.EventNameStepperFragment;
 import com.example.meetingapp.fragments.event_stepper.EventPublishStepperFragment;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.adapter.AbstractFragmentStepAdapter;
+import com.stepstone.stepper.viewmodel.StepViewModel;
 
-public class StepperAdapter extends AbstractFragmentStepAdapter {
+public class EventStepperAdapter extends AbstractFragmentStepAdapter {
 
     private static final String CURRENT_STEP_POSITION_KEY = "messageResourceId";
 
-    public StepperAdapter(FragmentManager fm, StepperActivity context) {
+    public EventStepperAdapter(FragmentManager fm, StepperActivity context) {
         super(fm, context);
     }
 
-    public StepperAdapter(@NonNull FragmentManager fm, @NonNull Context context) {
+    public EventStepperAdapter(@NonNull FragmentManager fm, @NonNull Context context) {
         super(fm, context);
     }
 
@@ -49,26 +51,22 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
         return 4;
     }
 
-//    @NonNull
-//    @Override
-//    public StepViewModel getViewModel(@IntRange(from = 0) int position) {
-//
-//        switch (position) {
-//            case 0:
-//                return new StepViewModel.Builder(context)
-//                        .setTitle("Tabs 1") //can be a CharSequence instead
-//                        .create();
-//            case 1:
-//                return new StepViewModel.Builder(context)
-//                        .setTitle("Tabs 2") //can be a CharSequence instead
-//                        .create();
-//        }
-//        return null;
-//    }
+    @NonNull
+    @Override
+    public StepViewModel getViewModel(@IntRange(from = 0) int position) {
 
-
-//        //Override this method to set Step title for the Tabs, not necessary for other stepper types
-//        return new StepViewModel.Builder(context)
-//                .setTitle("Create Event") //can be a CharSequence instead
-//                .create();
+        switch (position) {
+            case 0:
+                return new StepViewModel.Builder(context)
+                        .setTitle("Tabs 1")
+                        .create();
+            case 1:
+                return new StepViewModel.Builder(context)
+                        .setTitle("Tabs 2")
+                        .create();
+        }
+        return new StepViewModel.Builder(context)
+                .setTitle("A")
+                .create();
+    }
 }

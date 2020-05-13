@@ -19,24 +19,22 @@ import retrofit2.Response;
 
 public class AuthService {
 
-    private FirebaseClient firebaseClient;
     private Context context;
 
     public AuthService(Context c){
         context = c;
-        firebaseClient =  new FirebaseClient(getContext());
     }
 
     public void authenticate(String email, String password){
-        firebaseClient.login(email, password);
-
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
+//        firebaseClient.login(email, password);
+//
+//        try {
+//            TimeUnit.SECONDS.sleep(1);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//
+//
         Call<Token> call = RetrofitClient
                 .getInstance( PreferenceUtils.getToken(getContext()))
                 .getApi()
@@ -54,8 +52,6 @@ public class AuthService {
                         PreferenceUtils.saveToken(response.body().getToken(), getContext());
                         RetrofitClient.needsHeader(true);
                         RetrofitClient.setToken(response.body().getToken());
-
-                        firebaseClient.saveRegistrationToken();
 
                         Intent intent = new Intent(getContext(), MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

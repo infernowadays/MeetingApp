@@ -45,19 +45,6 @@ public class EventNameStepperFragment extends Fragment implements BlockingStep {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        String string = "2020-03-27T16:43:32.749945Z";
-//        String defaultTimezone = TimeZone.getDefault().getID();
-//        Date date = null;
-//        try {
-//            date = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ")).parse(string.replaceAll("Z$", "+0000"));
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//
-//        DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.DEFAULT);
-//        String d = dateFormat.format(date);
-
-
         View view = inflater.inflate(R.layout.fragment_event_name_stepper, container, false);
         ButterKnife.bind(this, view);
         if(eventManager.getAction().equals("edit"))
@@ -80,14 +67,11 @@ public class EventNameStepperFragment extends Fragment implements BlockingStep {
         }
     }
 
-
-
     @Nullable
     @Override
     public VerificationError verifyStep() {
-        if(editEventName.getText().toString().matches("")){
+        if(Objects.requireNonNull(editEventName.getText()).toString().matches("")){
             Toast.makeText(getActivity(), "Напишите описание )", Toast.LENGTH_SHORT).show();
-
             return new VerificationError("empty name");
         }
         return null;

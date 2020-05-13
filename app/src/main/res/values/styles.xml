@@ -20,14 +20,6 @@
     </style>
 
 
-    <style name="AppThemeWithTitle" parent="Theme.MaterialComponents.Light.DarkActionBar">
-<!--        <item name="colorPrimary">@color/common_google_signin_btn_text_dark_disabled</item>-->
-<!--        <item name="colorPrimaryDark">@color/quantum_yellow</item>-->
-<!--        <item name="colorAccent">@color/colorAccent</item>-->
-
-
-    </style>
-
     <style name="Toolbar.TitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textSize">24sp</item>
         <item name="android:textColor">#FFFFFF</item>
@@ -36,31 +28,6 @@
 
     </style>
 
-
-
-    <style name="windowTitleBackgroundStyle">
-        <item name="android:background">@color/quantum_orange</item>
-    </style>
-    <style name="windowTitleStyle">
-        <item name="android:textColor">#FFFFFF</item>
-        <item name="android:padding">32dip</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">44sp</item>
-    </style>
-
-
-
-
-    <style name="CustomChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">
-        <item name="chipBackgroundColor">@color/bg_chip_state_list</item>
-
-        <item name="chipSurfaceColor">@color/quantum_googred800</item>
-        <item name="rippleColor">@color/quantum_googred800</item>
-        <item name="chipStrokeColor">@color/quantum_googred800</item>
-
-        <item name="android:checkable">false</item>
-        <item name="android:clickable">true</item>
-    </style>
 
     <style name="EventsFilterDialogTheme" parent="Theme.AppCompat.DayNight.DialogWhenLarge">
 

@@ -58,7 +58,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.event_item, parent, false);
-        return new EventsAdapter.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -137,7 +137,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         return position;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.text_creator_name)
         TextView textCreatorName;
 

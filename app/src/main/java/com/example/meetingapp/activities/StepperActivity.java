@@ -7,19 +7,18 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.adapters.StepperAdapter;
+import com.example.meetingapp.adapters.EventStepperAdapter;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
 public class StepperActivity extends AppCompatActivity implements StepperLayout.StepperListener {
-    private StepperLayout mStepperLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.step);
-        mStepperLayout = findViewById(R.id.stepperLayout);
-        mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager(), this));
+        StepperLayout stepperLayout = findViewById(R.id.stepperLayout);
+        stepperLayout.setAdapter(new EventStepperAdapter(getSupportFragmentManager(), this));
     }
 
     @Override

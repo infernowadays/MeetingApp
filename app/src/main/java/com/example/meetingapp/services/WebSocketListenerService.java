@@ -8,16 +8,10 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.example.meetingapp.activities.MainActivity;
 import com.example.meetingapp.models.EventRequest;
 import com.example.meetingapp.models.Message;
-import com.example.meetingapp.models.Test2;
 import com.example.meetingapp.models.WebSocketEvent;
-import com.example.meetingapp.ui.notifications.NotificationsFragment;
 import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Objects;
 

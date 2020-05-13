@@ -2,23 +2,17 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/stick_scroll_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/quantum_yellow">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout_add_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/quantum_yellow"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/main.collapsing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/quantum_googred"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll">
@@ -32,7 +26,6 @@
                 app:layout_scrollFlags="scroll|enterAlways">
 
                 <RelativeLayout
-                    android:id="@+id/layout_profile_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -68,14 +61,12 @@
                                 android:orientation="vertical">
 
                                 <TextView
-                                    android:id="@+id/text_created_events"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Создано"
                                     android:textSize="14sp" />
 
                                 <TextView
-                                    android:id="@+id/text_created_events_count"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="13"
@@ -84,7 +75,6 @@
                             </LinearLayout>
 
                             <LinearLayout
-                                android:id="@+id/layout_visited_events"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="16dp"
@@ -93,14 +83,12 @@
                                 android:orientation="vertical">
 
                                 <TextView
-                                    android:id="@+id/text_visited_events"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Посещено"
                                     android:textSize="14sp" />
 
                                 <TextView
-                                    android:id="@+id/text_visited_events_counts"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="24"
@@ -119,7 +107,6 @@
                         android:src="@mipmap/ic_launcher" />
 
                     <ImageButton
-                        android:id="@+id/icon_add_photo"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_alignEnd="@id/image_profile"
@@ -144,7 +131,6 @@
                         android:orientation="vertical">
 
                         <ImageButton
-                            android:id="@+id/button_events"
                             android:layout_width="64dp"
                             android:layout_height="64dp"
                             android:background="@drawable/btn_background"
@@ -167,7 +153,6 @@
                         android:orientation="vertical">
 
                         <ImageButton
-                            android:id="@+id/button_tickets"
                             android:layout_width="64dp"
                             android:layout_height="64dp"
                             android:background="@drawable/btn_background"
@@ -212,7 +197,6 @@
                     android:layout_marginTop="16dp">
 
                     <TextView
-                        android:id="@+id/text_interests"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
@@ -221,12 +205,10 @@
                         android:textStyle="bold" />
 
                     <ImageButton
-                        android:id="@+id/icon_edit_categories"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_alignParentEnd="true"
-                        android:background="@color/quantum_googred"
-                        android:src="@drawable/ic_edit_icon"
+                        android:background="@drawable/ic_edit_icon"
                         tools:ignore="ContentDescription" />
                 </RelativeLayout>
 
@@ -245,7 +227,6 @@
                     android:layout_marginTop="16dp">
 
                     <TextView
-                        android:id="@+id/text_about_me"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_alignParentStart="true"
@@ -254,17 +235,14 @@
                         android:textStyle="bold" />
 
                     <ImageButton
-                        android:id="@+id/icon_edit_categories_interests"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_alignParentEnd="true"
-                        android:background="@color/quantum_googred"
-                        android:src="@drawable/ic_edit_icon"
+                        android:background="@drawable/ic_edit_icon"
                         tools:ignore="ContentDescription" />
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:id="@+id/layout_about_me"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -276,10 +254,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <ImageButton
-                            android:id="@+id/icon_profile_years_old"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:layout_marginEnd="8dp"
@@ -291,22 +269,21 @@
                             android:id="@+id/text_years_old"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="21 год"
                             android:textSize="18sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/profile_lives_in"
+                        android:id="@+id/profile_city"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <ImageButton
-                            android:id="@+id/icon_profile_lives_in"
-                            android:layout_width="32dp"
+                            android:layout_width="28dp"
                             android:layout_height="32dp"
                             android:layout_marginEnd="8dp"
                             android:background="@drawable/btn_background"
@@ -314,24 +291,23 @@
                             tools:ignore="ContentDescription" />
 
                         <TextView
-                            android:id="@+id/text_lives_in"
+                            android:id="@+id/text_city"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Москва"
                             android:textSize="18sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/profile_studying_in"
+                        android:id="@+id/profile_education"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <ImageButton
-                            android:id="@+id/icon_profile_studying_in"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:layout_marginEnd="8dp"
@@ -340,24 +316,23 @@
                             tools:ignore="ContentDescription" />
 
                         <TextView
-                            android:id="@+id/text_studying_in"
+                            android:id="@+id/text_education"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="МГУ"
                             android:textSize="18sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/profile_works_in"
+                        android:id="@+id/profile_job"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <ImageButton
-                            android:id="@+id/icon_profile_works_in"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:layout_marginEnd="8dp"
@@ -366,20 +341,17 @@
                             tools:ignore="ContentDescription" />
 
                         <TextView
-                            android:id="@+id/text_works_in"
+                            android:id="@+id/text_job"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="На заводе"
                             android:textSize="18sp"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/text_events"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/layout_about_me"
                     android:layout_marginTop="16dp"
                     android:text="@string/rus_events"
                     android:textSize="24sp"

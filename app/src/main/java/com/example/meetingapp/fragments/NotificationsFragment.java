@@ -1,4 +1,4 @@
-package com.example.meetingapp.ui.notifications;
+package com.example.meetingapp.fragments;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

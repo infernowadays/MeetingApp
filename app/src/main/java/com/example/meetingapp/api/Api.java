@@ -3,6 +3,7 @@ package com.example.meetingapp.api;
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.EventRequest;
 import com.example.meetingapp.models.LoginData;
+import com.example.meetingapp.models.MegaCategory;
 import com.example.meetingapp.models.Message;
 import com.example.meetingapp.models.Password;
 import com.example.meetingapp.models.RegisterData;
@@ -83,4 +84,8 @@ public interface Api {
     @Headers("Content-Type: application/json")
     @GET("api/chats")
     Call<List<Event>> getEventChats();
+
+    @Headers("Content-Type: application/json")
+    @GET("api/categories")
+    Call<List<MegaCategory>> getCategories();
 }

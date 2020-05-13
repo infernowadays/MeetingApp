@@ -9,14 +9,12 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.meetingapp.EventManager;
 import com.example.meetingapp.R;
-import com.example.meetingapp.adapters.StepperAdapter;
+import com.example.meetingapp.adapters.EventStepperAdapter;
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.GeoPoint;
 import com.stepstone.stepper.StepperLayout;
 
-import java.util.Objects;
-
-public class PassEventBetweenStepsActivity extends AppCompatActivity implements EventManager {
+public class CreateEventActivity extends AppCompatActivity implements EventManager {
 
     private static final String CURRENT_STEP_POSITION_KEY = "position";
     private static final String DESCRIPTION = "description";
@@ -42,8 +40,8 @@ public class PassEventBetweenStepsActivity extends AppCompatActivity implements 
         setContentView(R.layout.step);
 
         mStepperLayout = findViewById(R.id.stepperLayout);
-        StepperAdapter mStepperAdapter = new StepperAdapter(getSupportFragmentManager(), this);
-        mStepperLayout.setAdapter(mStepperAdapter);
+        EventStepperAdapter mEventStepperAdapter = new EventStepperAdapter(getSupportFragmentManager(), this);
+        mStepperLayout.setAdapter(mEventStepperAdapter);
 
         loadEvent();
     }

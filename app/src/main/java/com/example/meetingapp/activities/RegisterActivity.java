@@ -1,6 +1,7 @@
 package com.example.meetingapp.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.EditText;
@@ -8,12 +9,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.example.meetingapp.AuthService;
 import com.example.meetingapp.CustomCallback;
 import com.example.meetingapp.R;
-import com.example.meetingapp.api.FirebaseClient;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.RegisterData;
 import com.example.meetingapp.models.UserProfile;
@@ -30,15 +29,12 @@ import retrofit2.Response;
 public class RegisterActivity extends AppCompatActivity {
 
     @BindView(R.id.email)
-    public EditText email;
+    EditText email;
     @BindView(R.id.username)
-    public EditText username;
+    EditText username;
     @BindView(R.id.password)
-    public EditText password;
-    @BindView(R.id.toolbar)
-    public Toolbar toolbar;
+    EditText password;
 
-    private FirebaseClient firebaseClient;
     private Context mContext = this;
 
     @Override
@@ -46,20 +42,10 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
-
-        firebaseClient = new FirebaseClient(getContext());
-
-        initToolbar();
-    }
-
-    private void initToolbar() {
-        setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Register");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @OnClick(R.id.registerButton)
-    public void registerButton() {
+    public void register() {
         String txt_email = Objects.requireNonNull(email.getText()).toString();
         String txt_username = Objects.requireNonNull(username.getText()).toString();
         String txt_password = Objects.requireNonNull(password.getText()).toString();
@@ -79,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
         Toast.makeText(RegisterActivity.this, "Создаем аккаунт...", Toast.LENGTH_SHORT).show();
 
         Call<UserProfile> call = RetrofitClient
-                .getInstance(PreferenceUtils.getToken(getContext()))
+                .getInstance("")
                 .getApi()
                 .users(new RegisterData(email, username, password));
 
@@ -89,20 +75,15 @@ public class RegisterActivity extends AppCompatActivity {
                 super.onResponse(call, response);
 
                 if (response.isSuccessful() && response.body() != null) {
-                    Toast.makeText(RegisterActivity.this, "Аккаунт создан!", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(RegisterActivity.this, "Аккаунт создан!", Toast.LENGTH_SHORT).show();
 
-                    UserProfile userProfile = response.body();
+//                    UserProfile userProfile = response.body();
+                    Intent intent = new Intent(RegisterActivity.this, CreateUserProfileActivity.class);
+                    startActivity(intent);
+                    finish();
 
-//                    PreferenceUtils.saveToken(userProfile.getFirebaseToken(), getContext());
-//                    RetrofitClient.setToken(userProfile.getFirebaseToken());
-//                    RetrofitClient.needsHeader(true);
-
-//                    firebaseClient.createFirebaseUser(userProfile.getFirebaseUid(), email);
-
-
-                    AuthService authService = new AuthService(getContext());
-                    authService.authenticate(email, password);
-
+//                    AuthService authService = new AuthService(getContext());
+//                    authService.authenticate(email, password);
 
                 } else {
                     Toast.makeText(RegisterActivity.this, ":(", Toast.LENGTH_SHORT).show();

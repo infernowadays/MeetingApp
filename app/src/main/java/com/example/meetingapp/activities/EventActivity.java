@@ -2,7 +2,6 @@ package com.example.meetingapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -15,15 +14,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.fragments.CreateEventByStepFragment;
-import com.example.meetingapp.fragments.EditEventFragment;
 import com.example.meetingapp.fragments.EventChatFragment;
 import com.example.meetingapp.fragments.EventInfoFragment;
-import com.example.meetingapp.models.Event;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -79,7 +74,7 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void openEventEditor() {
-        Intent intent = new Intent(EventActivity.this, PassEventBetweenStepsActivity.class);
+        Intent intent = new Intent(EventActivity.this, CreateEventActivity.class);
         intent.putExtra("action", "edit");
 
         intent.putExtra("EVENT", EventInfoFragment.getEvent());

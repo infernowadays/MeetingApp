@@ -6,7 +6,6 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="25dp"
@@ -47,7 +46,6 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/text_distance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/text_creator_name"
@@ -93,7 +91,6 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/members"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
@@ -101,7 +98,6 @@
                     android:orientation="horizontal">
 
                     <ImageButton
-                        android:id="@+id/icon_members"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_marginEnd="8dp"
@@ -110,7 +106,6 @@
                         tools:ignore="ContentDescription" />
 
                     <TextView
-                        android:id="@+id/text_count_members"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1231"

@@ -1,6 +1,5 @@
 package com.example.meetingapp.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,10 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,11 +18,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.activities.MapsActivity;
-import com.example.meetingapp.activities.PassEventBetweenStepsActivity;
+import com.example.meetingapp.activities.CreateEventActivity;
 import com.example.meetingapp.adapters.EventsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Event;
-import com.example.meetingapp.models.User;
 import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,9 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.stepstone.stepper.StepperLayout;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -93,7 +87,7 @@ public class EventsFragment extends Fragment {
 
     @OnClick(R.id.button_create_event)
     void buttonCreateEvent() {
-        Intent intent = new Intent(getActivity(), PassEventBetweenStepsActivity.class);
+        Intent intent = new Intent(getActivity(), CreateEventActivity.class);
         intent.putExtra("action", "create");
 
         startActivity(intent);

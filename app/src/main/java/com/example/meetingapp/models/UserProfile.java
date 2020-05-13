@@ -12,14 +12,22 @@ public class UserProfile {
     private String firebaseUid;
     @SerializedName("date_of_birth")
     private String dateOfBirth;
-    @SerializedName("firebase_registration_token")
-    private String firebaseToken;
     @SerializedName("token")
     private String token;
     @SerializedName("username")
     private String username;
     @SerializedName("email")
     private String email;
+    @SerializedName("first_name")
+    private String firstName;
+    @SerializedName("last_name")
+    private String lastName;
+    @SerializedName("city")
+    private String city;
+    @SerializedName("education")
+    private String education;
+    @SerializedName("job")
+    private String job;
     @SerializedName("photo")
     private ProfilePhoto photo;
     @SerializedName("sex")
@@ -27,22 +35,81 @@ public class UserProfile {
     @SerializedName("categories")
     private List<Category> categories;
 
-    public UserProfile(String firebaseUid, String dateOfBirth, int id, String username, String email, ProfilePhoto photo, String sex, List<Category> categories) {
+    public UserProfile(int id,
+                       String firebaseUid,
+                       String dateOfBirth,
+                       String token,
+                       String username,
+                       String email,
+                       String firstName,
+                       String lastName,
+                       String city,
+                       String education,
+                       String job,
+                       ProfilePhoto photo,
+                       String sex,
+                       List<Category> categories) {
+        this.id = id;
         this.firebaseUid = firebaseUid;
         this.dateOfBirth = dateOfBirth;
-        this.id = id;
+        this.token = token;
         this.username = username;
         this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.city = city;
+        this.education = education;
+        this.job = job;
         this.photo = photo;
         this.sex = sex;
         this.categories = categories;
     }
 
-    public UserProfile(int id){
+    public UserProfile(int id) {
         this.id = id;
     }
 
     public UserProfile() {
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
     }
 
     public String getFirebaseUid() {
@@ -107,14 +174,6 @@ public class UserProfile {
 
     public void setCategories(List<Category> categories) {
         this.categories = categories;
-    }
-
-    public String getFirebaseToken() {
-        return firebaseToken;
-    }
-
-    public void setFirebaseToken(String firebaseToken) {
-        this.firebaseToken = firebaseToken;
     }
 
     public String getToken() {

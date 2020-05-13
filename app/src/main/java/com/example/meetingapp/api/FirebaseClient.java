@@ -96,7 +96,7 @@ public class FirebaseClient {
     public void saveRegistrationToken() {
         firebaseInstanceId.getInstanceId().addOnSuccessListener(instanceIdResult -> {
             UserProfile userProfile = new UserProfile();
-            userProfile.setFirebaseToken(instanceIdResult.getToken());
+//            userProfile.setFirebaseToken(instanceIdResult.getToken());
 
             Call<UserProfile> call = RetrofitClient
                     .getInstance(PreferenceUtils.getToken(getContext()))

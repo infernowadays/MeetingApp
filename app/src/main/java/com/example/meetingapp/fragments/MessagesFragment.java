@@ -13,7 +13,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.ui.notifications.NotificationsFragment;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;

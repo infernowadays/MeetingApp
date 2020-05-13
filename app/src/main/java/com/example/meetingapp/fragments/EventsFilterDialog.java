@@ -100,11 +100,6 @@ public class EventsFilterDialog extends DialogFragment implements View.OnClickLi
             case R.id.fullscreen_dialog_action:
                 callback.onActionClick(categories);
 
-//                EventsFragment eventsFragment = (EventsFragment) getTargetFragment();
-//                if (eventsFragment != null) {
-//                    eventsFragment.events(categories);
-//                }
-
                 dismiss();
                 break;
 

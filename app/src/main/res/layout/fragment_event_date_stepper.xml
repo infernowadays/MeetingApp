@@ -27,28 +27,6 @@
             android:button="@null"
             android:text="@string/tomorrow" />
     </RadioGroup>
-    <!--    <LinearLayout-->
-    <!--        android:id="@+id/date_buttons"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="96dp"-->
-    <!--        android:orientation="horizontal"-->
-    <!--        android:padding="16dp">-->
-
-    <!--        <com.google.android.material.button.MaterialButton-->
-    <!--            android:id="@+id/button_today"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_marginEnd="16dp"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:text="@string/today" />-->
-
-    <!--        <com.google.android.material.button.MaterialButton-->
-    <!--            android:id="@+id/button_tomorrow"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:text="@string/tomorrow" />-->
-    <!--    </LinearLayout>-->
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/text_date"

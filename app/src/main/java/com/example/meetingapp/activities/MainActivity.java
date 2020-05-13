@@ -2,10 +2,7 @@ package com.example.meetingapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -16,7 +13,7 @@ import com.example.meetingapp.fragments.EventsFragment;
 import com.example.meetingapp.fragments.MessagesFragment;
 import com.example.meetingapp.fragments.TicketsFragment;
 import com.example.meetingapp.services.WebSocketListenerService;
-import com.example.meetingapp.ui.home.HomeFragment;
+import com.example.meetingapp.fragments.HomeFragment;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 

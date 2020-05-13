@@ -20,7 +20,6 @@
         android:background="@drawable/ic_edit_location_24px" />
 
     <RelativeLayout
-        android:id="@+id/second_relative_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
@@ -34,7 +33,6 @@
             android:text="Отмена" />
 
         <Button
-            android:id="@+id/AddButton"
             android:layout_width="144dp"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
