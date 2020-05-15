@@ -1,6 +1,7 @@
 package com.example.meetingapp.activities;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,10 +37,18 @@ public class CreateUserProfileActivity extends AppCompatActivity implements IUse
     private String job;
     private ArrayList<String> categories;
 
+    public static Context contextOfApplication;
+    public static Context getContextOfApplication()
+    {
+        return contextOfApplication;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.step);
+
+        contextOfApplication = this;
 
         stepperLayout = findViewById(R.id.stepperLayout);
         UserStepperAdapter userStepperAdapter = new UserStepperAdapter(getSupportFragmentManager(), this);

@@ -6,7 +6,8 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.meetingapp.activities.StepperActivity;
+import com.example.meetingapp.activities.EventStepperActivity;
+import com.example.meetingapp.activities.UserProfileStepperActivity;
 import com.example.meetingapp.fragments.profile_stepper.UserAdditionalInformationStepperFragment;
 import com.example.meetingapp.fragments.profile_stepper.UserCategoriesStepperFragment;
 import com.example.meetingapp.fragments.profile_stepper.UserBasicInformationStepperFragmentFragment;
@@ -19,7 +20,7 @@ public class UserStepperAdapter extends AbstractFragmentStepAdapter {
 
     private static final String CURRENT_STEP_POSITION_KEY = "messageResourceId";
 
-    public UserStepperAdapter(FragmentManager fm, StepperActivity context) {
+    public UserStepperAdapter(FragmentManager fm, UserProfileStepperActivity context) {
         super(fm, context);
     }
 

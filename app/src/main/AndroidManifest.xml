@@ -18,14 +18,15 @@
         android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:fullBackupContent"
-        tools:targetApi="m">
-        <activity android:name=".activities.CreateUserProfileActivity"></activity>
+        tools:targetApi="q">
+        <activity android:name=".activities.CreateUserProfileActivity" />
         <activity android:name=".activities.ChangePasswordActivity" />
         <activity android:name=".activities.SettingsActivity" />
         <activity
@@ -41,7 +42,8 @@
         <activity android:name=".activities.GroupMessageActivity" />
         <activity android:name=".activities.CreateEventActivity" />
         <activity android:name=".activities.EventActivity" />
-        <activity android:name=".activities.StepperActivity" />
+        <activity android:name=".activities.EventStepperActivity" />
+        <activity android:name=".activities.UserProfileStepperActivity" />
         <activity android:name=".activities.MessageActivity" />
         <activity android:name=".activities.Main2Activity">
             <intent-filter>

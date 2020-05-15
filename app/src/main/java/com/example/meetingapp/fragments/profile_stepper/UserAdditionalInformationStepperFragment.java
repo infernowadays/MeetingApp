@@ -10,13 +10,24 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.meetingapp.R;
+import com.rengwuxian.materialedittext.MaterialEditText;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class UserAdditionalInformationStepperFragment extends Fragment implements BlockingStep {
+
+    @BindView(R.id.text_city)
+    MaterialEditText textCity;
+
+    @BindView(R.id.text_education)
+    MaterialEditText textEducation;
+
+    @BindView(R.id.text_job)
+    MaterialEditText textJob;
 
     public static UserAdditionalInformationStepperFragment newInstance() {
         return new UserAdditionalInformationStepperFragment();

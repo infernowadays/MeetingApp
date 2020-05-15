@@ -92,6 +92,13 @@ dependencies {
     implementation 'com.appyvet:materialrangebar:1.4.8'
 
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
+
+    implementation 'com.amazonaws:aws-android-sdk-core:2.16.12'
+    implementation 'com.amazonaws:aws-android-sdk-cognito:2.16.12'
+    implementation 'com.amazonaws:aws-android-sdk-s3:2.16.12'
+    implementation 'com.amazonaws:aws-android-sdk-ddb:2.16.12'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
 }
 
 configurations.all {

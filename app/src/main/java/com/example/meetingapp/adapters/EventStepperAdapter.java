@@ -6,7 +6,7 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.meetingapp.activities.StepperActivity;
+import com.example.meetingapp.activities.EventStepperActivity;
 import com.example.meetingapp.fragments.event_stepper.EventDateStepperFragment;
 import com.example.meetingapp.fragments.event_stepper.EventGeoLocationStepperFragment;
 import com.example.meetingapp.fragments.event_stepper.EventNameStepperFragment;
@@ -19,7 +19,7 @@ public class EventStepperAdapter extends AbstractFragmentStepAdapter {
 
     private static final String CURRENT_STEP_POSITION_KEY = "messageResourceId";
 
-    public EventStepperAdapter(FragmentManager fm, StepperActivity context) {
+    public EventStepperAdapter(FragmentManager fm, EventStepperActivity context) {
         super(fm, context);
     }
 
