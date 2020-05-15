@@ -1,5 +1,7 @@
 package com.example.meetingapp;
 
+import android.graphics.Bitmap;
+
 import java.util.ArrayList;
 
 public interface IUserProfileManager {
@@ -8,9 +10,9 @@ public interface IUserProfileManager {
 
     String getSex();
 
-    void savePhotoUrl(String photoUrl);
+    void savePhoto(byte[] photoUrl);
 
-    String getPhotoUrl();
+    byte[] getPhoto();
 
     void saveBirthDate(String birthDate);
 

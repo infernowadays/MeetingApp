@@ -1,6 +1,8 @@
 package com.example.meetingapp.fragments.profile_stepper;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +13,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.meetingapp.IUserProfileManager;
 import com.example.meetingapp.R;
+import com.example.meetingapp.TransferCategories;
 import com.example.meetingapp.adapters.CategoryChipsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.MegaCategory;
@@ -19,7 +23,9 @@ import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,10 +33,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UserCategoriesStepperFragment extends Fragment implements BlockingStep {
+public class UserCategoriesStepperFragment extends Fragment implements BlockingStep, TransferCategories {
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    private CategoryChipsAdapter categoryChipsAdapter;
+    private IUserProfileManager iUserProfileManager;
+    private ArrayList<String> categories;
 
     public static UserCategoriesStepperFragment newInstance() {
         return new UserCategoriesStepperFragment();
@@ -41,13 +50,31 @@ public class UserCategoriesStepperFragment extends Fragment implements BlockingS
         View view = inflater.inflate(R.layout.fragment_user_categories_stepper, container, false);
         ButterKnife.bind(this, view);
 
+        if (iUserProfileManager.getCategories() != null)
+            categories = iUserProfileManager.getCategories();
+        else
+            categories = new ArrayList<>();
+
         getCategories();
 
         return view;
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        if (context instanceof IUserProfileManager) {
+            iUserProfileManager = (IUserProfileManager) context;
+        } else {
+            throw new IllegalStateException("Activity must implement IUserProfileManager interface!");
+        }
+    }
+
+    @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
+        iUserProfileManager.saveCategories(categories);
+
         callback.goToNextStep();
     }
 
@@ -63,6 +90,11 @@ public class UserCategoriesStepperFragment extends Fragment implements BlockingS
     @Nullable
     @Override
     public VerificationError verifyStep() {
+        if (categories != null) {
+            if (categories.size() < 5)
+                return new VerificationError("at least 5 categories!");
+        }
+
         return null;
     }
 
@@ -87,15 +119,23 @@ public class UserCategoriesStepperFragment extends Fragment implements BlockingS
             @Override
             public void onResponse(@NonNull Call<List<MegaCategory>> call, @NonNull Response<List<MegaCategory>> response) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                recyclerView.setAdapter(new CategoryChipsAdapter(getContext(), recyclerView, response.body()));
+
+                categoryChipsAdapter = new CategoryChipsAdapter(getContext(), recyclerView,
+                        response.body(), UserCategoriesStepperFragment.this, categories);
+                recyclerView.setAdapter(categoryChipsAdapter);
 
                 RetrofitClient.needsHeader(true);
             }
 
             @Override
             public void onFailure(@NonNull Call<List<MegaCategory>> call, @NonNull Throwable t) {
-                int a = 5;
+                Log.d("error", Objects.requireNonNull(t.getMessage()));
             }
         });
+    }
+
+    @Override
+    public void getResult(ArrayList<String> categories) {
+        this.categories = categories;
     }
 }

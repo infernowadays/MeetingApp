@@ -2,6 +2,7 @@ package com.example.meetingapp.activities;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,7 +31,7 @@ public class CreateUserProfileActivity extends AppCompatActivity implements IUse
     private StepperLayout stepperLayout;
 
     private String sex;
-    private String photoUrl;
+    private byte[] photo;
     private String birthDate;
     private String city;
     private String education;
@@ -59,7 +60,7 @@ public class CreateUserProfileActivity extends AppCompatActivity implements IUse
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(CURRENT_STEP_POSITION_KEY, stepperLayout.getCurrentStepPosition());
         outState.putString(SEX, sex);
-        outState.putString(PHOTO_URL, photoUrl);
+        outState.putByteArray(PHOTO_URL, photo);
         outState.putString(BIRTH_DATE, birthDate);
         outState.putString(CITY, city);
         outState.putString(EDUCATION, education);
@@ -90,13 +91,13 @@ public class CreateUserProfileActivity extends AppCompatActivity implements IUse
     }
 
     @Override
-    public void savePhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public void savePhoto(byte[] photo) {
+        this.photo = photo;
     }
 
     @Override
-    public String getPhotoUrl() {
-        return photoUrl;
+    public byte[] getPhoto() {
+        return photo;
     }
 
     @Override

@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.TransferCategories;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.MegaCategory;
 import com.google.android.material.chip.Chip;
@@ -32,22 +33,22 @@ public class CategoryChipsAdapter extends RecyclerView.Adapter<CategoryChipsAdap
 
     private Context context;
     private List<MegaCategory> megaCategories;
+    private TransferCategories transferCategories;
 
-    private List<String> categories;
+    private ArrayList<String> categories;
 
-    public CategoryChipsAdapter(Context context, RecyclerView recyclerView, List<MegaCategory> megaCategories) {
+    public CategoryChipsAdapter(Context context, RecyclerView recyclerView, List<MegaCategory> megaCategories, TransferCategories transferCategories, ArrayList<String> categories) {
         this.context = context;
         this.recyclerView = recyclerView;
         this.megaCategories = megaCategories;
+        this.transferCategories = transferCategories;
+        this.categories = categories;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_category_item, parent, false);
-
-        categories = new ArrayList<>();
-
 
         return new ViewHolder(view);
     }
@@ -61,17 +62,27 @@ public class CategoryChipsAdapter extends RecyclerView.Adapter<CategoryChipsAdap
         for (Category category : megaCategory.getCategories()) {
             Chip chip = (Chip) LayoutInflater.from(context).inflate(R.layout.category_item, holder.chipGroup, false);
             chip.setText(category.getName());
+
+            if (categories != null) {
+                for (String categoryString : categories)
+                    if (categoryString.contentEquals(chip.getText()))
+                        chip.setChecked(true);
+            }
+
             holder.chipGroup.addView(chip);
 
             chip.setOnCheckedChangeListener((compoundButton, checked) -> {
                 if (checked) {
                     categories.add(String.valueOf(chip.getText()));
+                    transferCategories.getResult(categories);
 
                     if (categories.size() == 5)
                         disableChips();
 
                 } else {
                     categories.remove(String.valueOf(chip.getText()));
+                    transferCategories.getResult(categories);
+
                     allowChips();
                 }
             });
@@ -92,6 +103,9 @@ public class CategoryChipsAdapter extends RecyclerView.Adapter<CategoryChipsAdap
                 holder.expandableLayout.expand();
                 selectedItem = currentItemPosition;
             }
+
+            if(categories.size() == 5)
+                disableChips();
         });
     }
 
@@ -107,8 +121,9 @@ public class CategoryChipsAdapter extends RecyclerView.Adapter<CategoryChipsAdap
 
             if (currentHolder != null) {
                 for (int j = 0; j < currentHolder.chipGroup.getChildCount(); j++) {
-                    if (!((Chip) currentHolder.chipGroup.getChildAt(j)).isChecked())
+                    if (!((Chip) currentHolder.chipGroup.getChildAt(j)).isChecked()) {
                         ((Chip) currentHolder.chipGroup.getChildAt(j)).setCheckable(false);
+                    }
                 }
             }
         }

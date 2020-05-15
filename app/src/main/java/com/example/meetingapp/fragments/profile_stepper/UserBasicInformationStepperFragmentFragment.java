@@ -17,6 +17,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,6 +40,7 @@ import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -74,12 +78,15 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     MaterialEditText textBirthDate;
     @BindView(R.id.image_profile)
     CircleImageView imageProfile;
+    @BindView(R.id.radio_group_sex)
+    RadioGroup radioGroupSex;
     private IUserProfileManager iUserProfileManager;
     private FragmentActivity mContext;
     private String imageUrl;
     private Bitmap bitmap;
     private String pattern = "yyyy-MM-dd";
     private Date date;
+    private String sex;
 
     public static UserBasicInformationStepperFragmentFragment newInstance() {
         return new UserBasicInformationStepperFragmentFragment();
@@ -103,9 +110,27 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         View view = inflater.inflate(R.layout.fragment_user_info_stepper_fragment, container, false);
         ButterKnife.bind(this, view);
 
+        sex = "MALE";
         date = new Date();
 
         return view;
+    }
+
+    @OnClick({R.id.radio_male, R.id.radio_female, R.id.radio_do_not_know})
+    void setUserGender(RadioButton radioButton) {
+        boolean checked = radioButton.isChecked();
+
+        switch (radioButton.getId()) {
+            case R.id.radio_male:
+                if (checked) sex = "MALE";
+                break;
+            case R.id.radio_female:
+                if (checked) sex = "FEMALE";
+                break;
+            case R.id.radio_do_not_know:
+                if (checked) sex = "UNSURE";
+                break;
+        }
     }
 
     @OnClick(R.id.text_birth_date)
@@ -148,6 +173,13 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
         String date = Objects.requireNonNull(textBirthDate.getText()).toString();
         iUserProfileManager.saveBirthDate(date);
+        iUserProfileManager.saveSex(sex);
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+
+        iUserProfileManager.savePhoto(byteArray);
 
         callback.goToNextStep();
     }
@@ -165,6 +197,10 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     @Nullable
     @Override
     public VerificationError verifyStep() {
+        if (bitmap == null) {
+            return new VerificationError("load avatar pls!");
+        }
+
         return null;
     }
 
@@ -254,6 +290,8 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
             public void onResponse(@NonNull Call<ProfilePhoto> call, @NonNull Response<ProfilePhoto> response) {
                 ProfilePhoto profilePhoto = response.body();
                 if (profilePhoto != null) {
+                    Toast.makeText(getContext(), "Loaded!", Toast.LENGTH_SHORT).show();
+
                     imageUrl = profilePhoto.getPhoto();
                     new DownloadImageTask(imageProfile, UserBasicInformationStepperFragmentFragment.this).execute(imageUrl);
                 }

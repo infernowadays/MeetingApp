@@ -1,5 +1,6 @@
 package com.example.meetingapp.fragments.profile_stepper;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.meetingapp.IUserProfileManager;
 import com.example.meetingapp.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +33,8 @@ public class UserAdditionalInformationStepperFragment extends Fragment implement
     @BindView(R.id.text_job)
     MaterialEditText textJob;
 
+    private IUserProfileManager iUserProfileManager;
+
     public static UserAdditionalInformationStepperFragment newInstance() {
         return new UserAdditionalInformationStepperFragment();
     }
@@ -42,7 +48,22 @@ public class UserAdditionalInformationStepperFragment extends Fragment implement
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        if (context instanceof IUserProfileManager) {
+            iUserProfileManager = (IUserProfileManager) context;
+        } else {
+            throw new IllegalStateException("Activity must implement IUserProfileManager interface!");
+        }
+    }
+
+    @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
+        iUserProfileManager.saveEducation(Objects.requireNonNull(textEducation.getText()).toString());
+        iUserProfileManager.saveCity(Objects.requireNonNull(textCity.getText()).toString());
+        iUserProfileManager.saveJob(Objects.requireNonNull(textJob.getText()).toString());
+
         callback.goToNextStep();
     }
 
