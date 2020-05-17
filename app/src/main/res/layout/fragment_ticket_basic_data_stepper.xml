@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".fragments.ticket_stepper.TicketBasicDataStepperFragment">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/text_ticket_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Название мероприятия" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/text_ticket_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Стоимость билета" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/text_birth_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:hint="Дата начала мероприятия" />
+</LinearLayout>
