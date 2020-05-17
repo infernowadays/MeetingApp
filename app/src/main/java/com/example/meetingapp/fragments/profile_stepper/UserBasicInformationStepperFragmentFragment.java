@@ -35,6 +35,7 @@ import com.example.meetingapp.IUserProfileManager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.ProfilePhoto;
+import com.example.meetingapp.utils.PreferenceUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
@@ -197,7 +198,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     @Nullable
     @Override
     public VerificationError verifyStep() {
-        if (bitmap == null) {
+        if (bitmap == null || date.toString().equals("")) {
             return new VerificationError("load avatar pls!");
         }
 
@@ -279,9 +280,8 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
 
 
         RetrofitClient.needsHeader(true);
-        RetrofitClient.setToken("333afa3e66653dfd524c13fa746550fbe8e67ba2");
         Call<ProfilePhoto> call = RetrofitClient
-                .getInstance("333afa3e66653dfd524c13fa746550fbe8e67ba2")
+                .getInstance(PreferenceUtils.getToken(requireContext()))
                 .getApi()
                 .uploadFile("145", map);
 

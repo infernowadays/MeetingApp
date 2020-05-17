@@ -16,12 +16,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create a new account"
+            android:text="Регистрация"
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/email"
+            android:id="@+id/text_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -29,19 +29,27 @@
             app:met_floatingLabel="normal" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/username"
+            android:id="@+id/text_first_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:hint="Username"
+            android:hint="Имя"
             app:met_floatingLabel="normal" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/password"
+            android:id="@+id/text_last_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:hint="Password"
+            android:hint="Фамилия"
+            app:met_floatingLabel="normal" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/text_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Пароль"
             app:met_floatingLabel="normal" />
 
         <Button
@@ -49,8 +57,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Register" />
-
+            android:text="Создать аккаунт" />
     </LinearLayout>
-
 </RelativeLayout>

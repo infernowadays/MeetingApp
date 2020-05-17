@@ -34,6 +34,8 @@ public class UserProfile {
     private String sex;
     @SerializedName("categories")
     private List<Category> categories;
+    @SerializedName("confirmed")
+    private Boolean confirmed;
 
     public UserProfile(int id,
                        String firebaseUid,
@@ -48,7 +50,8 @@ public class UserProfile {
                        String job,
                        ProfilePhoto photo,
                        String sex,
-                       List<Category> categories) {
+                       List<Category> categories,
+                       Boolean confirmed) {
         this.id = id;
         this.firebaseUid = firebaseUid;
         this.dateOfBirth = dateOfBirth;
@@ -63,6 +66,7 @@ public class UserProfile {
         this.photo = photo;
         this.sex = sex;
         this.categories = categories;
+        this.confirmed = confirmed;
     }
 
     public UserProfile(int id) {
@@ -70,6 +74,14 @@ public class UserProfile {
     }
 
     public UserProfile() {
+    }
+
+    public Boolean getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(Boolean confirmed) {
+        this.confirmed = confirmed;
     }
 
     public String getFirstName() {

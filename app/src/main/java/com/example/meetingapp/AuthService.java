@@ -26,15 +26,6 @@ public class AuthService {
     }
 
     public void authenticate(String email, String password){
-//        firebaseClient.login(email, password);
-//
-//        try {
-//            TimeUnit.SECONDS.sleep(1);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//
-//
         Call<Token> call = RetrofitClient
                 .getInstance( PreferenceUtils.getToken(getContext()))
                 .getApi()
@@ -45,20 +36,12 @@ public class AuthService {
             public void onResponse(@NonNull Call<Token> call, @NonNull Response<Token> response) {
                 super.onResponse(call, response);
 
-
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
 
                         PreferenceUtils.saveToken(response.body().getToken(), getContext());
                         RetrofitClient.needsHeader(true);
                         RetrofitClient.setToken(response.body().getToken());
-
-                        Intent intent = new Intent(getContext(), MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                        getContext().startActivity(intent);
-                        ((Activity) getContext()).finish();
-
                     }
                 } else {
 //                    Toast.makeText(LoginActivity.this, "Убедись, что ввели данные корректно.", Toast.LENGTH_SHORT).show();
@@ -70,6 +53,14 @@ public class AuthService {
 //                Toast.makeText(LoginActivity.this, "Нет соединения с интернетом :(", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void finishAuth(){
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        getContext().startActivity(intent);
+        ((Activity) getContext()).finish();
     }
 
     private Context getContext(){

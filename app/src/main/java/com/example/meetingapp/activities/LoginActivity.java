@@ -43,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(LoginActivity.this, "Входим в профиль...", Toast.LENGTH_SHORT).show();
         AuthService authService = new AuthService(getContext());
         authService.authenticate(email, password);
+        authService.finishAuth();
     }
 
     private Context getContext() {

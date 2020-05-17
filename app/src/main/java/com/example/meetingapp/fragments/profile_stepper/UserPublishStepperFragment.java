@@ -1,6 +1,8 @@
 package com.example.meetingapp.fragments.profile_stepper;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -16,9 +18,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.meetingapp.IUserProfileManager;
 import com.example.meetingapp.R;
+import com.example.meetingapp.activities.MainActivity;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Category;
-import com.example.meetingapp.models.User;
 import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.material.chip.Chip;
@@ -101,12 +103,11 @@ public class UserPublishStepperFragment extends Fragment implements BlockingStep
     }
 
     private void createUserProfile() {
-        RetrofitClient.setToken("333afa3e66653dfd524c13fa746550fbe8e67ba2");
         RetrofitClient.needsHeader(true);
         userProfile.setId(145);
 
         Call<UserProfile> call = RetrofitClient
-                .getInstance("333afa3e66653dfd524c13fa746550fbe8e67ba2")
+                .getInstance(PreferenceUtils.getToken(requireContext()))
                 .getApi()
                 .updateProfile(userProfile);
 
@@ -114,6 +115,12 @@ public class UserPublishStepperFragment extends Fragment implements BlockingStep
             @Override
             public void onResponse(@NonNull Call<UserProfile> call, @NonNull Response<UserProfile> response) {
                 int sss = 100;
+
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                requireContext().startActivity(intent);
+                ((Activity) requireContext()).finish();
             }
 
             @Override
