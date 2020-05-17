@@ -22,8 +22,11 @@ import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.activities.SettingsActivity;
 import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.tabs.TabLayout;
 
 import java.time.LocalDate;
@@ -39,8 +42,11 @@ import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
-    @BindView(R.id.text_profile_name)
-    TextView textProfileName;
+    @BindView(R.id.text_first_name)
+    TextView textFirstName;
+
+    @BindView(R.id.text_last_name)
+    TextView textLastName;
 
     @BindView(R.id.text_years_old)
     TextView textYearsOld;
@@ -65,6 +71,9 @@ public class HomeFragment extends Fragment {
 
     @BindView(R.id.profile_job)
     LinearLayout profileJob;
+
+    @BindView(R.id.chip_group)
+    ChipGroup chipGroup;
 
     @BindView(R.id.view_pager)
     ViewPager viewPager;
@@ -126,20 +135,22 @@ public class HomeFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void showProfile() {
-        textProfileName.setText(userProfile.getFirstName() + " " + userProfile.getLastName());
+        textFirstName.setText(userProfile.getFirstName());
+        textLastName.setText(userProfile.getLastName());
 
-        if(userProfile.getDateOfBirth() != null){
+        if (!userProfile.getDateOfBirth().equals("")) {
             String age = getAgeFromBirthDateString(userProfile.getDateOfBirth());
-                textYearsOld.setText(age);
-                profileYearsOld.setVisibility(View.VISIBLE);
+            age = age + " " + getStringYear(Integer.parseInt(age));
+            textYearsOld.setText(age);
+            profileYearsOld.setVisibility(View.VISIBLE);
         }
 
-        if (userProfile.getCity() != null) {
+        if (!userProfile.getCity().equals("")) {
             textCity.setText(userProfile.getCity());
             profileCity.setVisibility(View.VISIBLE);
         }
 
-        if (userProfile.getEducation() != null) {
+        if (!userProfile.getEducation().equals("")) {
             textEducation.setText(userProfile.getEducation());
             profileEducation.setVisibility(View.VISIBLE);
         }
@@ -149,6 +160,39 @@ public class HomeFragment extends Fragment {
             profileJob.setVisibility(View.VISIBLE);
         }
 
+        for (Category category : userProfile.getCategories()) {
+            Chip chip = (Chip) LayoutInflater.from(getContext()).inflate(R.layout.category_item, chipGroup, false);
+            chip.setText(category.getName());
+            chip.setCheckable(false);
+            chipGroup.addView(chip);
+        }
+    }
+
+    private String getStringYear(int age){
+        int year = age % 10;
+        String stringYears = "";
+
+        switch(year) {
+            case 1:
+                stringYears = "год";
+                break;
+            case 2:
+            case 3:
+            case 4:
+                stringYears = "года";
+                break;
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 0:
+                stringYears = "лет";
+                break;
+
+        }
+
+        return stringYears;
     }
 
     private String getAgeFromBirthDateString(String birthDateString) {
