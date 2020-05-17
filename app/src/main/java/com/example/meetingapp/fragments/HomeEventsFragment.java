@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -77,7 +78,7 @@ public class HomeEventsFragment extends Fragment {
 
         call.enqueue(new Callback<List<Event>>() {
             @Override
-            public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
+            public void onResponse(@NonNull Call<List<Event>> call, @NonNull Response<List<Event>> response) {
                 List<Event> events = response.body();
 
                 if (events == null)
@@ -98,7 +99,7 @@ public class HomeEventsFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<Event>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
 
             }
         });

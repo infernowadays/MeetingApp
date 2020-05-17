@@ -16,9 +16,9 @@
 
         <TextView
             android:id="@+id/text"
-            android:layout_width="wrap_content"
             style="@style/Toolbar.TitleText"
-            android:layout_height="wrap_content"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -29,10 +29,6 @@
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

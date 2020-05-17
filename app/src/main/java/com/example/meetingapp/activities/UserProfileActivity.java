@@ -1,27 +1,23 @@
-package com.example.meetingapp.fragments;
+package com.example.meetingapp.activities;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.UserProfileManager;
-import com.example.meetingapp.activities.SettingsActivity;
 import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.fragments.HomeEventsFragment;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
@@ -35,12 +31,11 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFragment extends Fragment {
+public class UserProfileActivity extends AppCompatActivity {
 
     @BindView(R.id.text_first_name)
     TextView textFirstName;
@@ -83,45 +78,37 @@ public class HomeFragment extends Fragment {
 
     private UserProfile userProfile;
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-        ButterKnife.bind(this, view);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_profile);
+        ButterKnife.bind(this);
 
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        viewPagerAdapter.addFragment(new HomeEventsFragment("all"), "Все");
-        viewPagerAdapter.addFragment(new HomeEventsFragment("creator"), "Мои");
-        viewPagerAdapter.addFragment(new HomeEventsFragment("member"), "Иду");
-        viewPagerAdapter.addFragment(new HomeEventsFragment("passed"), "Был(-а)");
+        viewPagerAdapter.addFragment(new HomeEventsFragment("creator"), "Активные");
+        viewPagerAdapter.addFragment(new HomeEventsFragment("passed"), "Завершенные");
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        meProfile();
-
-        return view;
+        loadProfile();
     }
 
+    private void loadProfile() {
+        String pk = getIntent().getStringExtra("EXTRA_USER_PROFILE_ID");
 
-    @OnClick(R.id.button_settings)
-    void openSettings() {
-        Intent intent = new Intent(getActivity(), SettingsActivity.class);
-        startActivity(intent);
-    }
 
-    private void meProfile() {
         Call<UserProfile> call = RetrofitClient
-                .getInstance(PreferenceUtils.getToken(requireContext()))
+                .getInstance(PreferenceUtils.getToken(this))
                 .getApi()
-                .meProfile();
+                .getUserProfile(pk);
 
         call.enqueue(new Callback<UserProfile>() {
             @Override
             public void onResponse(@NonNull Call<UserProfile> call, @NonNull Response<UserProfile> response) {
                 if (response.body() != null) {
                     userProfile = response.body();
-                    UserProfileManager.getInstance().initialize(userProfile);
                     showProfile();
                 }
             }
@@ -161,18 +148,18 @@ public class HomeFragment extends Fragment {
         }
 
         for (Category category : userProfile.getCategories()) {
-            Chip chip = (Chip) LayoutInflater.from(getContext()).inflate(R.layout.category_item, chipGroup, false);
+            Chip chip = (Chip) LayoutInflater.from(this).inflate(R.layout.category_item, chipGroup, false);
             chip.setText(category.getName());
             chip.setCheckable(false);
             chipGroup.addView(chip);
         }
     }
 
-    private String getStringYear(int age){
+    private String getStringYear(int age) {
         int year = age % 10;
         String stringYears = "";
 
-        switch(year) {
+        switch (year) {
             case 1:
                 stringYears = "год";
                 break;

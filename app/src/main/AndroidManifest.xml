@@ -26,6 +26,7 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:fullBackupContent"
         tools:targetApi="q">
+        <activity android:name=".activities.UserProfileActivity"></activity>
         <activity android:name=".activities.CreateUserProfileActivity" />
         <activity android:name=".activities.ChangePasswordActivity" />
         <activity android:name=".activities.SettingsActivity" />

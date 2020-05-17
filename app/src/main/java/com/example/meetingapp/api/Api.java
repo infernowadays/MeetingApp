@@ -49,6 +49,10 @@ public interface Api {
     Call<UserProfile> meProfile();
 
     @Headers("Content-Type: application/json")
+    @GET("token_auth/profile/{pk}")
+    Call<UserProfile> getUserProfile(@Path("pk") String pk);
+
+    @Headers("Content-Type: application/json")
     @GET("api/events")
     Call<List<Event>> getEvents(@Query("category") List<String> categories, @Query("me") List<String> roles);
 
