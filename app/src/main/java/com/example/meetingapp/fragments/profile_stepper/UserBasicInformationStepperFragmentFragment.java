@@ -283,7 +283,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         Call<ProfilePhoto> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(requireContext()))
                 .getApi()
-                .uploadFile("145", map);
+                .uploadFile(map);
 
         call.enqueue(new Callback<ProfilePhoto>() {
             @Override

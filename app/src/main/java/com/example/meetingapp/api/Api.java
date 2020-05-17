@@ -97,6 +97,6 @@ public interface Api {
     Call<List<MegaCategory>> getCategories();
 
     @Multipart
-    @POST("token_auth/profile/{pk}/upload")
-    Call<ProfilePhoto> uploadFile(@Path("pk") String pk, @PartMap Map<String, RequestBody> params);
+    @POST("token_auth/profile/upload")
+    Call<ProfilePhoto> uploadFile(@PartMap Map<String, RequestBody> params);
 }
