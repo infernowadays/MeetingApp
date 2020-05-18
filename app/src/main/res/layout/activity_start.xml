@@ -10,21 +10,21 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Meeting App"
+        android:text="WALK"
         android:textSize="25sp"
         android:textStyle="bold" />
 
     <Button
+        android:id="@+id/button_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        android:id="@+id/myLoginButton"
-        android:text="Login"/>
+        android:text="ВОЙТИ" />
 
     <Button
+        android:id="@+id/button_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/myRegisterButton"
-        android:text="Register"/>
+        android:text="СОЗДАТЬ АККАУНТ" />
 
 </LinearLayout>

@@ -188,6 +188,7 @@ public class UserPublishStepperFragment extends Fragment implements BlockingStep
         }
 
         userProfile.setCategories(categories);
+        userProfile.setFilled(true);
     }
 
     @Override
