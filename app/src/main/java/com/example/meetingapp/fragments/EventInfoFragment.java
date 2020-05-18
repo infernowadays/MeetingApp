@@ -139,6 +139,7 @@ public class EventInfoFragment extends Fragment {
                 event = response.body();
 
                 if (event != null) {
+                    chipGroup.removeAllViews();
                     for (Category category : event.getCategories()) {
                         Chip chip = (Chip) getLayoutInflater().inflate(R.layout.category_item, chipGroup, false);
                         chip.setText(category.getName());
