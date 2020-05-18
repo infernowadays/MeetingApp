@@ -55,6 +55,8 @@ public class EventsFragment extends Fragment {
 
     @BindView(R.id.swipe_layout)
     SwipeRefreshLayout swipeRefreshLayout;
+
+
     ProgressBar progressBar;
     private FirebaseUser firebaseUser;
     private DatabaseReference databaseReference;
@@ -84,8 +86,9 @@ public class EventsFragment extends Fragment {
         toolbar.setTitle("");
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
 
-        TextView textView = view.findViewById(R.id.text);
+        TextView textView = view.findViewById(R.id.toolbar_header);
         textView.setText("События");
+        textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_expand_more_black_24dp, 0);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -101,6 +104,13 @@ public class EventsFragment extends Fragment {
 
         return view;
     }
+
+    @OnClick(R.id.toolbar_header)
+    void changeContent() {
+        BottomSheetFragment bottomSheetFragment = BottomSheetFragment.newInstance();
+        bottomSheetFragment.show(requireActivity().getSupportFragmentManager(), BottomSheetFragment.TAG);
+    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

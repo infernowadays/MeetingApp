@@ -2,6 +2,7 @@ package com.example.meetingapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -9,6 +10,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.meetingapp.NotificationListener;
 import com.example.meetingapp.R;
+import com.example.meetingapp.fragments.BottomSheetFragment;
 import com.example.meetingapp.fragments.EventsFragment;
 import com.example.meetingapp.fragments.MessagesFragment;
 import com.example.meetingapp.fragments.TicketsFragment;
@@ -17,7 +19,7 @@ import com.example.meetingapp.fragments.HomeFragment;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity implements NotificationListener {
+public class MainActivity extends AppCompatActivity implements NotificationListener, BottomSheetFragment.ItemClickListener {
 
     final Fragment homeFragment = new HomeFragment();
     final Fragment eventsFragment = new EventsFragment();
@@ -80,5 +82,10 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
     @Override
     public void removeNotificationBadge() {
         navigation.removeBadge(R.id.navigation_messages);
+    }
+
+    @Override
+    public void onItemClick(String item) {
+        Toast.makeText(this, item, Toast.LENGTH_SHORT).show();
     }
 }
