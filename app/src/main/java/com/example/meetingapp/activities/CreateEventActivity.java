@@ -24,7 +24,6 @@ public class CreateEventActivity extends AppCompatActivity implements EventManag
     private static final String LOCATION = "location";
     private static final String ACTION = "action";
 
-
     private StepperLayout mStepperLayout;
 
     private String action;
@@ -79,7 +78,6 @@ public class CreateEventActivity extends AppCompatActivity implements EventManag
         outState.putString(DATE, mDate);
         outState.putString(TIME, mTime);
         outState.putParcelable(LOCATION, mLocation);
-
 
         super.onSaveInstanceState(outState);
     }

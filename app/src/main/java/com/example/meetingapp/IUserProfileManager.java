@@ -1,7 +1,5 @@
 package com.example.meetingapp;
 
-import android.graphics.Bitmap;
-
 import java.util.ArrayList;
 
 public interface IUserProfileManager {
