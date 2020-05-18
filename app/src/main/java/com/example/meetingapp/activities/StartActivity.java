@@ -77,7 +77,7 @@ public class StartActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else if (!userProfile.getFilled()) {
-            Intent intent = new Intent(StartActivity.this, UserProfileStepperActivity.class);
+            Intent intent = new Intent(StartActivity.this, CreateUserProfileActivity.class);
             startActivity(intent);
             finish();
         }
