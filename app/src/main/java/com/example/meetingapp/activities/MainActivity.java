@@ -2,6 +2,7 @@ package com.example.meetingapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
 
     private int notSeenNotifications = 0;
     private Fragment active = homeFragment;
+    private String content;
 
     private BottomNavigationView navigation;
 
@@ -40,13 +42,19 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
                 active = homeFragment;
                 return true;
             case R.id.navigation_events:
-                fm.beginTransaction().hide(active).show(eventsFragment).commit();
-                active = eventsFragment;
+                if(content.equals("EVENTS")){
+                    fm.beginTransaction().hide(active).show(eventsFragment).commit();
+                    active = eventsFragment;
+                }
+                else if(content.equals("TICKETS")){
+                    fm.beginTransaction().hide(active).show(ticketsFragment).commit();
+                    active = ticketsFragment;
+                }
                 return true;
-            case R.id.navigation_tickets:
-                fm.beginTransaction().hide(active).show(ticketsFragment).commit();
-                active = ticketsFragment;
-                return true;
+//            case R.id.navigation_tickets:
+//                fm.beginTransaction().hide(active).show(ticketsFragment).commit();
+//                active = ticketsFragment;
+//                return true;
             case R.id.navigation_messages:
                 fm.beginTransaction().hide(active).show(messagesFragment).commit();
                 active = messagesFragment;
@@ -60,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        content = "EVENTS";
 
         navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -87,5 +97,19 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
     @Override
     public void onItemClick(String item) {
         Toast.makeText(this, item, Toast.LENGTH_SHORT).show();
+        if(item.equals("Билеты")){
+            fm.beginTransaction().hide(eventsFragment).show(ticketsFragment).commit();
+            Menu menu = navigation.getMenu();
+            menu.findItem(R.id.navigation_events).setIcon(R.drawable.ic_tickets);
+
+            content = "TICKETS";
+        }
+        else if(item.equals("События")){
+            fm.beginTransaction().hide(ticketsFragment).show(eventsFragment).commit();
+            Menu menu = navigation.getMenu();
+            menu.findItem(R.id.navigation_events).setIcon(R.drawable.ic_events);
+
+            content = "EVENTS";
+        }
     }
 }
