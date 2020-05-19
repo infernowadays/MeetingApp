@@ -2,6 +2,7 @@ package com.example.meetingapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,14 +13,12 @@ import com.example.meetingapp.NotificationListener;
 import com.example.meetingapp.R;
 import com.example.meetingapp.fragments.BottomSheetFragment;
 import com.example.meetingapp.fragments.EventsFragment;
-import com.example.meetingapp.fragments.HomeFragment;
 import com.example.meetingapp.fragments.MessagesFragment;
 import com.example.meetingapp.fragments.TicketsFragment;
 import com.example.meetingapp.services.WebSocketListenerService;
+import com.example.meetingapp.fragments.HomeFragment;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements NotificationListener, BottomSheetFragment.ItemClickListener {
 
@@ -28,10 +27,6 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
     final Fragment ticketsFragment = new TicketsFragment();
     final Fragment messagesFragment = new MessagesFragment();
     final FragmentManager fm = getSupportFragmentManager();
-    private final String EVENTS = "EVENTS";
-    private final String TICKETS = "TICKETS";
-    private final int eventIcon = R.drawable.ic_events;
-    private final int ticketIcon = R.drawable.ic_tickets;
 
     private int notSeenNotifications = 0;
     private Fragment active = homeFragment;
@@ -46,15 +41,20 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
                 fm.beginTransaction().hide(active).show(homeFragment).commit();
                 active = homeFragment;
                 return true;
-            case R.id.navigation_content:
-                if (content.equals(EVENTS)) {
+            case R.id.navigation_events:
+                if(content.equals("EVENTS")){
                     fm.beginTransaction().hide(active).show(eventsFragment).commit();
                     active = eventsFragment;
-                } else if (content.equals(TICKETS)) {
+                }
+                else if(content.equals("TICKETS")){
                     fm.beginTransaction().hide(active).show(ticketsFragment).commit();
                     active = ticketsFragment;
                 }
                 return true;
+//            case R.id.navigation_tickets:
+//                fm.beginTransaction().hide(active).show(ticketsFragment).commit();
+//                active = ticketsFragment;
+//                return true;
             case R.id.navigation_messages:
                 fm.beginTransaction().hide(active).show(messagesFragment).commit();
                 active = messagesFragment;
@@ -68,17 +68,11 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+
+        content = "EVENTS";
 
         navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        content = PreferenceUtils.getContentType(this);
-        if (content.equals(TICKETS)) {
-            navigation.getMenu().findItem(R.id.navigation_content).setIcon(ticketIcon);
-        } else if (content.equals(EVENTS)) {
-            navigation.getMenu().findItem(R.id.navigation_content).setIcon(eventIcon);
-        }
 
         fm.beginTransaction().add(R.id.main_container, messagesFragment, "4").hide(messagesFragment).commit();
         fm.beginTransaction().add(R.id.main_container, eventsFragment, "3").hide(eventsFragment).commit();
@@ -103,18 +97,19 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
     @Override
     public void onItemClick(String item) {
         Toast.makeText(this, item, Toast.LENGTH_SHORT).show();
-        if (item.equals("Билеты")) {
-            changeContent(eventsFragment, ticketsFragment, TICKETS, ticketIcon);
+        if(item.equals("Билеты")){
+            fm.beginTransaction().hide(eventsFragment).show(ticketsFragment).commit();
+            Menu menu = navigation.getMenu();
+            menu.findItem(R.id.navigation_events).setIcon(R.drawable.ic_tickets);
 
-        } else if (item.equals("События")) {
-            changeContent(ticketsFragment, eventsFragment, EVENTS, eventIcon);
+            content = "TICKETS";
         }
-    }
+        else if(item.equals("События")){
+            fm.beginTransaction().hide(ticketsFragment).show(eventsFragment).commit();
+            Menu menu = navigation.getMenu();
+            menu.findItem(R.id.navigation_events).setIcon(R.drawable.ic_events);
 
-    private void changeContent(Fragment hideFragment, Fragment showFragment, String contentType, int icon) {
-        fm.beginTransaction().hide(hideFragment).show(showFragment).commit();
-        navigation.getMenu().findItem(R.id.navigation_content).setIcon(icon);
-        content = contentType;
-        PreferenceUtils.saveContentType(content, this);
+            content = "EVENTS";
+        }
     }
 }
