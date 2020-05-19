@@ -12,28 +12,27 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.meetingapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class TicketsFragment extends Fragment {
+public class TicketsFragment extends ContentFragment {
 
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
-
-    @BindView(R.id.floating_action_button)
-    FloatingActionButton floatingActionButton;
-
-    @BindView(R.id.swipe_layout)
-    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tickets, container, false);
-        ButterKnife.bind(this, view);
+    public void openFilterDialog() {
 
+    }
 
+    @Override
+    public void loadContent(List<String> categories) {
 
-        return view;
+    }
+
+    @Override
+    public String getContentType() {
+        return null;
     }
 }
