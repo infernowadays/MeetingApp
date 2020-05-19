@@ -63,4 +63,21 @@ public class PreferenceUtils {
         SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE);
         return preferences.getString(Constants.KEY_PASSWORD, "");
     }
+
+    public static boolean hasContentType(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE);
+        return preferences.contains(Constants.KEY_CONTENT_TYPE);
+    }
+
+    public static void saveContentType(String contentType, Context context) {
+        SharedPreferences.Editor preferencesEditor = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE).edit();
+        preferencesEditor.putString(Constants.KEY_CONTENT_TYPE, contentType);
+        preferencesEditor.apply();
+    }
+
+    public static String getContentType(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE);
+        return preferences.getString(Constants.KEY_CONTENT_TYPE, "EVENTS");
+    }
+
 }

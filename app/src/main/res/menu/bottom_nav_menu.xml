@@ -7,14 +7,9 @@
         android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_events"
+        android:id="@+id/navigation_content"
         android:icon="@drawable/ic_events"
         android:title="@string/events" />
-
-<!--    <item-->
-<!--        android:id="@+id/navigation_tickets"-->
-<!--        android:icon="@drawable/ic_tickets"-->
-<!--        android:title="@string/tickets" />-->
 
     <item
         android:id="@+id/navigation_messages"
