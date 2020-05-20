@@ -3,6 +3,7 @@ package com.example.meetingapp.models;
 import java.util.List;
 
 public class Ticket {
+    private int id;
     private String name;
     private Double price;
     private UserProfile creator;
@@ -12,7 +13,8 @@ public class Ticket {
     private boolean sold;
     private List<Category> categories;
 
-    public Ticket(String name, Double price, UserProfile creator, String created, String date, String description, boolean sold, List<Category> categories) {
+    public Ticket(int id, String name, Double price, UserProfile creator, String created, String date, String description, boolean sold, List<Category> categories) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.creator = creator;
@@ -97,5 +99,13 @@ public class Ticket {
 
     public void setCategories(List<Category> categories) {
         this.categories = categories;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

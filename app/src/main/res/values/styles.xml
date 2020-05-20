@@ -35,4 +35,25 @@
 
     </style>
 
+
+    <style name="CustomDialogTheme" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="colorAccent">@color/ms_material_blue_500</item>
+        <item name="android:windowIsFloating">false</item>
+
+
+        <item name="android:windowBackground">@color/quantum_yellow</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:textColor">@color/ms_material_blue_500</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="verticalTextStyle" parent="android:Widget.TextView">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/ms_white</item>
+        <item name="android:gravity">center|bottom</item>
+    </style>
+
 </resources>

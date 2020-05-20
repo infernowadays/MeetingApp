@@ -8,24 +8,21 @@ import com.example.meetingapp.models.Message;
 import com.example.meetingapp.models.Password;
 import com.example.meetingapp.models.ProfilePhoto;
 import com.example.meetingapp.models.RegisterData;
+import com.example.meetingapp.models.Ticket;
 import com.example.meetingapp.models.Token;
 import com.example.meetingapp.models.UserProfile;
 
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
-import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -55,6 +52,10 @@ public interface Api {
     @Headers("Content-Type: application/json")
     @GET("api/events")
     Call<List<Event>> getEvents(@Query("category") List<String> categories, @Query("me") List<String> roles);
+
+    @Headers("Content-Type: application/json")
+    @GET("api/tickets")
+    Call<List<Ticket>> getTickets(@Query("category") List<String> categories, @Query("me") List<String> roles);
 
     @Headers("Content-Type: application/json")
     @GET("api/events/{pk}")

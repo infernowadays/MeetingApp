@@ -2,8 +2,6 @@ package com.example.meetingapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -13,10 +11,10 @@ import com.example.meetingapp.NotificationListener;
 import com.example.meetingapp.R;
 import com.example.meetingapp.fragments.BottomSheetFragment;
 import com.example.meetingapp.fragments.EventsFragment;
+import com.example.meetingapp.fragments.HomeFragment;
 import com.example.meetingapp.fragments.MessagesFragment;
 import com.example.meetingapp.fragments.TicketsFragment;
 import com.example.meetingapp.services.WebSocketListenerService;
-import com.example.meetingapp.fragments.HomeFragment;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -27,7 +25,10 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
     final Fragment ticketsFragment = new TicketsFragment();
     final Fragment messagesFragment = new MessagesFragment();
     final FragmentManager fm = getSupportFragmentManager();
-
+    private final int EVENT_ICON = R.drawable.ic_events;
+    private final int TICKET_ICON = R.drawable.ic_tickets;
+    private final String EVENTS = "EVENTS";
+    private final String TICKETS = "TICKETS";
     private int notSeenNotifications = 0;
     private Fragment active = homeFragment;
     private String content;
@@ -41,20 +42,15 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
                 fm.beginTransaction().hide(active).show(homeFragment).commit();
                 active = homeFragment;
                 return true;
-            case R.id.navigation_events:
-                if(content.equals("EVENTS")){
+            case R.id.navigation_content:
+                if (content.equals("EVENTS")) {
                     fm.beginTransaction().hide(active).show(eventsFragment).commit();
                     active = eventsFragment;
-                }
-                else if(content.equals("TICKETS")){
+                } else if (content.equals("TICKETS")) {
                     fm.beginTransaction().hide(active).show(ticketsFragment).commit();
                     active = ticketsFragment;
                 }
                 return true;
-//            case R.id.navigation_tickets:
-//                fm.beginTransaction().hide(active).show(ticketsFragment).commit();
-//                active = ticketsFragment;
-//                return true;
             case R.id.navigation_messages:
                 fm.beginTransaction().hide(active).show(messagesFragment).commit();
                 active = messagesFragment;
@@ -69,14 +65,21 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        content = "EVENTS";
-
         navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        fm.beginTransaction().add(R.id.main_container, messagesFragment, "4").hide(messagesFragment).commit();
-        fm.beginTransaction().add(R.id.main_container, eventsFragment, "3").hide(eventsFragment).commit();
-        fm.beginTransaction().add(R.id.main_container, ticketsFragment, "2").hide(ticketsFragment).commit();
+        content = PreferenceUtils.getContentType(this);
+        if (content.equals(EVENTS))
+            navigation.getMenu().findItem(R.id.navigation_content).setIcon(EVENT_ICON);
+        else if (content.equals(TICKETS))
+            navigation.getMenu().findItem(R.id.navigation_content).setIcon(TICKET_ICON);
+
+        if (content.equals(EVENTS))
+            fm.beginTransaction().add(R.id.main_container, eventsFragment, "3").hide(eventsFragment).commit();
+        else if (content.equals(TICKETS))
+            fm.beginTransaction().add(R.id.main_container, ticketsFragment, "3").hide(ticketsFragment).commit();
+
+        fm.beginTransaction().add(R.id.main_container, messagesFragment, "2").hide(messagesFragment).commit();
         fm.beginTransaction().add(R.id.main_container, homeFragment, "1").commit();
 
         Intent intent = new Intent(this, WebSocketListenerService.class);
@@ -96,20 +99,20 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
 
     @Override
     public void onItemClick(String item) {
-        Toast.makeText(this, item, Toast.LENGTH_SHORT).show();
-        if(item.equals("Билеты")){
-            fm.beginTransaction().hide(eventsFragment).show(ticketsFragment).commit();
-            Menu menu = navigation.getMenu();
-            menu.findItem(R.id.navigation_events).setIcon(R.drawable.ic_tickets);
-
-            content = "TICKETS";
+        if (item.equals("Билеты")) {
+            if(!content.equals(TICKETS))
+                changeContent(eventsFragment, ticketsFragment, TICKETS, TICKET_ICON);
+        } else if (item.equals("События")) {
+            if(!content.equals(EVENTS))
+                changeContent(ticketsFragment, eventsFragment, EVENTS, EVENT_ICON);
         }
-        else if(item.equals("События")){
-            fm.beginTransaction().hide(ticketsFragment).show(eventsFragment).commit();
-            Menu menu = navigation.getMenu();
-            menu.findItem(R.id.navigation_events).setIcon(R.drawable.ic_events);
+    }
 
-            content = "EVENTS";
-        }
+    private void changeContent(Fragment removeFragment, Fragment addFragment, String contentType, int icon) {
+        fm.beginTransaction().remove(removeFragment).add(R.id.main_container, addFragment, "3").commit();
+        navigation.getMenu().findItem(R.id.navigation_content).setIcon(icon);
+
+        content = contentType;
+        PreferenceUtils.saveContentType(content, this);
     }
 }

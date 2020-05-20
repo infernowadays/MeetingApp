@@ -26,6 +26,7 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:fullBackupContent"
         tools:targetApi="q">
+        <activity android:name=".activities.TicketActivity"></activity>
         <activity android:name=".activities.TicketStepperActivity" />
         <activity android:name=".activities.CreateTicketActivity" />
         <activity android:name=".activities.UserProfileActivity" />
@@ -50,10 +51,10 @@
         <activity android:name=".activities.MessageActivity" />
         <activity android:name=".activities.Main2Activity" />
         <activity android:name=".activities.RegisterActivity" />
-
         <activity android:name=".activities.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

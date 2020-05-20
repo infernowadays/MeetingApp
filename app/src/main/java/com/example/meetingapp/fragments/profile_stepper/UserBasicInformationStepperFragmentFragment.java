@@ -1,6 +1,7 @@
 package com.example.meetingapp.fragments.profile_stepper;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -170,6 +171,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         }
     }
 
+    @SuppressLint("WrongThread")
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
         String date = Objects.requireNonNull(textBirthDate.getText()).toString();
