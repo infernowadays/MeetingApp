@@ -1,62 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingStart="32dp"
+    android:paddingTop="64dp"
+    android:paddingEnd="32dp"
+    android:paddingBottom="64dp"
     tools:context=".activities.RegisterActivity">
 
-    <LinearLayout
+    <TextView
+        style="@style/H5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Регистрация"
+        android:textColor="@color/colorPrimary" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/text_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_marginTop="8dp"
+        android:hint="Email"
+        app:met_floatingLabel="normal" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Регистрация"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/text_first_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Имя" />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/text_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="Email"
-            app:met_floatingLabel="normal" />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/text_last_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Фамилия"
+        app:met_floatingLabel="normal" />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/text_first_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="Имя"
-            app:met_floatingLabel="normal" />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/text_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Пароль"
+        android:inputType="textPassword" />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/text_last_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="Фамилия"
-            app:met_floatingLabel="normal" />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/text_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="Пароль"
-            app:met_floatingLabel="normal" />
-
-        <Button
-            android:id="@+id/registerButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Создать аккаунт" />
-    </LinearLayout>
-</RelativeLayout>
+    <Button
+        android:id="@+id/registerButton"
+        style="@style/Body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Создать аккаунт"
+        android:textColor="@color/colorSecondaryLight" />
+</LinearLayout>

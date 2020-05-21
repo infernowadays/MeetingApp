@@ -62,6 +62,6 @@ public class TicketsFragment extends ContentFragment {
 
     @Override
     public String getContentType() {
-        return "TICKETS";
+        return "БИЛЕТЫ";
     }
 }

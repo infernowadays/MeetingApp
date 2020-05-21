@@ -3,28 +3,90 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:paddingTop="64dp"
+    android:paddingEnd="32dp"
+    android:paddingStart="32dp"
+    android:paddingBottom="64dp"
     tools:context=".activities.StartActivity">
+
+    <ImageView
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:background="@drawable/ic_wolf"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="WALK"
-        android:textSize="25sp"
-        android:textStyle="bold" />
+        android:layout_marginTop="8dp"
+        android:text="Welcome to WALK"
+        android:textColor="@color/colorPrimary"
+        style="@style/H5" />
 
-    <Button
-        android:id="@+id/button_login"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:text="ВОЙТИ" />
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button_register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="СОЗДАТЬ АККАУНТ" />
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/text_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Email" />
 
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/text_password"
+            android:inputType="textPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Пароль" />
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/Body"
+            android:layout_width="match_parent"
+            android:textColor="@color/colorSecondaryDark"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="right"
+            android:text="Забыли пароль?" />
+
+        <Button
+            android:id="@+id/button_login"
+            style="@style/Body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="ВОЙТИ"
+            android:textColor="@color/colorSecondaryLight" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/Body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Нет аккаунта? "
+                android:textStyle="normal" />
+
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/Body"
+                android:id="@+id/button_register"
+                android:layout_width="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:layout_height="wrap_content"
+                android:text="Зарегистрироваться" />
+        </LinearLayout>
+
+
+    </LinearLayout>
 </LinearLayout>

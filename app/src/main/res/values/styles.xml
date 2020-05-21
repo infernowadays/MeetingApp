@@ -1,46 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimaryLight">@color/colorPrimaryLight</item>
+
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryDark">@color/colorSecondaryDark</item>
+        <item name="colorSecondaryLight">@color/colorSecondaryLight</item>
+
+        <item name="android:textColor">#000000</item>
+
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
-
-        <item name="android:actionOverflowButtonStyle">@style/MyActionButtonOverflow</item>
-
     </style>
 
-
-    <style name="MyActionButtonOverflow" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
-<!--        <item name="android:src">@drawable/ic_edit_icon</item>-->
+    <style name="H4" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">34sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorText</item>
     </style>
 
+    <style name="H5" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+
+    <style name="Subtitle2" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="Body" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
 
     <style name="Toolbar.TitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textSize">24sp</item>
-        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textColor">@color/ms_white</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-
     <style name="EventsFilterDialogTheme" parent="Theme.AppCompat.DayNight.DialogWhenLarge">
-
         <item name="android:statusBarColor">#280680</item>
-        <!--        <item name="windowNoTitle">true</item>-->
         <item name="android:windowAnimationStyle">@style/Theme.AppCompat.Dialog</item>
-
     </style>
-
 
     <style name="CustomDialogTheme" parent="Widget.AppCompat.ProgressBar">
         <item name="android:windowNoTitle">true</item>
         <item name="colorAccent">@color/ms_material_blue_500</item>
         <item name="android:windowIsFloating">false</item>
-
 
         <item name="android:windowBackground">@color/quantum_yellow</item>
         <item name="android:textColorPrimary">#FFFFFF</item>
@@ -54,6 +67,11 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/ms_white</item>
         <item name="android:gravity">center|bottom</item>
+    </style>
+
+    <style name="CustomChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/colorPrimaryLight</item>
+        <item name="android:textColor">@color/bg_chip_state_list</item>
     </style>
 
 </resources>

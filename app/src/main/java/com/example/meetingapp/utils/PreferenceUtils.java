@@ -77,6 +77,6 @@ public class PreferenceUtils {
 
     public static String getContentType(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE);
-        return preferences.getString(Constants.KEY_CONTENT_TYPE, "EVENTS");
+        return preferences.getString(Constants.KEY_CONTENT_TYPE, Constants.KEY_EVENTS_RUS);
     }
 }

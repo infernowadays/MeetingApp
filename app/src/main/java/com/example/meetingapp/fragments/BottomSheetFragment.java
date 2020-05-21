@@ -16,7 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 public class BottomSheetFragment extends BottomSheetDialogFragment
         implements View.OnClickListener {
 
-    public static final String TAG = "ActionBottomDialog";
+    static final String TAG = "ActionBottomDialog";
 
     private ItemClickListener mListener;
 

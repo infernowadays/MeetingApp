@@ -2,24 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="8dp">
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/textView"
+        style="@style/H5"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
-        android:text="События"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="СОБЫТИЯ"
+        android:textColor="@color/ms_white" />
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/textView2"
+        style="@style/H5"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-        android:text="Билеты"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:layout_height="wrap_content"
+        android:text="БИЛЕТЫ"
+        android:textColor="@color/ms_white" />
 </LinearLayout>

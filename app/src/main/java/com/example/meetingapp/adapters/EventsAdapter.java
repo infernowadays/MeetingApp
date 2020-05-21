@@ -23,11 +23,6 @@ import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.gms.common.util.ArrayUtils;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,13 +38,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     private List<Event> events;
     private Context context;
-    private FirebaseClient firebaseClient;
     private List<Integer> eventsIds;
 
     public EventsAdapter(Context context, List<Event> events) {
         this.events = events;
         this.context = context;
-        firebaseClient = new FirebaseClient(context);
 
         eventsIds = new ArrayList<>();
     }
@@ -66,15 +59,17 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         final Event event = events.get(position);
 
         TextView textCreatorName = holder.textCreatorName;
-        textCreatorName.setText(event.getCreator().getUsername());
+        String fullName = event.getCreator().getFirstName() + " " + event.getCreator().getLastName();
+        textCreatorName.setText(fullName);
 
         TextView textEventDescription = holder.textEventDescription;
-        textEventDescription .setText(event.getDescription());
+        textEventDescription.setText(event.getDescription());
 
-        if(!ArrayUtils.contains(eventsIds.toArray(), events.get(position).getId())){
+        if (!ArrayUtils.contains(eventsIds.toArray(), events.get(position).getId())) {
             for (Category category : event.getCategories()) {
                 Chip chip = (Chip) LayoutInflater.from(context).inflate(R.layout.category_item, holder.chipGroup, false);
                 chip.setText(category.getName());
+                chip.setCheckable(false);
                 holder.chipGroup.addView(chip);
             }
         }
@@ -118,7 +113,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, getItemCount());
-//        notifyDataSetChanged();
     }
 
 

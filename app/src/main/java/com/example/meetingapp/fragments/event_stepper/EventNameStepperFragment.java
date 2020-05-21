@@ -1,16 +1,16 @@
 package com.example.meetingapp.fragments.event_stepper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.example.meetingapp.EventManager;
@@ -20,14 +20,7 @@ import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Objects;
-import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,19 +28,26 @@ import butterknife.ButterKnife;
 
 public class EventNameStepperFragment extends Fragment implements BlockingStep {
 
-    private EventManager eventManager;
     @BindView(R.id.event_name_creation)
     MaterialEditText editEventName;
+    @BindView(R.id.header_h3)
+    TextView headerH3;
+    private EventManager eventManager;
 
     public static EventNameStepperFragment newInstance() {
         return new EventNameStepperFragment();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_name_stepper, container, false);
         ButterKnife.bind(this, view);
-        if(eventManager.getAction().equals("edit"))
+
+        int unicode = 0x1F60A;
+        headerH3.setText("Опишите событие максимально подробно" + new String(Character.toChars(unicode)));
+
+        if (eventManager.getAction().equals("edit"))
             loadDescription();
 
         return view;
@@ -70,7 +70,8 @@ public class EventNameStepperFragment extends Fragment implements BlockingStep {
     @Nullable
     @Override
     public VerificationError verifyStep() {
-        if(Objects.requireNonNull(editEventName.getText()).toString().matches("")){
+        if (Objects.requireNonNull(editEventName.getText()).toString().matches("")) {
+            editEventName.setError("уууу");
             Toast.makeText(getActivity(), "Напишите описание )", Toast.LENGTH_SHORT).show();
             return new VerificationError("empty name");
         }

@@ -1,18 +1,21 @@
 package com.example.meetingapp.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.meetingapp.AuthService;
 import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
-import com.google.firebase.auth.FirebaseUser;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import retrofit2.Call;
@@ -21,7 +24,10 @@ import retrofit2.Response;
 
 public class StartActivity extends AppCompatActivity {
 
-    FirebaseUser firebaseUser;
+    @BindView(R.id.text_email)
+    public EditText textEmail;
+    @BindView(R.id.text_password)
+    public EditText textPassword;
     UserProfile userProfile;
 
     @Override
@@ -32,15 +38,19 @@ public class StartActivity extends AppCompatActivity {
 
         userProfile = null;
         meProfile();
-//        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//        firebaseUser != null &&
-
-
     }
 
     @OnClick(R.id.button_login)
-    void login() {
-        startActivity(new Intent(StartActivity.this, LoginActivity.class));
+    public void login() {
+        login(textEmail.getText().toString(), textPassword.getText().toString());
+    }
+
+    private void login(String email, String password) {
+        RetrofitClient.needsHeader(false);
+
+        AuthService authService = new AuthService(getContext());
+        authService.authenticate(email, password);
+        authService.finishAuth();
     }
 
     @OnClick(R.id.button_register)
@@ -81,5 +91,9 @@ public class StartActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+    }
+
+    private Context getContext() {
+        return this;
     }
 }

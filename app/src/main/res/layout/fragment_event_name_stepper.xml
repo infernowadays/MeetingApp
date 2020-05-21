@@ -3,12 +3,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".fragments.event_stepper.EventNameStepperFragment">
 
-    <com.rengwuxian.materialedittext.MaterialEditText
+    <TextView
+        android:id="@+id/header_h3"
+        android:letterSpacing="0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/event_name_creation"
-        android:hint="Куда пойдем?" />
+        android:textSize="48sp"
+        android:textStyle="bold" />
 
+    <LinearLayout
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/event_name_creation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:gravity="top|left"
+            android:hint="Куда пойдем?"
+            android:textSize="16sp"
+            tools:ignore="RtlHardcoded" />
+
+        <View
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1" />
+
+    </LinearLayout>
 </LinearLayout>

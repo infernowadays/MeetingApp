@@ -6,4 +6,6 @@ class Constants {
     static String KEY_EMAIL = "email";
     static String KEY_PASSWORD = "password";
     static String KEY_CONTENT_TYPE = "contentType";
+    static String KEY_EVENTS_RUS = "СОБЫТИЯ";
+    static String KEY_TICKETS_RUS = "БИЛЕТЫ";
 }

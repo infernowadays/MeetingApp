@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
     final FragmentManager fm = getSupportFragmentManager();
     private final int EVENT_ICON = R.drawable.ic_events;
     private final int TICKET_ICON = R.drawable.ic_tickets;
-    private final String EVENTS = "EVENTS";
-    private final String TICKETS = "TICKETS";
+    private final String EVENTS = "СОБЫТИЯ";
+    private final String TICKETS = "БИЛЕТЫ";
     private int notSeenNotifications = 0;
     private Fragment active = homeFragment;
     private String content;
@@ -43,10 +43,10 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
                 active = homeFragment;
                 return true;
             case R.id.navigation_content:
-                if (content.equals("EVENTS")) {
+                if (content.equals(EVENTS)) {
                     fm.beginTransaction().hide(active).show(eventsFragment).commit();
                     active = eventsFragment;
-                } else if (content.equals("TICKETS")) {
+                } else if (content.equals(TICKETS)) {
                     fm.beginTransaction().hide(active).show(ticketsFragment).commit();
                     active = ticketsFragment;
                 }
@@ -99,10 +99,10 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
 
     @Override
     public void onItemClick(String item) {
-        if (item.equals("Билеты")) {
+        if (item.equals(EVENTS)) {
             if(!content.equals(TICKETS))
                 changeContent(eventsFragment, ticketsFragment, TICKETS, TICKET_ICON);
-        } else if (item.equals("События")) {
+        } else if (item.equals(TICKETS)) {
             if(!content.equals(EVENTS))
                 changeContent(ticketsFragment, eventsFragment, EVENTS, EVENT_ICON);
         }

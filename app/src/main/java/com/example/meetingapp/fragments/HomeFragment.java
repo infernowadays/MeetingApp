@@ -2,11 +2,13 @@ package com.example.meetingapp.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,6 +20,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.meetingapp.DownloadImageTask;
+import com.example.meetingapp.GetImageFromAsync;
 import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.activities.SettingsActivity;
@@ -40,7 +44,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements GetImageFromAsync {
+
+    @BindView(R.id.image_profile)
+    ImageView imageProfile;
 
     @BindView(R.id.text_first_name)
     TextView textFirstName;
@@ -82,6 +89,7 @@ public class HomeFragment extends Fragment {
     TabLayout tabLayout;
 
     private UserProfile userProfile;
+    private Bitmap bitmap;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,10 +98,8 @@ public class HomeFragment extends Fragment {
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
 
-        viewPagerAdapter.addFragment(new HomeEventsFragment("all"), "Все");
-        viewPagerAdapter.addFragment(new HomeEventsFragment("creator"), "Мои");
-        viewPagerAdapter.addFragment(new HomeEventsFragment("member"), "Иду");
-        viewPagerAdapter.addFragment(new HomeEventsFragment("passed"), "Был(-а)");
+        viewPagerAdapter.addFragment(new HomeEventsFragment("creator"), "События");
+        viewPagerAdapter.addFragment(new HomeEventsFragment("creator"), "Билеты");
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -133,8 +139,19 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (bitmap != null)
+            imageProfile.setImageBitmap(bitmap);
+    }
+
     @SuppressLint("SetTextI18n")
     private void showProfile() {
+        if (userProfile.getPhoto().getPhoto() != null) {
+            new DownloadImageTask(HomeFragment.this).execute(userProfile.getPhoto().getPhoto());
+        }
+
         textFirstName.setText(userProfile.getFirstName());
         textLastName.setText(userProfile.getLastName());
 
@@ -155,7 +172,7 @@ public class HomeFragment extends Fragment {
             profileEducation.setVisibility(View.VISIBLE);
         }
 
-        if (userProfile.getJob() != null) {
+        if (!userProfile.getJob().equals("")) {
             textJob.setText(userProfile.getJob());
             profileJob.setVisibility(View.VISIBLE);
         }
@@ -168,11 +185,11 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private String getStringYear(int age){
+    private String getStringYear(int age) {
         int year = age % 10;
         String stringYears = "";
 
-        switch(year) {
+        switch (year) {
             case 1:
                 stringYears = "год";
                 break;
@@ -204,6 +221,12 @@ public class HomeFragment extends Fragment {
             return String.valueOf(Period.between(birthDate, currentDate).getYears());
         }
         return "";
+    }
+
+    @Override
+    public void getResult(Bitmap bitmap) {
+        imageProfile.setImageBitmap(bitmap);
+        this.bitmap = bitmap;
     }
 
     static class ViewPagerAdapter extends FragmentPagerAdapter {

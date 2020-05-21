@@ -65,6 +65,6 @@ public class EventsFragment extends ContentFragment {
 
     @Override
     public String getContentType() {
-        return "EVENTS";
+        return "СОБЫТИЯ";
     }
 }

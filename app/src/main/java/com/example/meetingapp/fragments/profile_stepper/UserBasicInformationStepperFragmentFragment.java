@@ -295,7 +295,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
                     Toast.makeText(getContext(), "Loaded!", Toast.LENGTH_SHORT).show();
 
                     imageUrl = profilePhoto.getPhoto();
-                    new DownloadImageTask(imageProfile, UserBasicInformationStepperFragmentFragment.this).execute(imageUrl);
+                    new DownloadImageTask(UserBasicInformationStepperFragmentFragment.this).execute(imageUrl);
                 }
             }
 
@@ -315,6 +315,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
 
     @Override
     public void getResult(Bitmap bitmap) {
+        imageProfile.setImageBitmap(bitmap);
         this.bitmap = bitmap;
     }
 }
