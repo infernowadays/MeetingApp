@@ -1,10 +1,12 @@
 package com.example.meetingapp.fragments.profile_stepper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,16 +35,24 @@ public class UserAdditionalInformationStepperFragment extends Fragment implement
     @BindView(R.id.text_job)
     MaterialEditText textJob;
 
+    @BindView(R.id.header_h4)
+    TextView headerH4;
+
     private IUserProfileManager iUserProfileManager;
 
     public static UserAdditionalInformationStepperFragment newInstance() {
         return new UserAdditionalInformationStepperFragment();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_additional_information, container, false);
         ButterKnife.bind(this, view);
+
+        int unicode = 0x1F60E;
+        headerH4.setText("Информация необязательна, но поможет лучше узнать вас "
+                + new String(Character.toChars(unicode)));
 
         return view;
     }

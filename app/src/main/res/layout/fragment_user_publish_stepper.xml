@@ -8,11 +8,19 @@
     android:padding="16dp"
     tools:context=".fragments.profile_stepper.UserPublishStepperFragment">
 
+    <TextView
+        android:id="@+id/header_h4"
+        style="@style/H4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image_profile"
         android:layout_width="96dp"
         android:layout_height="96dp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp" />
 
     <View
         android:layout_width="match_parent"

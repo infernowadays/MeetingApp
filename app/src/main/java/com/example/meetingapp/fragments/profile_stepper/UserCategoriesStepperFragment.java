@@ -1,11 +1,13 @@
 package com.example.meetingapp.fragments.profile_stepper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,6 +39,8 @@ public class UserCategoriesStepperFragment extends Fragment implements BlockingS
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.header_h4)
+    TextView headerH4;
     private CategoryChipsAdapter categoryChipsAdapter;
     private IUserProfileManager iUserProfileManager;
     private ArrayList<String> categories;
@@ -45,10 +49,20 @@ public class UserCategoriesStepperFragment extends Fragment implements BlockingS
         return new UserCategoriesStepperFragment();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_categories_stepper, container, false);
         ButterKnife.bind(this, view);
+
+        int unicode = 0x1F607;
+        int unicodeBar = 0x1F37B;
+        int unicodeEast = 0x1F482;
+        int unicodeArmsStand = 0x1F938;
+        headerH4.setText("Это поможет нашим алгоритмам более точно находить контент для вас  "
+                + new String(Character.toChars(unicodeBar)) +
+                new String(Character.toChars(unicodeArmsStand)) +
+                new String(Character.toChars(unicodeEast)));
 
         if (iUserProfileManager.getCategories() != null)
             categories = iUserProfileManager.getCategories();

@@ -6,7 +6,15 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <TextView
+        android:id="@+id/header_h4"
+        style="@style/H4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary" />
+
     <RelativeLayout
+        android:layout_marginTop="8dp"
         android:layout_width="96dp"
         android:layout_height="96dp"
         android:layout_gravity="center">

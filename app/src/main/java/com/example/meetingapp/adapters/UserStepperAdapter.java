@@ -67,7 +67,7 @@ public class UserStepperAdapter extends AbstractFragmentStepAdapter {
 
             case 3:
                 return new StepViewModel.Builder(context)
-                        .setTitle("Проверяем...")
+                        .setTitle("Готово!")
                         .create();
         }
         return null;

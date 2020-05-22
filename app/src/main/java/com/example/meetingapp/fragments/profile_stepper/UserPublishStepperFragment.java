@@ -1,5 +1,6 @@
 package com.example.meetingapp.fragments.profile_stepper;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -64,6 +65,9 @@ public class UserPublishStepperFragment extends Fragment implements BlockingStep
     @BindView(R.id.text_job)
     TextView textJob;
 
+    @BindView(R.id.header_h4)
+    TextView headerH4;
+
     private IUserProfileManager iUserProfileManager;
     private Bitmap bitmap;
     private UserProfile userProfile;
@@ -72,10 +76,14 @@ public class UserPublishStepperFragment extends Fragment implements BlockingStep
         return new UserPublishStepperFragment();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_publish_stepper, container, false);
         ButterKnife.bind(this, view);
+
+        int unicode = 0x1F929;
+        headerH4.setText("Ура! Создание профиля закончено " + new String(Character.toChars(unicode)));
 
         userProfile = new UserProfile();
 

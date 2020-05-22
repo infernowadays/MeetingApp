@@ -21,6 +21,7 @@ import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -85,6 +86,8 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     RadioGroup radioGroupSex;
     @BindView(R.id.layout_avatar_mask)
     RelativeLayout layoutAvatarMask;
+    @BindView(R.id.header_h4)
+    TextView headerH4;
     private IUserProfileManager iUserProfileManager;
     private FragmentActivity mContext;
     private String imageUrl;
@@ -114,6 +117,9 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_info_stepper_fragment, container, false);
         ButterKnife.bind(this, view);
+
+        int unicode = 0x1F607;
+        headerH4.setText("Расскажите немного о себе " + new String(Character.toChars(unicode)));
 
         sex = "MALE";
         date = new Date();

@@ -7,10 +7,18 @@
     android:padding="16dp"
     tools:context=".fragments.profile_stepper.UserAdditionalInformationStepperFragment">
 
+    <TextView
+        android:id="@+id/header_h4"
+        style="@style/H4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary" />
+
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/text_city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:hint="В каком городе вы живете?" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
