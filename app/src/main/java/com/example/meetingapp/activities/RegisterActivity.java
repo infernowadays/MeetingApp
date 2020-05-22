@@ -63,7 +63,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void register(String email, String firstName, String lastName, String password) {
         RetrofitClient.needsHeader(false);
-        Toast.makeText(RegisterActivity.this, "Создаем аккаунт...", Toast.LENGTH_SHORT).show();
 
         Call<UserProfile> call = RetrofitClient
                 .getInstance("")

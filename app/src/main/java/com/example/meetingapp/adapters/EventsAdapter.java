@@ -2,19 +2,22 @@ package com.example.meetingapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.meetingapp.DownloadImageTask;
+import com.example.meetingapp.GetImageFromAsync;
 import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.activities.EventActivity;
-import com.example.meetingapp.api.FirebaseClient;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
@@ -58,12 +61,20 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Event event = events.get(position);
 
+        if (event.getCreator().getPhoto() != null) {
+            holder.setImageProfile(event.getCreator().getPhoto().getPhoto());
+        }
+
+        int membersCount = event.getMembers().size();
+        holder.textMembersCount.setText(String.valueOf(membersCount));
+
         TextView textCreatorName = holder.textCreatorName;
         String fullName = event.getCreator().getFirstName() + " " + event.getCreator().getLastName();
         textCreatorName.setText(fullName);
 
         TextView textEventDescription = holder.textEventDescription;
         textEventDescription.setText(event.getDescription());
+
 
         if (!ArrayUtils.contains(eventsIds.toArray(), events.get(position).getId())) {
             for (Category category : event.getCategories()) {
@@ -131,12 +142,18 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         return position;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder implements GetImageFromAsync {
+        @BindView(R.id.image_profile)
+        ImageView imageProfile;
+
         @BindView(R.id.text_creator_name)
         TextView textCreatorName;
 
         @BindView(R.id.text_event_description)
         TextView textEventDescription;
+
+        @BindView(R.id.text_members_count)
+        TextView textMembersCount;
 
         @BindView(R.id.button_send_request)
         Button buttonSendRequest;
@@ -144,9 +161,21 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         @BindView(R.id.chip_group)
         ChipGroup chipGroup;
 
+        Bitmap bitmap;
+
         ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        public void setImageProfile(String photoUrl) {
+            new DownloadImageTask(ViewHolder.this).execute(photoUrl);
+        }
+
+        @Override
+        public void getResult(Bitmap bitmap) {
+            imageProfile.setImageBitmap(bitmap);
+            this.bitmap = bitmap;
         }
     }
 }

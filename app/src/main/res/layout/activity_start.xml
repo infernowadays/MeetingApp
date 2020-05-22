@@ -5,30 +5,42 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:paddingStart="32dp"
     android:paddingTop="64dp"
     android:paddingEnd="32dp"
-    android:paddingStart="32dp"
     android:paddingBottom="64dp"
     tools:context=".activities.StartActivity">
 
-    <ImageView
-        android:layout_width="128dp"
-        android:layout_height="128dp"
-        android:background="@drawable/ic_wolf"
-        tools:ignore="ContentDescription" />
+    <LinearLayout
+        android:id="@+id/layout_logo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:ignore="UseCompoundDrawables">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Welcome to WALK"
-        android:textColor="@color/colorPrimary"
-        style="@style/H5" />
+        <ImageView
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:background="@drawable/ic_wolf"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            style="@style/H5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Welcome to WALK"
+            android:textColor="@color/colorPrimary" />
+    </LinearLayout>
+
 
     <LinearLayout
+        android:id="@+id/layout_start"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom"
+        android:visibility="gone"
         android:orientation="vertical">
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -40,20 +52,20 @@
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/text_password"
-            android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Пароль" />
+            android:hint="Пароль"
+            android:inputType="textPassword" />
 
         <com.google.android.material.textview.MaterialTextView
             style="@style/Body"
             android:layout_width="match_parent"
-            android:textColor="@color/colorSecondaryDark"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="right"
-            android:text="Забыли пароль?" />
+            android:text="Забыли пароль?"
+            android:textColor="@color/colorSecondaryDark" />
 
         <Button
             android:id="@+id/button_login"
@@ -79,12 +91,12 @@
                 android:textStyle="normal" />
 
             <com.google.android.material.textview.MaterialTextView
-                style="@style/Body"
                 android:id="@+id/button_register"
+                style="@style/Body"
                 android:layout_width="wrap_content"
-                android:textColor="@color/colorPrimary"
                 android:layout_height="wrap_content"
-                android:text="Зарегистрироваться" />
+                android:text="Зарегистрироваться"
+                android:textColor="@color/colorPrimary" />
         </LinearLayout>
 
 

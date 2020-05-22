@@ -1,38 +1,25 @@
 package com.example.meetingapp.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.activities.TicketActivity;
-import com.example.meetingapp.api.FirebaseClient;
-import com.example.meetingapp.api.RetrofitClient;
-import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Ticket;
-import com.example.meetingapp.models.Ticket;
-import com.example.meetingapp.utils.PreferenceUtils;
-import com.google.android.gms.common.util.ArrayUtils;
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.ViewHolder> {
 
@@ -54,10 +41,16 @@ public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.ViewHold
         return new ViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Ticket ticket = tickets.get(position);
 
+        holder.textName.setText(ticket.getName());
+        holder.textPlace.setText(ticket.getAddress());
+        holder.textPrice.setText(ticket.getPrice() + " ₽");
+        holder.textDate.setText(ticket.getDate());
+        holder.textTime.setText(ticket.getTime());
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, TicketActivity.class);
@@ -102,8 +95,20 @@ public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.ViewHold
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.name)
+        TextView textName;
 
+        @BindView(R.id.place)
+        TextView textPlace;
 
+        @BindView(R.id.price)
+        TextView textPrice;
+
+        @BindView(R.id.date)
+        TextView textDate;
+
+        @BindView(R.id.time)
+        TextView textTime;
 
         ViewHolder(View itemView) {
             super(itemView);

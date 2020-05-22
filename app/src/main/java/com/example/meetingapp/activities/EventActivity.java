@@ -51,7 +51,7 @@ public class EventActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.event_menu, menu);
+        getMenuInflater().inflate(R.menu.content_options_menu, menu);
         return true;
     }
 
@@ -59,10 +59,10 @@ public class EventActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Toast.makeText(this, "Selected Item: " + item.getTitle(), Toast.LENGTH_SHORT).show();
         switch (item.getItemId()) {
-            case R.id.menu_stop_accepting_people:
+            case R.id.menu_stop:
                 // do your code
                 return true;
-            case R.id.menu_stop_event:
+            case R.id.menu_cancel:
                 // do your code
                 return true;
             case R.id.action_edit:

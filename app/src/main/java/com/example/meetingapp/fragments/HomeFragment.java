@@ -243,7 +243,6 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
         @NonNull
         @Override
         public Fragment getItem(int position) {
-
             return fragments.get(position);
         }
 

@@ -8,10 +8,13 @@
         android:id="@+id/stepperLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:ms_activeStepColor="@color/quantum_googred"
-        app:ms_completeButtonColor="@color/quantum_googred"
+        app:ms_activeStepColor="@color/colorPrimary"
+        app:ms_backButtonBackground="@android:color/transparent"
+        app:ms_backButtonText="НАЗАД"
+        app:ms_completeButtonColor="@color/colorPrimary"
+        app:ms_completeButtonText="ЗАВЕРШИТЬ"
+        app:ms_nextButtonText="ВПЕРЕД"
         app:ms_showErrorMessageEnabled="true"
         app:ms_showErrorStateEnabled="true"
         app:ms_stepperType="tabs" />
-
 </RelativeLayout>

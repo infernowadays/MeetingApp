@@ -30,8 +30,8 @@ public class EventNameStepperFragment extends Fragment implements BlockingStep {
 
     @BindView(R.id.event_name_creation)
     MaterialEditText editEventName;
-    @BindView(R.id.header_h3)
-    TextView headerH3;
+    @BindView(R.id.header_h4)
+    TextView headerH4;
     private EventManager eventManager;
 
     public static EventNameStepperFragment newInstance() {
@@ -45,7 +45,7 @@ public class EventNameStepperFragment extends Fragment implements BlockingStep {
         ButterKnife.bind(this, view);
 
         int unicode = 0x1F60A;
-        headerH3.setText("Опишите событие максимально подробно" + new String(Character.toChars(unicode)));
+        headerH4.setText("Опишите событие максимально подробно " + new String(Character.toChars(unicode)));
 
         if (eventManager.getAction().equals("edit"))
             loadDescription();
@@ -71,9 +71,8 @@ public class EventNameStepperFragment extends Fragment implements BlockingStep {
     @Override
     public VerificationError verifyStep() {
         if (Objects.requireNonNull(editEventName.getText()).toString().matches("")) {
-            editEventName.setError("уууу");
-            Toast.makeText(getActivity(), "Напишите описание )", Toast.LENGTH_SHORT).show();
-            return new VerificationError("empty name");
+            editEventName.setError("Поле является обязательным для заполнения");
+            return new VerificationError("Не все обязательные поля заполнены");
         }
         return null;
     }

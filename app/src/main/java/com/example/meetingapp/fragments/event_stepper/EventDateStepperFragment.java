@@ -67,8 +67,11 @@ public class EventDateStepperFragment extends Fragment implements BlockingStep, 
         View view = inflater.inflate(R.layout.fragment_event_date_stepper, container, false);
         ButterKnife.bind(this, view);
 
+        Locale locale = getResources().getConfiguration().locale;
+        Locale.setDefault(locale);
+
         date = new Date();
-        if(eventManager.getAction().equals("edit"))
+        if (eventManager.getAction().equals("edit"))
             setDateFromString(eventManager.getDate());
 
         defaultDate(date);
@@ -76,7 +79,7 @@ public class EventDateStepperFragment extends Fragment implements BlockingStep, 
         return view;
     }
 
-    private void setDateFromString(String dateString){
+    private void setDateFromString(String dateString) {
         DateFormat format = new SimpleDateFormat(pattern, Locale.ENGLISH);
         try {
             date = format.parse(dateString);
@@ -102,7 +105,7 @@ public class EventDateStepperFragment extends Fragment implements BlockingStep, 
         switch (radioButton.getId()) {
             case R.id.button_today:
                 if (checked) {
-                    buttonToday.setTextColor(Color.RED);
+                    buttonToday.setTextColor(getResources().getColor(R.color.colorPrimary));
                     buttonTomorrow.setTextColor(Color.BLACK);
 
                     String dateString = dateFormat.format(new Date());
@@ -113,7 +116,7 @@ public class EventDateStepperFragment extends Fragment implements BlockingStep, 
             case R.id.button_tomorrow:
                 if (checked) {
                     buttonToday.setTextColor(Color.BLACK);
-                    buttonTomorrow.setTextColor(Color.RED);
+                    buttonTomorrow.setTextColor(getResources().getColor(R.color.colorPrimary));
 
                     Date date = new Date();
                     Calendar calendar = Calendar.getInstance();
@@ -129,8 +132,8 @@ public class EventDateStepperFragment extends Fragment implements BlockingStep, 
     }
 
     @SuppressLint("SimpleDateFormat")
-    private void defaultDate(Date date){
-        buttonToday.setTextColor(Color.RED);
+    private void defaultDate(Date date) {
+        buttonToday.setTextColor(getResources().getColor(R.color.colorPrimary));
 
         dateFormat = new SimpleDateFormat(pattern);
         String dateString = dateFormat.format(date);
@@ -143,6 +146,7 @@ public class EventDateStepperFragment extends Fragment implements BlockingStep, 
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 requireActivity(),
+                R.style.DialogTheme,
                 this,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
@@ -174,6 +178,7 @@ public class EventDateStepperFragment extends Fragment implements BlockingStep, 
     private void showTimePickerDialog() {
         TimePickerDialog timePickerDialog = new TimePickerDialog(
                 requireActivity(),
+                R.style.DialogTheme,
                 this,
                 Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
                 Calendar.getInstance().get(Calendar.MINUTE),
@@ -214,9 +219,8 @@ public class EventDateStepperFragment extends Fragment implements BlockingStep, 
     @Override
     public VerificationError verifyStep() {
         if (Objects.requireNonNull(textDate.getText()).toString().matches("")) {
-            Toast.makeText(getActivity(), "Укажите дату )", Toast.LENGTH_SHORT).show();
-
-            return new VerificationError("empty date");
+            textDate.setError("Поле является обязательным для заполнения");
+            return new VerificationError("Не все обязательные поля заполнены");
         }
         return null;
     }

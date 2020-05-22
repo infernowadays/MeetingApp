@@ -62,6 +62,10 @@ public interface Api {
     Call<Event> getEvent(@Path("pk") String pk);
 
     @Headers("Content-Type: application/json")
+    @GET("api/tickets/{pk}")
+    Call<Ticket> getTicket(@Path("pk") String pk);
+
+    @Headers("Content-Type: application/json")
     @POST("api/events")
     Call<Event> createEvent(@Body Event event);
 

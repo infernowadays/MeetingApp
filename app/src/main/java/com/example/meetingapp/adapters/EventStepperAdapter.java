@@ -58,15 +58,21 @@ public class EventStepperAdapter extends AbstractFragmentStepAdapter {
         switch (position) {
             case 0:
                 return new StepViewModel.Builder(context)
-                        .setTitle("Tabs 1")
+                        .setTitle("Куда пойдем?")
                         .create();
             case 1:
                 return new StepViewModel.Builder(context)
-                        .setTitle("Tabs 2")
+                        .setTitle("Тик-Так")
+                        .create();
+            case 2:
+                return new StepViewModel.Builder(context)
+                        .setTitle("А где это?")
+                        .create();
+            case 3:
+                return new StepViewModel.Builder(context)
+                        .setTitle("Готово!")
                         .create();
         }
-        return new StepViewModel.Builder(context)
-                .setTitle("A")
-                .create();
+        return null;
     }
 }

@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -82,6 +83,8 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     CircleImageView imageProfile;
     @BindView(R.id.radio_group_sex)
     RadioGroup radioGroupSex;
+    @BindView(R.id.layout_avatar_mask)
+    RelativeLayout layoutAvatarMask;
     private IUserProfileManager iUserProfileManager;
     private FragmentActivity mContext;
     private String imageUrl;
@@ -201,7 +204,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     @Override
     public VerificationError verifyStep() {
         if (bitmap == null || date.toString().equals("")) {
-            return new VerificationError("load avatar pls!");
+            return new VerificationError("Пожалуйста, заполните все данные!");
         }
 
         return null;
@@ -223,6 +226,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 requireActivity(),
+                R.style.DialogTheme,
                 this,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
@@ -315,6 +319,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
 
     @Override
     public void getResult(Bitmap bitmap) {
+        layoutAvatarMask.setVisibility(View.GONE);
         imageProfile.setImageBitmap(bitmap);
         this.bitmap = bitmap;
     }

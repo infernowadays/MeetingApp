@@ -3,17 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".fragments.event_stepper.EventDateStepperFragment">
+
+    <TextView
+        android:id="@+id/header_h4"
+        style="@style/H4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="«Время, потерянное с удовольствием, не считается потерянным» (Джон Леннон)"
+        android:textColor="@color/colorPrimary" />
 
     <RadioGroup
         android:id="@+id/radio_group"
         android:layout_width="wrap_content"
+        android:layout_below="@id/header_h4"
         android:layout_height="wrap_content"
         android:checkedButton="@id/button_today"
         android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/button_today"
+            style="@style/Body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -22,6 +33,7 @@
 
         <RadioButton
             android:id="@+id/button_tomorrow"
+            style="@style/Body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@null"
@@ -33,6 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/radio_group"
+        android:layout_marginTop="8dp"
         android:focusable="false"
         android:hint="@string/date" />
 
@@ -41,6 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_date"
+        android:layout_marginTop="8dp"
         android:focusable="false"
         android:hint="@string/time_optional" />
 

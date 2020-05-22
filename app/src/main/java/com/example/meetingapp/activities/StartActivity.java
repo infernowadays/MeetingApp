@@ -3,7 +3,10 @@ package com.example.meetingapp.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,9 +28,13 @@ import retrofit2.Response;
 public class StartActivity extends AppCompatActivity {
 
     @BindView(R.id.text_email)
-    public EditText textEmail;
+    EditText textEmail;
     @BindView(R.id.text_password)
-    public EditText textPassword;
+    EditText textPassword;
+    @BindView(R.id.layout_logo)
+    LinearLayout layoutLogo;
+    @BindView(R.id.layout_start)
+    LinearLayout layoutStart;
     UserProfile userProfile;
 
     @Override
@@ -37,7 +44,13 @@ public class StartActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         userProfile = null;
-        meProfile();
+        if (PreferenceUtils.hasToken(this)) {
+            meProfile();
+        } else {
+            layoutLogo.setLayoutParams(new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            layoutStart.setVisibility(View.VISIBLE);
+        }
     }
 
     @OnClick(R.id.button_login)
@@ -82,11 +95,11 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void checkPrerequisites() {
-        if (userProfile.getFilled() && PreferenceUtils.hasToken(this)) {
+        if (userProfile.getFilled()) {
             Intent intent = new Intent(StartActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
-        } else if (!userProfile.getFilled()) {
+        } else {
             Intent intent = new Intent(StartActivity.this, CreateUserProfileActivity.class);
             startActivity(intent);
             finish();

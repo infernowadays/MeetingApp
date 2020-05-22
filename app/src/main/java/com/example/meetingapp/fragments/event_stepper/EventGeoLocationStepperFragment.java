@@ -1,5 +1,6 @@
 package com.example.meetingapp.fragments.event_stepper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,11 +30,15 @@ import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
 import java.util.Arrays;
-import java.util.Objects;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class EventGeoLocationStepperFragment extends Fragment implements BlockingStep {
 
+    @BindView(R.id.header_h4)
+    TextView headerH4;
     private GeoPoint geoPoint;
     private EventManager eventManager;
     private AutocompleteSupportFragment autocompleteFragment;
@@ -59,14 +64,20 @@ public class EventGeoLocationStepperFragment extends Fragment implements Blockin
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_geo_location_stepper, container, false);
+        ButterKnife.bind(this, view);
+
+        int unicode = 0x1F609;
+        headerH4.setText("Выберите точку на карте так, чтобы она точно определяла место " +
+                "вашего события " + new String(Character.toChars(unicode)));
 
         initAutoComplete();
 
         geoPoint = null;
-        if(eventManager.getAction().equals("edit"))
+        if (eventManager.getAction().equals("edit"))
             loadGeoPoint();
 
         MaterialButton locationButton = view.findViewById(R.id.openGeo);
@@ -136,9 +147,7 @@ public class EventGeoLocationStepperFragment extends Fragment implements Blockin
     @Override
     public VerificationError verifyStep() {
         if (geoPoint == null) {
-            Toast.makeText(getActivity(), "Введите адрес )", Toast.LENGTH_SHORT).show();
-
-            return new VerificationError("empty address");
+            return new VerificationError("Не все обязательные поля заполнены");
         }
         return null;
     }

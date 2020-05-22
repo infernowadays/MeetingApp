@@ -4,41 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".fragments.event_stepper.EventNameStepperFragment">
 
     <TextView
-        android:id="@+id/header_h3"
-        android:letterSpacing="0"
+        android:id="@+id/header_h4"
+        style="@style/H4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="48sp"
-        android:textStyle="bold" />
+        android:textColor="@color/colorPrimary" />
 
-    <LinearLayout
-        android:layout_marginTop="16dp"
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/event_name_creation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <View
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="0.1" />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/event_name_creation"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:gravity="top|left"
-            android:hint="Куда пойдем?"
-            android:textSize="16sp"
-            tools:ignore="RtlHardcoded" />
-
-        <View
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="0.1" />
-
-    </LinearLayout>
+        android:gravity="top|left"
+        android:layout_marginTop="8dp"
+        android:hint="Куда пойдем?"
+        android:textSize="16sp"
+        tools:ignore="RtlHardcoded" />
 </LinearLayout>

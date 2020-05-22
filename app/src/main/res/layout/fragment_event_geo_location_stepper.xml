@@ -4,13 +4,23 @@
     android:id="@+id/geo_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".fragments.event_stepper.EventGeoLocationStepperFragment">
+
+    <TextView
+        android:id="@+id/header_h4"
+        style="@style/H4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary" />
 
     <fragment
         android:id="@+id/autocomplete_fragment"
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_below="@id/header_h4"
         tools:ignore="FragmentTagUsage" />
 
     <com.google.android.material.button.MaterialButton
@@ -18,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/autocomplete_fragment"
+        android:layout_marginTop="8dp"
         android:text="Выбрать на карте" />
 
 </RelativeLayout>

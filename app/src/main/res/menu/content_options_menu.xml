@@ -4,16 +4,16 @@
 
     <item
         android:id="@+id/action_edit"
+        android:icon="@drawable/ic_edit_white_24dp"
         android:title="Редактировать"
-        android:icon="@drawable/ic_edit_icon"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/menu_stop_accepting_people"
-        android:title="Перестать принимать людей" />
+        android:id="@+id/menu_stop"
+        android:title="Приостановить" />
 
     <item
-        android:id="@+id/menu_stop_event"
-        android:title="Завершить событие" />
+        android:id="@+id/menu_cancel"
+        android:title="Завершить" />
 
 </menu>

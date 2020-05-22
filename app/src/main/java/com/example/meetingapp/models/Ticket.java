@@ -5,21 +5,25 @@ import java.util.List;
 public class Ticket {
     private int id;
     private String name;
+    private String address;
     private Double price;
     private UserProfile creator;
     private String created;
     private String date;
+    private String time;
     private String description;
     private boolean sold;
     private List<Category> categories;
 
-    public Ticket(int id, String name, Double price, UserProfile creator, String created, String date, String description, boolean sold, List<Category> categories) {
+    public Ticket(int id, String name, String address, Double price, UserProfile creator, String created, String date, String time, String description, boolean sold, List<Category> categories) {
         this.id = id;
         this.name = name;
+        this.address = address;
         this.price = price;
         this.creator = creator;
         this.created = created;
         this.date = date;
+        this.time = time;
         this.description = description;
         this.sold = sold;
         this.categories = categories;
@@ -107,5 +111,21 @@ public class Ticket {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }
