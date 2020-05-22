@@ -15,7 +15,7 @@
         android:layout_margin="16dp"
         android:backgroundTint="@color/colorPrimary"
         android:src="@drawable/ic_add_black_24dp"
-        app:borderWidth="0dp"
+        app:borderWidth="2dp"
         app:tint="@color/ms_white" />
 
     <LinearLayout

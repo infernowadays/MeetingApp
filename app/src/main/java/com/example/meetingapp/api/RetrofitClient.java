@@ -1,5 +1,7 @@
 package com.example.meetingapp.api;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
@@ -29,7 +31,11 @@ public class RetrofitClient {
                             Request request = requestBuilder.build();
                             return chain.proceed(request);
                         }
-                ).build();
+                )
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
+                .build();
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)

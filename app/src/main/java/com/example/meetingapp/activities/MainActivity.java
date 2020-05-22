@@ -69,15 +69,14 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         content = PreferenceUtils.getContentType(this);
-        if (content.equals(EVENTS))
+        if (content.equals(EVENTS)) {
             navigation.getMenu().findItem(R.id.navigation_content).setIcon(EVENT_ICON);
-        else if (content.equals(TICKETS))
-            navigation.getMenu().findItem(R.id.navigation_content).setIcon(TICKET_ICON);
-
-        if (content.equals(EVENTS))
             fm.beginTransaction().add(R.id.main_container, eventsFragment, "3").hide(eventsFragment).commit();
-        else if (content.equals(TICKETS))
+        } else if (content.equals(TICKETS)) {
+            navigation.getMenu().findItem(R.id.navigation_content).setIcon(TICKET_ICON);
             fm.beginTransaction().add(R.id.main_container, ticketsFragment, "3").hide(ticketsFragment).commit();
+        }
+
 
         fm.beginTransaction().add(R.id.main_container, messagesFragment, "2").hide(messagesFragment).commit();
         fm.beginTransaction().add(R.id.main_container, homeFragment, "1").commit();
@@ -100,18 +99,18 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
     @Override
     public void onItemClick(String item) {
         if (item.equals(EVENTS)) {
-            if(!content.equals(TICKETS))
-                changeContent(eventsFragment, ticketsFragment, TICKETS, TICKET_ICON);
-        } else if (item.equals(TICKETS)) {
-            if(!content.equals(EVENTS))
+            if (content.equals(TICKETS))
                 changeContent(ticketsFragment, eventsFragment, EVENTS, EVENT_ICON);
+        } else if (item.equals(TICKETS)) {
+            if (content.equals(EVENTS))
+                changeContent(eventsFragment, ticketsFragment, TICKETS, TICKET_ICON);
         }
     }
 
     private void changeContent(Fragment removeFragment, Fragment addFragment, String contentType, int icon) {
-        fm.beginTransaction().remove(removeFragment).add(R.id.main_container, addFragment, "3").commit();
+        fm.beginTransaction().remove(removeFragment).add(R.id.main_container, addFragment, "3").show(addFragment).commit();
         navigation.getMenu().findItem(R.id.navigation_content).setIcon(icon);
-
+        active = addFragment;
         content = contentType;
         PreferenceUtils.saveContentType(content, this);
     }

@@ -93,6 +93,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<UserProfile> call, @NonNull Throwable t) {
+                super.onFailure(call, t);
                 Toast.makeText(RegisterActivity.this, "error :(", Toast.LENGTH_SHORT).show();
             }
         });
