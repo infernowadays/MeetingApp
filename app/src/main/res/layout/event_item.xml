@@ -43,7 +43,7 @@
                     android:id="@+id/image_profile"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:src="@mipmap/ic_launcher" />
+                    android:src="@drawable/ic_icons8_avatar" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -56,7 +56,7 @@
                         android:id="@+id/text_creator_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Creator Name"
+                        android:text="Undefined"
                         android:textSize="16sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/creator"
                 android:layout_marginTop="8dp"
-                android:text="Description"
+                android:text="Undefined"
                 android:textSize="16sp" />
 
             <View

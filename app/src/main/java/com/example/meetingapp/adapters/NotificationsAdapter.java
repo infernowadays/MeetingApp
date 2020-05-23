@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +19,14 @@ import com.example.meetingapp.models.EventRequest;
 import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,20 +61,21 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         final EventRequest eventRequest = eventRequests.get(position);
         userProfile = UserProfileManager.getInstance().getMyProfile();
 
-        holder.username.setText(eventRequest.getFromUser());
+        holder.textFirstName.setText(eventRequest.getFromUser());
+        holder.textCreated.setText(parseCreated(eventRequest.getCreated()));
 
         if (eventRequest.getToUser().equals(String.valueOf(userProfile.getId())) && eventRequest.getDecision().equals("ACCEPT")) {
             holder.decisionButtons.setVisibility(View.GONE);
-            holder.username.setText("Вы приняли " + eventRequest.getFromUser() + "в событие!");
+            holder.textFirstName.setText("Вы приняли " + eventRequest.getFromUser() + " в событие!");
         } else if (eventRequest.getToUser().equals(String.valueOf(userProfile.getId())) && eventRequest.getDecision().equals("DECLINE")) {
             holder.decisionButtons.setVisibility(View.GONE);
-            holder.username.setText("Запрос отклонен.");
+            holder.textFirstName.setText("Вы отклонили запрос");
         } else if (eventRequest.getFromUser().equals(String.valueOf(userProfile.getId())) && eventRequest.getDecision().equals("ACCEPT")) {
             holder.decisionButtons.setVisibility(View.GONE);
-            holder.username.setText("Добро пожаловать!");
+            holder.textFirstName.setText("Добро пожаловать в событие!");
         } else if (eventRequest.getFromUser().equals(String.valueOf(userProfile.getId())) && eventRequest.getDecision().equals("DECLINE")) {
             holder.decisionButtons.setVisibility(View.GONE);
-            holder.username.setText("К сожалению, Ваша заявка была отклонена :(");
+            holder.textFirstName.setText("К сожалению, Ваша заявка была отклонена :(");
         } else {
             holder.decisionButtons.setVisibility(View.VISIBLE);
         }
@@ -95,7 +103,30 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 int a = 0;
             }
         });
+    }
 
+    private String parseCreated(String created) {
+        String newFormat = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            ZonedDateTime zdt = ZonedDateTime.parse(created);
+            newFormat = zdt.format(DateTimeFormatter.ofPattern("dd/MM hh:mm"));
+        }
+
+        SimpleDateFormat month_date = new SimpleDateFormat("dd MMMM в hh:mm", new Locale("RU"));
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM hh:mm");
+
+        Date date = null;
+        try {
+            date = sdf.parse(Objects.requireNonNull(newFormat));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (date != null) {
+            return month_date.format(date);
+        }
+
+        return "";
     }
 
     @Override
@@ -106,10 +137,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.notification_username)
-        TextView username;
+        TextView textFirstName;
+
+        @BindView(R.id.text_created)
+        TextView textCreated;
 
         @BindView(R.id.decision_buttons)
-        RelativeLayout decisionButtons;
+        LinearLayout decisionButtons;
 
         @BindView(R.id.acceptButton)
         Button acceptButton;

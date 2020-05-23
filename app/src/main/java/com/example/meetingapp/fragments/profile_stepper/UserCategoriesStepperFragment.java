@@ -55,7 +55,6 @@ public class UserCategoriesStepperFragment extends Fragment implements BlockingS
         View view = inflater.inflate(R.layout.fragment_user_categories_stepper, container, false);
         ButterKnife.bind(this, view);
 
-        int unicode = 0x1F607;
         int unicodeBar = 0x1F37B;
         int unicodeEast = 0x1F482;
         int unicodeArmsStand = 0x1F938;

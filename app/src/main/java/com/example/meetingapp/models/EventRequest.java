@@ -26,8 +26,7 @@ public class EventRequest implements Parcelable {
     private long event;
     private String decision;
     private boolean seen;
-
-
+    private String created;
 
     public EventRequest(String fromUser, String toUser, long event) {
         this.fromUser = fromUser;
@@ -35,11 +34,12 @@ public class EventRequest implements Parcelable {
         this.event = event;
     }
 
-    public EventRequest(int id, String fromUser, String toUser, long event) {
+    public EventRequest(int id, String fromUser, String toUser, long event, String created) {
         this.id = id;
         this.fromUser = fromUser;
         this.toUser = toUser;
         this.event = event;
+        this.created = created;
     }
 
     public EventRequest(String decision) {
@@ -115,5 +115,13 @@ public class EventRequest implements Parcelable {
         dest.writeString(fromUser);
         dest.writeString(toUser);
         dest.writeLong(event);
+    }
+
+    public String getCreated() {
+        return created;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
     }
 }
