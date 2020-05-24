@@ -11,12 +11,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amar.library.ui.presenter.StickyScrollPresenter;
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.TicketActivity;
 import com.example.meetingapp.models.Ticket;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,8 +58,8 @@ public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.ViewHold
         holder.textName.setText(ticket.getName());
         holder.textPlace.setText(ticket.getAddress());
         holder.textPrice.setText(ticket.getPrice() + " ₽");
-        holder.textDate.setText(ticket.getDate());
-        holder.textTime.setText(ticket.getTime());
+        holder.textDate.setText(parseDate(ticket.getDate()));
+        holder.textTime.setText(parseTime(ticket.getTime()));
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, TicketActivity.class);
@@ -64,6 +73,33 @@ public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.ViewHold
 //            removeItemAfterRequest(position);
 //        });
     }
+
+    private String parseTime(String time) {
+        @SuppressLint("SimpleDateFormat") DateFormat format = new SimpleDateFormat("hh:mm:ss");
+        Date date = null;
+        try {
+            date = format.parse(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        @SuppressLint("SimpleDateFormat") String newDate = new SimpleDateFormat("hh:mm").format(Objects.requireNonNull(date));
+        return newDate;
+    }
+
+    private String parseDate(String dateString) {
+        @SuppressLint("SimpleDateFormat") DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = format.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        @SuppressLint("SimpleDateFormat") String newDate = new SimpleDateFormat("dd MMMM", new Locale("RU")).format(Objects.requireNonNull(date));
+        return newDate;
+    }
+
 
     private void sendRequest(String toUser, long ticket) {
 

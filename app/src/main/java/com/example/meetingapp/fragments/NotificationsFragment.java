@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.NotificationsAdapter;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,16 +43,18 @@ public class NotificationsFragment extends Fragment {
 
     @BindView(R.id.recycle_view)
     RecyclerView recycleView;
+
+    @BindView(R.id.swipe_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+
     private NotificationsAdapter notificationsAdapter;
     private List<EventRequest> eventRequests;
     private BroadcastReceiver broadcastReceiver;
-    private Gson gson;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
         ButterKnife.bind(this, view);
 
-        gson = new Gson();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
         recycleView.setLayoutManager(linearLayoutManager);
 
@@ -58,9 +63,15 @@ public class NotificationsFragment extends Fragment {
 
         loadNotifications();
 
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            loadNotifications();
+            swipeRefreshLayout.setRefreshing(false);
+        });
+
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                Gson gson = new Gson();
                 EventRequest eventRequest = gson.fromJson(intent.getStringExtra(WebSocketListenerService.EXTRA_REQUEST), EventRequest.class);
 
                 eventRequests.add(0, eventRequest);
@@ -104,7 +115,7 @@ public class NotificationsFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<List<EventRequest>> call, @NonNull Throwable t) {
-
+                Log.d("failure", Objects.requireNonNull(t.getMessage()));
             }
         });
     }

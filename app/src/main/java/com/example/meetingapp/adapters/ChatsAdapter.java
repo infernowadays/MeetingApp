@@ -2,6 +2,7 @@ package com.example.meetingapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.meetingapp.DownloadImageTask;
+import com.example.meetingapp.GetImageFromAsync;
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.EventActivity;
 import com.example.meetingapp.models.Event;
@@ -25,6 +28,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> {
     private String theLastMessage;
@@ -49,11 +56,13 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
 
         final Event event = events.get(position);
 
-        holder.username.setText(event.getCreator().getEmail());
-        if (event.getCreator().getPhoto() == null) {
-            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
+        holder.textFirstName.setText(event.getCreator().getFirstName());
+        holder.textDescription.setText(event.getDescription());
+
+        if (event.getCreator().getPhoto() != null) {
+            holder.setImageProfile(event.getCreator().getPhoto().getPhoto());
         } else {
-            Glide.with(context).load(event.getCreator().getPhoto()).into(holder.profile_image);
+            Glide.with(context).load(event.getCreator().getPhoto()).into(holder.imageProfile);
         }
 
         holder.itemView.setOnClickListener(v -> {
@@ -69,28 +78,32 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
         return events.size();
     }
 
-    private void lastMessage(final String userid, final TextView last_msg) {
-        last_msg.setText(theLastMessage);
-    }
+    static class ViewHolder extends RecyclerView.ViewHolder implements GetImageFromAsync {
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.text_first_name)
+        TextView textFirstName;
 
-        private TextView username;
-        private ImageView profile_image;
-        private ImageView img_on;
-        private ImageView img_off;
-        private TextView last_msg;
+        @BindView(R.id.text_event_description_brief)
+        TextView textDescription;
+
+        @BindView(R.id.image_profile)
+        CircleImageView imageProfile;
+
+        Bitmap bitmap;
 
         ViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
 
-            username = itemView.findViewById(R.id.username);
-            profile_image = itemView.findViewById(R.id.profile_image);
+        public void setImageProfile(String photoUrl) {
+            new DownloadImageTask(ChatsAdapter.ViewHolder.this).execute(photoUrl);
+        }
 
-            last_msg = itemView.findViewById(R.id.last_msg);
-
-            img_on = itemView.findViewById(R.id.img_on);
-            img_off = itemView.findViewById(R.id.img_off);
+        @Override
+        public void getResult(Bitmap bitmap) {
+            imageProfile.setImageBitmap(bitmap);
+            this.bitmap = bitmap;
         }
     }
 }

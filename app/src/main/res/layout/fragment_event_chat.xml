@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.EventChatFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/message_box"
-        android:id="@+id/recycle_view"
-        android:padding="5dp"
+        android:padding="16dp"
         tools:ignore="UnknownIdInLayout" />
 
     <RelativeLayout
+        android:id="@+id/message_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/message_box"
         android:layout_alignParentBottom="true"
-        android:padding="5dp">
+        android:background="@color/colorSecondary"
+        android:padding="16dp">
 
-        <EditText
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/text_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,13 +33,13 @@
 
         <ImageButton
             android:id="@+id/button_send"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:background="@drawable/ic_action_name"
-            tools:ignore="RtlHardcoded" />
-
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/send_message_circle"
+            android:src="@drawable/ic_action_name"
+            tools:ignore="ContentDescription,RtlHardcoded" />
     </RelativeLayout>
-
 </RelativeLayout>

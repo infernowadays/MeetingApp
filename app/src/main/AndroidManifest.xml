@@ -26,7 +26,8 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:fullBackupContent"
         tools:targetApi="q">
-        <activity android:name=".activities.TicketActivity"></activity>
+        <activity android:name=".activities.EventInfoActivity"></activity>
+        <activity android:name=".activities.TicketActivity" />
         <activity android:name=".activities.TicketStepperActivity" />
         <activity android:name=".activities.CreateTicketActivity" />
         <activity android:name=".activities.UserProfileActivity" />

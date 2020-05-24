@@ -18,6 +18,7 @@ import com.example.meetingapp.GetImageFromAsync;
 import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.activities.EventActivity;
+import com.example.meetingapp.activities.EventInfoActivity;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
@@ -87,7 +88,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         eventsIds.add(events.get(position).getId());
 
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, EventActivity.class);
+            Intent intent = new Intent(context, EventInfoActivity.class);
             intent.putExtra("EXTRA_EVENT_ID", String.valueOf(event.getId()));
 
             context.startActivity(intent);

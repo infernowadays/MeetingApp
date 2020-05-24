@@ -6,7 +6,7 @@ public class Ticket {
     private int id;
     private String name;
     private String address;
-    private Double price;
+    private int price;
     private UserProfile creator;
     private String created;
     private String date;
@@ -15,7 +15,7 @@ public class Ticket {
     private boolean sold;
     private List<Category> categories;
 
-    public Ticket(int id, String name, String address, Double price, UserProfile creator, String created, String date, String time, String description, boolean sold, List<Category> categories) {
+    public Ticket(int id, String name, String address, int price, UserProfile creator, String created, String date, String time, String description, boolean sold, List<Category> categories) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -29,7 +29,7 @@ public class Ticket {
         this.categories = categories;
     }
 
-    public Ticket(String name, Double price, String date, String description, List<Category> categories) {
+    public Ticket(String name, int price, String date, String description, List<Category> categories) {
         this.name = name;
         this.price = price;
         this.date = date;
@@ -49,11 +49,11 @@ public class Ticket {
         this.name = name;
     }
 
-    public Double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

@@ -70,7 +70,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             holder.setImageProfile(eventRequest.getFromUser().getPhoto().getPhoto());
         }
 
-
         holder.textCreated.setText(parseCreated(eventRequest.getCreated()));
 
         if (eventRequest.getToUser().equals(String.valueOf(userProfile.getId())) && eventRequest.getDecision().equals("ACCEPT")) {
