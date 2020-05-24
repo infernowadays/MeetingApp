@@ -18,9 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.NotificationsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.EventRequest;
+import com.example.meetingapp.models.Message;
 import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,17 +38,18 @@ import retrofit2.Response;
 
 public class NotificationsFragment extends Fragment {
 
-    private NotificationsAdapter notificationsAdapter;
-    private static List<EventRequest> eventRequests;
     @BindView(R.id.recycle_view)
     RecyclerView recycleView;
-
+    private NotificationsAdapter notificationsAdapter;
+    private List<EventRequest> eventRequests;
     private BroadcastReceiver broadcastReceiver;
+    private Gson gson;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
         ButterKnife.bind(this, view);
 
+        gson = new Gson();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
         recycleView.setLayoutManager(linearLayoutManager);
 
@@ -57,7 +61,7 @@ public class NotificationsFragment extends Fragment {
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                EventRequest eventRequest = intent.getParcelableExtra(WebSocketListenerService.EXTRA_REQUEST);
+                EventRequest eventRequest = gson.fromJson(intent.getStringExtra(WebSocketListenerService.EXTRA_REQUEST), EventRequest.class);
 
                 eventRequests.add(0, eventRequest);
                 notificationsAdapter.notifyItemInserted(0);

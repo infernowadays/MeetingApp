@@ -73,6 +73,12 @@ public class UserProfile {
         this.filled = filled;
     }
 
+    public UserProfile(int id, String firstName, String lastName){
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     public UserProfile(int id) {
         this.id = id;
     }

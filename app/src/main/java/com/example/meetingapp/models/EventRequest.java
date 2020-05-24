@@ -1,40 +1,32 @@
 package com.example.meetingapp.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
 
-public class EventRequest implements Parcelable {
+public class EventRequest {
 
-    public static final Parcelable.Creator<EventRequest> CREATOR = new Parcelable.Creator<EventRequest>() {
-        public EventRequest createFromParcel(Parcel in) {
-            return new EventRequest(in);
-        }
-
-        public EventRequest[] newArray(int size) {
-            return new EventRequest[size];
-        }
-    };
     @SerializedName("id")
     private int id;
+
     @SerializedName("from_user")
-    private String fromUser;
+    private UserProfile fromUser;
+
     @SerializedName("to_user")
     private String toUser;
+
     @SerializedName("event")
     private long event;
+
     private String decision;
     private boolean seen;
     private String created;
 
-    public EventRequest(String fromUser, String toUser, long event) {
+    public EventRequest(UserProfile fromUser, String toUser, long event) {
         this.fromUser = fromUser;
         this.toUser = toUser;
         this.event = event;
     }
 
-    public EventRequest(int id, String fromUser, String toUser, long event, String created) {
+    public EventRequest(int id, UserProfile fromUser, String toUser, long event, String created) {
         this.id = id;
         this.fromUser = fromUser;
         this.toUser = toUser;
@@ -47,13 +39,6 @@ public class EventRequest implements Parcelable {
     }
 
     public EventRequest() {
-    }
-
-    private EventRequest(Parcel in) {
-        id = in.readInt();
-        fromUser = in.readString();
-        toUser = in.readString();
-        event = in.readLong();
     }
 
     public int getId() {
@@ -80,11 +65,11 @@ public class EventRequest implements Parcelable {
         this.seen = seen;
     }
 
-    public String getFromUser() {
+    public UserProfile getFromUser() {
         return fromUser;
     }
 
-    public void setFromUser(String fromUser) {
+    public void setFromUser(UserProfile fromUser) {
         this.fromUser = fromUser;
     }
 
@@ -102,19 +87,6 @@ public class EventRequest implements Parcelable {
 
     public void setEvent(long event) {
         this.event = event;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(fromUser);
-        dest.writeString(toUser);
-        dest.writeLong(event);
     }
 
     public String getCreated() {

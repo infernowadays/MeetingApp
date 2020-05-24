@@ -2,16 +2,20 @@ package com.example.meetingapp.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.meetingapp.DownloadImageTask;
+import com.example.meetingapp.GetImageFromAsync;
 import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.api.RetrofitClient;
@@ -61,7 +65,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         final EventRequest eventRequest = eventRequests.get(position);
         userProfile = UserProfileManager.getInstance().getMyProfile();
 
-        holder.textFirstName.setText(eventRequest.getFromUser());
+        holder.textFirstName.setText(eventRequest.getFromUser().getFirstName());
+        if (eventRequest.getFromUser().getPhoto() != null) {
+            holder.setImageProfile(eventRequest.getFromUser().getPhoto().getPhoto());
+        }
+
+
         holder.textCreated.setText(parseCreated(eventRequest.getCreated()));
 
         if (eventRequest.getToUser().equals(String.valueOf(userProfile.getId())) && eventRequest.getDecision().equals("ACCEPT")) {
@@ -70,10 +79,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         } else if (eventRequest.getToUser().equals(String.valueOf(userProfile.getId())) && eventRequest.getDecision().equals("DECLINE")) {
             holder.decisionButtons.setVisibility(View.GONE);
             holder.textFirstName.setText("Вы отклонили запрос");
-        } else if (eventRequest.getFromUser().equals(String.valueOf(userProfile.getId())) && eventRequest.getDecision().equals("ACCEPT")) {
+        } else if (eventRequest.getFromUser().getId() == userProfile.getId() && eventRequest.getDecision().equals("ACCEPT")) {
             holder.decisionButtons.setVisibility(View.GONE);
             holder.textFirstName.setText("Добро пожаловать в событие!");
-        } else if (eventRequest.getFromUser().equals(String.valueOf(userProfile.getId())) && eventRequest.getDecision().equals("DECLINE")) {
+        } else if (eventRequest.getFromUser().getId() == userProfile.getId() && eventRequest.getDecision().equals("DECLINE")) {
             holder.decisionButtons.setVisibility(View.GONE);
             holder.textFirstName.setText("К сожалению, Ваша заявка была отклонена :(");
         } else {
@@ -134,7 +143,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         return eventRequests.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder implements GetImageFromAsync {
+
+        @BindView(R.id.image_profile)
+        ImageView imageProfile;
 
         @BindView(R.id.notification_username)
         TextView textFirstName;
@@ -151,9 +163,21 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         @BindView(R.id.declineButton)
         Button declineButton;
 
+        Bitmap bitmap;
+
         ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        public void setImageProfile(String photoUrl) {
+            new DownloadImageTask(NotificationsAdapter.ViewHolder.this).execute(photoUrl);
+        }
+
+        @Override
+        public void getResult(Bitmap bitmap) {
+            imageProfile.setImageBitmap(bitmap);
+            this.bitmap = bitmap;
         }
     }
 }

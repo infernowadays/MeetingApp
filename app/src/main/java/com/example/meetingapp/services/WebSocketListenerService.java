@@ -23,15 +23,13 @@ import okhttp3.WebSocketListener;
 
 public class WebSocketListenerService extends Service {
 
-    private static final String WEB_SOCKET_URL = "ws://10.0.2.2:8000/ws/chat/";
-    private static final String AUTHORIZATION = "Authorization";
-    private static final String EXTRA_TOKEN = "EXTRA_TOKEN";
-
-    private LocalBroadcastManager broadcaster;
-
     static final public String EXTRA_RESULT = "EXTRA_RESULT";
     static final public String EXTRA_REQUEST = "EXTRA_REQUEST";
     static final public String EXTRA_MESSAGE = "EXTRA_MESSAGE";
+    private static final String WEB_SOCKET_URL = "ws://10.0.2.2:8000/ws/chat/";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String EXTRA_TOKEN = "EXTRA_TOKEN";
+    private LocalBroadcastManager broadcaster;
 
     public WebSocketListenerService() {
     }
@@ -44,7 +42,7 @@ public class WebSocketListenerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String token = "";
-        if (intent !=null && intent.getExtras()!=null)
+        if (intent != null && intent.getExtras() != null)
             token = intent.getExtras().getString(EXTRA_TOKEN);
 
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -72,7 +70,7 @@ public class WebSocketListenerService extends Service {
 
         private LocalBroadcastManager broadcaster;
 
-        private EchoWebSocketListener(LocalBroadcastManager broadcaster){
+        private EchoWebSocketListener(LocalBroadcastManager broadcaster) {
             this.broadcaster = broadcaster;
         }
 
@@ -87,13 +85,10 @@ public class WebSocketListenerService extends Service {
             Intent intent = new Intent(EXTRA_RESULT);
 
             WebSocketEvent webSocketEvent = gson.fromJson(text, WebSocketEvent.class);
-            if(webSocketEvent.isRequestEvent())
-                intent.putExtra(EXTRA_REQUEST, gson.fromJson(text, EventRequest.class));
-            else if(webSocketEvent.isMessageEvent()){
-
-                Message message = gson.fromJson(text, Message.class);
-                intent.putExtra(EXTRA_MESSAGE, gson.toJson(gson.fromJson(text, Message.class)));
-
+            if (webSocketEvent.isRequestEvent()) {
+                intent.putExtra(EXTRA_REQUEST, text);
+            } else if (webSocketEvent.isMessageEvent()) {
+                intent.putExtra(EXTRA_MESSAGE, text);
             }
             broadcaster.sendBroadcast(intent);
         }

@@ -88,9 +88,10 @@ public class EventChatFragment extends Fragment {
             public void onReceive(Context context, Intent intent) {
                 Gson gson = new Gson();
                 Message message = gson.fromJson(intent.getStringExtra(WebSocketListenerService.EXTRA_MESSAGE), Message.class);
+
                 messages.add(message);
                 messageAdapter.notifyItemInserted(messages.size() - 1);
-                recycleView.scrollToPosition(messages.size() - 1);
+                recycleView.smoothScrollToPosition(messages.size() - 1);
             }
         };
 

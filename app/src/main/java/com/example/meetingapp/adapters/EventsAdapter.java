@@ -103,7 +103,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         Call<EventRequest> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(Objects.requireNonNull(context)))
                 .getApi()
-                .sendRequest(new EventRequest(String.valueOf(UserProfileManager.getInstance().getMyProfile().getId()), toUser, event));
+                .sendRequest(new EventRequest(UserProfileManager.getInstance().getMyProfile(), toUser, event));
 
         call.enqueue(new Callback<EventRequest>() {
             @Override

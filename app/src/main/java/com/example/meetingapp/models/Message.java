@@ -19,7 +19,6 @@ public class Message {
         this.event = event;
     }
 
-
     public Message(UserProfile fromUser, String text, String created, boolean seen) {
         this.fromUser = fromUser;
         this.text = text;
