@@ -61,7 +61,7 @@ public class EventsFilterDialog extends DialogFragment implements View.OnClickLi
         ImageButton close = view.findViewById(R.id.fullscreen_dialog_close);
         close.setOnClickListener(this);
 
-        Button apply = view.findViewById(R.id.fullscreen_dialog_action);
+        Button apply = view.findViewById(R.id.fullscreen_dialog_action_confirm);
         apply.setOnClickListener(this);
 
         UserProfile userProfile = UserProfileManager.getInstance().getMyProfile();
@@ -97,7 +97,7 @@ public class EventsFilterDialog extends DialogFragment implements View.OnClickLi
                 dismiss();
                 break;
 
-            case R.id.fullscreen_dialog_action:
+            case R.id.fullscreen_dialog_action_confirm:
                 callback.onActionClick(categories);
 
                 dismiss();

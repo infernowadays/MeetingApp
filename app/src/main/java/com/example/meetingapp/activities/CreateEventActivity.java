@@ -50,8 +50,8 @@ public class CreateEventActivity extends AppCompatActivity implements EventManag
         Intent intent = getIntent();
         this.saveAction(intent.getStringExtra("action"));
 
-        if(intent.hasExtra("EVENT")){
-            Event event = intent.getParcelableExtra("EVENT");
+        if(intent.hasExtra("EXTRA_EVENT")){
+            Event event = intent.getParcelableExtra("EXTRA_EVENT");
             if(event != null){
                 this.saveId(event.getId());
                 this.saveDescription(event.getDescription());

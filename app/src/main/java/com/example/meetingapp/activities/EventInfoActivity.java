@@ -2,21 +2,25 @@ package com.example.meetingapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.api.RetrofitClient;
-import com.example.meetingapp.fragments.EventInfoFragment;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.utils.PreferenceUtils;
@@ -28,6 +32,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,6 +64,8 @@ public class EventInfoActivity extends AppCompatActivity {
     ChipGroup chipGroup;
     @BindView(R.id.button_edit_event)
     ImageButton buttonEditEvent;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private Context context;
     private GoogleMap googleMap;
 
@@ -75,8 +83,44 @@ public class EventInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_info);
         ButterKnife.bind(this);
 
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        TextView textView = findViewById(R.id.text);
+        textView.setText("Велком");
+
         loadEvent();
         mapView.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.content_options_menu, menu);
+        MenuItem item = menu.getItem(0);
+        SpannableString s = new SpannableString("Пожаловаться");
+        s.setSpan(new ForegroundColorSpan(Color.RED), 0, s.length(), 0);
+        item.setTitle(s);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_complain:
+                // do your code
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @OnClick(R.id.event_creator)

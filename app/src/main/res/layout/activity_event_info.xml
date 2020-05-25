@@ -6,10 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".activities.EventInfoActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="5dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+
+        <TextView
+            android:id="@+id/text"
+            style="@style/Toolbar.TitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </androidx.appcompat.widget.Toolbar>
+
     <ImageButton
         android:id="@+id/button_edit_event"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_below="@id/toolbar"
         android:layout_alignParentEnd="true"
         android:background="@color/ms_white"
         android:src="@drawable/ic_more_horiz_black_24dp"
@@ -154,4 +171,12 @@
             android:orientation="horizontal"
             app:chipSpacing="8dp" />
     </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"
+        android:text="ХОЧУ ПОЙТИ" />
 </RelativeLayout>

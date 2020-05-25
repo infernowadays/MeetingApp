@@ -9,16 +9,16 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:cardBackgroundColor="#5e35b1"
+        app:cardBackgroundColor="@color/colorSecondaryLight"
         app:cardCornerRadius="0dp"
-        app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical">
 
             <ImageButton
                 android:id="@+id/fullscreen_dialog_close"
@@ -26,9 +26,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="8dp"
-                android:src="@drawable/ic_close_black_24dp" />
+                android:background="@drawable/ic_close_black_24dp"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -36,43 +35,57 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="8dp"
                 android:layout_toEndOf="@id/fullscreen_dialog_close"
-                android:text="Page Title"
-                android:textColor="@android:color/white"
-                android:textSize="20sp" />
+                android:text="Фильтры"
+                android:textColor="@color/colorPrimary"
+                android:textSize="24sp" />
 
-            <Button
-                android:id="@+id/fullscreen_dialog_action"
+            <TextView
+                android:id="@+id/fullscreen_dialog_action_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                android:layout_toStartOf="@id/fullscreen_dialog_action_confirm"
+                android:padding="8dp"
+                android:text="Очистить"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/fullscreen_dialog_action_confirm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="8dp"
-                android:background="?attr/selectableItemBackground"
+                android:background="@color/colorPrimary"
+                android:backgroundTint="@color/colorPrimary"
                 android:padding="8dp"
                 android:text="Применить"
-                android:textColor="@android:color/white" />
-
+                android:textColor="@color/colorSecondaryLight"
+                android:textSize="14sp"
+                app:rippleColor="@color/colorSecondaryLight" />
         </RelativeLayout>
-
     </androidx.cardview.widget.CardView>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <include layout="@layout/line" />
-
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:text="@string/interests"
-                android:textSize="16sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <com.google.android.material.chip.ChipGroup
@@ -80,45 +93,55 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:chipSpacing="10dp" />
+                app:chipSpacing="8dp" />
 
-            <include layout="@layout/line" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/colorSecondary" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/age"
-                android:textSize="16sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <com.appyvet.materialrangebar.RangeBar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:mrb_barWeight="2dp"
-                app:mrb_connectingLineColor="@color/quantum_yellow"
+                app:mrb_connectingLineColor="@color/colorPrimary"
                 app:mrb_connectingLineWeight="4dp"
-                app:mrb_pinColor="@color/quantum_googred"
-                app:mrb_pinMaxFont="15sp"
+                app:mrb_pinColor="@color/colorPrimary"
+                app:mrb_pinMaxFont="16sp"
                 app:mrb_pinMinFont="12sp"
                 app:mrb_pinRadius="14dp"
                 app:mrb_rangeBar_rounded="true"
-                app:mrb_rightThumbColor="@color/quantum_googred"
-                app:mrb_thumbBoundaryColor="@color/quantum_googred"
-                app:mrb_thumbColor="@color/quantum_googred"
-                app:mrb_thumbSize="10dp"
+                app:mrb_rightThumbColor="@color/colorPrimary"
+                app:mrb_thumbBoundaryColor="@color/colorPrimary"
+                app:mrb_thumbColor="@color/colorPrimary"
+                app:mrb_thumbSize="12dp"
                 app:mrb_tickEnd="100"
                 app:mrb_tickHeight="0dp"
                 app:mrb_tickInterval="1"
                 app:mrb_tickLabelSize="4sp"
                 app:mrb_tickStart="17" />
 
-            <include layout="@layout/line" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/colorSecondary" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/genger"
-                android:textSize="16sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -139,29 +162,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:checked="true"
-                        android:minWidth="0dp"
-                        android:minHeight="0dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/any" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="48dp"
-                    android:orientation="vertical"
-                    tools:ignore="UselessParent">
-
-                    <com.google.android.material.checkbox.MaterialCheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
+                        android:buttonTint="@color/colorPrimary"
                         android:checked="true"
                         android:minWidth="0dp"
                         android:minHeight="0dp" />
@@ -177,6 +178,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginEnd="48dp"
+
                     android:orientation="vertical"
                     tools:ignore="UselessParent">
 
@@ -184,7 +187,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:buttonTint="@color/quantum_yellow"
+                        android:buttonTint="@color/colorPrimary"
                         android:checked="true"
                         android:minWidth="0dp"
                         android:minHeight="0dp" />
@@ -194,6 +197,29 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="@string/woman" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    tools:ignore="UselessParent">
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:buttonTint="@color/colorPrimary"
+                        android:checked="false"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Любой другой" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

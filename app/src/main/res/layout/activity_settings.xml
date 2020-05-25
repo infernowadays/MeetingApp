@@ -6,57 +6,112 @@
     android:orientation="vertical"
     tools:context=".activities.SettingsActivity">
 
-    <TextView
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Настройки"
-        android:textSize="32sp"
-        android:textStyle="bold" />
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="5dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
+        <TextView
+            android:id="@+id/text"
+            style="@style/Toolbar.TitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
         android:id="@+id/account"
         android:layout_width="match_parent"
         android:layout_height="64dp"
+        android:layout_marginTop="8dp"
         android:background="@color/ms_white"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:text="Аккаунт"
-            android:textSize="24sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/colorSecondary" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:background="@color/ms_white"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:text="Email &amp; Уведомления"
-            android:textSize="24sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/colorSecondary" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:background="@color/ms_white"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:text="Написать разработчикам"
-            android:textSize="24sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/colorSecondary" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@color/ms_white"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Оценить приложение"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/colorSecondary" />
 </LinearLayout>

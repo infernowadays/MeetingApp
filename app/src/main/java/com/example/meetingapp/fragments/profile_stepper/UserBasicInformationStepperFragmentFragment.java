@@ -238,7 +238,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
         );
-        datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
+        datePickerDialog.getDatePicker();
         datePickerDialog.show();
     }
 

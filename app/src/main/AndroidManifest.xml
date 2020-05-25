@@ -26,17 +26,25 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:fullBackupContent"
         tools:targetApi="q">
-        <activity android:name=".activities.EventInfoActivity"></activity>
+        <activity
+            android:name=".activities.EventInfoActivity"
+            android:parentActivityName=".activities.MainActivity" />
         <activity android:name=".activities.TicketActivity" />
         <activity android:name=".activities.TicketStepperActivity" />
         <activity android:name=".activities.CreateTicketActivity" />
-        <activity android:name=".activities.UserProfileActivity" />
+        <activity
+            android:name=".activities.UserProfileActivity"
+            android:parentActivityName=".activities.MainActivity" />
         <activity android:name=".activities.CreateUserProfileActivity" />
-        <activity android:name=".activities.ChangePasswordActivity" />
-        <activity android:name=".activities.SettingsActivity" />
+        <activity
+            android:name=".activities.ChangePasswordActivity"
+            android:parentActivityName=".activities.AccountSettingsActivity" />
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.AccountSettingsActivity"
-            android:label="@string/title_activity_account_settings" />
+            android:parentActivityName=".activities.SettingsActivity" />
         <activity android:name=".activities.WebSocketActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

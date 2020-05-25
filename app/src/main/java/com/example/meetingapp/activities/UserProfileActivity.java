@@ -1,8 +1,13 @@
 package com.example.meetingapp.activities;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -10,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -28,6 +34,7 @@ import com.google.android.material.tabs.TabLayout;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,6 +83,12 @@ public class UserProfileActivity extends AppCompatActivity {
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
+    @BindView(R.id.text)
+    TextView textView;
+
     private UserProfile userProfile;
 
     @Override
@@ -84,15 +97,48 @@ public class UserProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
         ButterKnife.bind(this);
 
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        viewPagerAdapter.addFragment(new HomeEventsFragment("creator"), "Активные");
-        viewPagerAdapter.addFragment(new HomeEventsFragment("passed"), "Завершенные");
+        viewPagerAdapter.addFragment(new HomeEventsFragment("creator"), "БИЛЕТЫ");
+        viewPagerAdapter.addFragment(new HomeEventsFragment("passed"), "СОБЫТИЯ");
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
         loadProfile();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.user_options_menu, menu);
+        MenuItem item = menu.getItem(0);
+        SpannableString s = new SpannableString("Пожаловаться");
+        s.setSpan(new ForegroundColorSpan(Color.RED), 0, s.length(), 0);
+        item.setTitle(s);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_complain:
+                // do your code
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private void loadProfile() {
@@ -142,7 +188,7 @@ public class UserProfileActivity extends AppCompatActivity {
             profileEducation.setVisibility(View.VISIBLE);
         }
 
-        if (userProfile.getJob() != null) {
+        if (userProfile.getJob().equals("")) {
             textJob.setText(userProfile.getJob());
             profileJob.setVisibility(View.VISIBLE);
         }

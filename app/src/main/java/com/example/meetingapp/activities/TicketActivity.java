@@ -61,7 +61,7 @@ public class TicketActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.content_options_menu, menu);
+        getMenuInflater().inflate(R.menu.content_options_menu_for_creator, menu);
         return true;
     }
 

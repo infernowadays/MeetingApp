@@ -113,6 +113,7 @@ public class EventPublishStepperFragment extends Fragment implements BlockingSte
     private void openCreatedEvent() {
         Intent intent = new Intent(getActivity(), EventActivity.class);
         intent.putExtra("EXTRA_EVENT_ID", String.valueOf(createdEvent.getId()));
+        intent.putExtra("EXTRA_ACTIVE_TAB", 0);
 
         finishActivity();
         startActivity(intent);

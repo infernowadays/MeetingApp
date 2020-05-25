@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,9 +16,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.meetingapp.DownloadImageTask;
@@ -29,6 +32,7 @@ import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.tabs.TabLayout;
@@ -88,6 +92,13 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
 
+    @BindView(R.id.swipe_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+
+
+    @BindView(R.id.appBarLayout)
+    AppBarLayout appBarLayout;
+
     private UserProfile userProfile;
     private Bitmap bitmap;
 
@@ -96,6 +107,28 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
 
+        setContent();
+
+        appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            if (verticalOffset == 0)
+                swipeRefreshLayout.setEnabled(true);
+            else
+                swipeRefreshLayout.setEnabled(false);
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            setContent();
+            meProfile();
+
+            swipeRefreshLayout.setRefreshing(false);
+        });
+
+        meProfile();
+
+        return view;
+    }
+
+    private void setContent(){
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
 
         viewPagerAdapter.addFragment(new HomeEventsFragment("creator"), "События");
@@ -103,12 +136,7 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
-
-        meProfile();
-
-        return view;
     }
-
 
     @OnClick(R.id.button_settings)
     void openSettings() {
@@ -177,6 +205,7 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
             profileJob.setVisibility(View.VISIBLE);
         }
 
+        chipGroup.removeAllViews();
         for (Category category : userProfile.getCategories()) {
             Chip chip = (Chip) LayoutInflater.from(getContext()).inflate(R.layout.category_item, chipGroup, false);
             chip.setText(category.getName());

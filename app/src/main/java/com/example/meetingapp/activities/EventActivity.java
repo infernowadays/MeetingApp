@@ -2,7 +2,6 @@ package com.example.meetingapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -20,6 +19,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.fragments.EventChatFragment;
 import com.example.meetingapp.fragments.EventInfoFragment;
+import com.example.meetingapp.models.Event;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -50,7 +50,11 @@ public class EventActivity extends AppCompatActivity {
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        Objects.requireNonNull(tabLayout.getTabAt(1)).select();
+        Intent intent = getIntent();
+        if (intent.hasExtra("EXTRA_ACTIVE_TAB")) {
+            selectActiveTab(intent.getIntExtra("EXTRA_ACTIVE_TAB", 1));
+        }
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -62,13 +66,17 @@ public class EventActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.content_options_menu, menu);
+        getMenuInflater().inflate(R.menu.content_options_menu_for_creator, menu);
         return true;
+    }
+
+    private void selectActiveTab(int index) {
+        Objects.requireNonNull(tabLayout.getTabAt(index)).select();
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Toast.makeText(this, "Selected Item: " + item.getTitle(), Toast.LENGTH_SHORT).show();
         switch (item.getItemId()) {
             case R.id.menu_stop:
                 // do your code
@@ -88,7 +96,7 @@ public class EventActivity extends AppCompatActivity {
         Intent intent = new Intent(EventActivity.this, CreateEventActivity.class);
         intent.putExtra("action", "edit");
 
-        intent.putExtra("EVENT", EventInfoFragment.getEvent());
+        intent.putExtra("EXTRA_EVENT", EventInfoFragment.getEvent());
 
 
         EventActivity.this.startActivity(intent);
