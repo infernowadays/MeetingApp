@@ -75,7 +75,7 @@
     </style>
 
     <style name="EventsFilterDialogTheme" parent="Theme.AppCompat.DayNight.DialogWhenLarge">
-        <item name="android:statusBarColor">#280680</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="android:windowAnimationStyle">@style/Theme.AppCompat.Dialog</item>
     </style>
 
@@ -84,7 +84,6 @@
         <item name="colorAccent">@color/ms_material_blue_500</item>
         <item name="android:windowIsFloating">false</item>
 
-        <item name="android:windowBackground">@color/quantum_yellow</item>
         <item name="android:textColorPrimary">#FFFFFF</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:textColor">@color/ms_material_blue_500</item>
