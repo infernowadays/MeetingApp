@@ -22,10 +22,10 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 
 
 public class EventsFilterDialog extends DialogFragment implements View.OnClickListener {
@@ -73,7 +73,7 @@ public class EventsFilterDialog extends DialogFragment implements View.OnClickLi
                 categories.add(String.valueOf(chip.getText()));
 
                 chip.setOnCheckedChangeListener((compoundButton, checked) -> {
-                    if(checked)
+                    if (checked)
                         categories.add(String.valueOf(chip.getText()));
                     else
                         categories.remove(String.valueOf(chip.getText()));
@@ -85,6 +85,13 @@ public class EventsFilterDialog extends DialogFragment implements View.OnClickLi
         }
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle arg0) {
+        super.onActivityCreated(arg0);
+        Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow())
+                .getAttributes().windowAnimations = R.style.DialogAnimation;
     }
 
     @Override

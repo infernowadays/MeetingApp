@@ -79,6 +79,11 @@
         <item name="android:windowAnimationStyle">@style/Theme.AppCompat.Dialog</item>
     </style>
 
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+
     <style name="CustomDialogTheme" parent="Widget.AppCompat.ProgressBar">
         <item name="android:windowNoTitle">true</item>
         <item name="colorAccent">@color/ms_material_blue_500</item>
