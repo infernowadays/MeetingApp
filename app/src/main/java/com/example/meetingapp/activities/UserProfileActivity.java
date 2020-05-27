@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,11 +24,13 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.fragments.HomeEventsFragment;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.tabs.TabLayout;
@@ -88,6 +92,18 @@ public class UserProfileActivity extends AppCompatActivity {
 
     @BindView(R.id.text)
     TextView textView;
+
+    @BindView(R.id.content_buttons)
+    LinearLayout contentButtons;
+
+    @BindView(R.id.button_write_message)
+    MaterialButton buttonWriteMessage;
+
+    @BindView(R.id.button_edit_categories)
+    ImageButton buttonEditCategories;
+
+    @BindView(R.id.button_edit_info)
+    ImageButton buttonEditInfo;
 
     private UserProfile userProfile;
 
@@ -156,6 +172,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 if (response.body() != null) {
                     userProfile = response.body();
                     showProfile();
+                    HideIfNotCurrentUserProfile();
                 }
             }
 
@@ -237,6 +254,15 @@ public class UserProfileActivity extends AppCompatActivity {
             return String.valueOf(Period.between(birthDate, currentDate).getYears());
         }
         return "";
+    }
+
+    private void HideIfNotCurrentUserProfile(){
+        if(userProfile.getId() == UserProfileManager.getInstance().getMyProfile().getId()){
+            contentButtons.setVisibility(View.VISIBLE);
+            buttonEditCategories.setVisibility(View.VISIBLE);
+            buttonEditInfo.setVisibility(View.VISIBLE);
+            buttonWriteMessage.setVisibility(View.GONE);
+        }
     }
 
     static class ViewPagerAdapter extends FragmentPagerAdapter {

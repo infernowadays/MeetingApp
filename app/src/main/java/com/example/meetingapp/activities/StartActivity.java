@@ -3,6 +3,7 @@ package com.example.meetingapp.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -43,14 +44,7 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
         ButterKnife.bind(this);
 
-        userProfile = null;
-        if (PreferenceUtils.hasToken(this)) {
-            meProfile();
-        } else {
-            layoutLogo.setLayoutParams(new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            layoutStart.setVisibility(View.VISIBLE);
-        }
+        loadApp();
     }
 
     @OnClick(R.id.button_login)
@@ -71,39 +65,26 @@ public class StartActivity extends AppCompatActivity {
         startActivity(new Intent(StartActivity.this, RegisterActivity.class));
     }
 
-    private void meProfile() {
-        Call<UserProfile> call = RetrofitClient
-                .getInstance(PreferenceUtils.getToken(this))
-                .getApi()
-                .meProfile();
-
-        call.enqueue(new Callback<UserProfile>() {
-            @Override
-            public void onResponse(@NonNull Call<UserProfile> call, @NonNull Response<UserProfile> response) {
-                if (response.body() != null) {
-                    userProfile = response.body();
-                    UserProfileManager.getInstance().initialize(userProfile);
-                    checkPrerequisites();
+    private void loadApp() {
+        final Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            userProfile = null;
+            if (PreferenceUtils.hasToken(this)) {
+                if (PreferenceUtils.isFilled(this)) {
+                    Intent intent = new Intent(StartActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Intent intent = new Intent(StartActivity.this, CreateUserProfileActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
+            } else {
+                layoutLogo.setLayoutParams(new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                layoutStart.setVisibility(View.VISIBLE);
             }
-
-            @Override
-            public void onFailure(@NonNull Call<UserProfile> call, @NonNull Throwable t) {
-
-            }
-        });
-    }
-
-    private void checkPrerequisites() {
-        if (userProfile.getFilled()) {
-            Intent intent = new Intent(StartActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        } else {
-            Intent intent = new Intent(StartActivity.this, CreateUserProfileActivity.class);
-            startActivity(intent);
-            finish();
-        }
+        }, 1000);
     }
 
     private Context getContext() {

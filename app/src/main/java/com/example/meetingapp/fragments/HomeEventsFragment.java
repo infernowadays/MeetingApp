@@ -12,10 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.adapters.EventsAdapter;
 import com.example.meetingapp.api.FirebaseClient;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Event;
+import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
 
 import java.util.ArrayList;
@@ -30,16 +32,13 @@ import retrofit2.Response;
 
 public class HomeEventsFragment extends Fragment {
 
-    private static HomeEventsFragment instance;
-    public String type1;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
-    int mScrollPosition = 0;
-    LinearLayoutManager linearLayoutManager;
-    View view;
+    private String eventType;
+    private UserProfile userProfile;
 
     public HomeEventsFragment(String eventType) {
-        this.type1 = eventType;
+        this.eventType = eventType;
     }
 
     public HomeEventsFragment() {
@@ -48,18 +47,12 @@ public class HomeEventsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_home_events, container, false);
+        View view = inflater.inflate(R.layout.fragment_home_events, container, false);
         ButterKnife.bind(this, view);
 
-        instance = this;
+        userProfile = UserProfileManager.getInstance().getMyProfile();
 
-        linearLayoutManager = new LinearLayoutManager(getContext());
-
-        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(new EventsAdapter(getContext(), new ArrayList<>()));
-
-//        recyclerView.setNestedScrollingEnabled(false);
-//        recyclerView.setHasFixedSize(true);
 
         List<String> lll = new ArrayList<>();
         lll.add("creator");
@@ -84,14 +77,13 @@ public class HomeEventsFragment extends Fragment {
                 if (events == null)
                     events = new ArrayList<>();
 
-
-                if (type1.equals("creator"))
+                if (eventType.equals("creator"))
                     events = eventsByCreator(events);
 
-                if (type1.equals("member"))
+                if (eventType.equals("member"))
                     events = eventsByMember(events);
 
-                if (type1.equals("passed"))
+                if (eventType.equals("passed"))
                     events = new ArrayList<>();
 
 
@@ -109,24 +101,22 @@ public class HomeEventsFragment extends Fragment {
         FirebaseClient firebaseClient = new FirebaseClient(getContext());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-
-//            if (events != null) {
-//                events = events.stream().filter(event ->
-//                        event.getCreator().getFirebaseUid().equals(firebaseClient.getUid())).collect(Collectors.toList());
-//            }
+            if (events != null) {
+                events = events.stream().filter(event -> event.getCreator().getId() ==
+                        userProfile.getId()).collect(Collectors.toList());
+            }
         }
 
         return events;
     }
 
     private List<Event> eventsByMember(List<Event> events) {
-        FirebaseClient firebaseClient = new FirebaseClient(getContext());
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
             if (events != null) {
                 events = events.stream().filter(event ->
-                        event.getMembers().stream().anyMatch(member -> member.getFirebaseUid().equals(firebaseClient.getUid()))).collect(Collectors.toList());
+                        event.getMembers().stream().anyMatch(member -> member.getId() ==
+                                (userProfile.getId()))).collect(Collectors.toList());
             }
         }
 

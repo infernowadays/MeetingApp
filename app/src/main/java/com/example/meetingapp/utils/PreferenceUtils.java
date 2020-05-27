@@ -79,4 +79,15 @@ public class PreferenceUtils {
         SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE);
         return preferences.getString(Constants.KEY_CONTENT_TYPE, Constants.KEY_EVENTS_RUS);
     }
+
+    public static void saveFilled(boolean isFilled, Context context) {
+        SharedPreferences.Editor preferencesEditor = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE).edit();
+        preferencesEditor.putBoolean(Constants.KEY_FILLED, isFilled);
+        preferencesEditor.apply();
+    }
+
+    public static boolean isFilled(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE);
+        return preferences.getBoolean(Constants.KEY_FILLED, false);
+    }
 }

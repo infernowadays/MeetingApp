@@ -32,7 +32,7 @@ public class RetrofitClient {
                             return chain.proceed(request);
                         }
                 )
-                .connectTimeout(1, TimeUnit.MINUTES)
+                .connectTimeout(15, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(15, TimeUnit.SECONDS)
                 .build();

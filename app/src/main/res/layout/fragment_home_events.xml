@@ -4,12 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorSecondary"
     tools:context=".fragments.HomeEventsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipToPadding="false"
         android:overScrollMode="never"
+        android:paddingTop="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 </FrameLayout>

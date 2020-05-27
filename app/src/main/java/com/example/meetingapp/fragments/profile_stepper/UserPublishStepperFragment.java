@@ -112,7 +112,6 @@ public class UserPublishStepperFragment extends Fragment implements BlockingStep
 
     private void createUserProfile() {
         RetrofitClient.needsHeader(true);
-        userProfile.setId(145);
 
         Call<UserProfile> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(requireContext()))
@@ -122,13 +121,13 @@ public class UserPublishStepperFragment extends Fragment implements BlockingStep
         call.enqueue(new Callback<UserProfile>() {
             @Override
             public void onResponse(@NonNull Call<UserProfile> call, @NonNull Response<UserProfile> response) {
-                int sss = 100;
-
                 Intent intent = new Intent(getContext(), MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 requireContext().startActivity(intent);
                 ((Activity) requireContext()).finish();
+
+                PreferenceUtils.saveFilled(true, getContext());
             }
 
             @Override

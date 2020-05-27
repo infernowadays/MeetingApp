@@ -1,8 +1,11 @@
 package com.example.meetingapp.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,18 +14,22 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.meetingapp.CustomCallback;
 import com.example.meetingapp.DownloadImageTask;
 import com.example.meetingapp.GetImageFromAsync;
 import com.example.meetingapp.R;
@@ -41,6 +48,7 @@ import com.google.android.material.tabs.TabLayout;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -99,9 +107,21 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
     @BindView(R.id.swipe_layout)
     SwipeRefreshLayout swipeRefreshLayout;
 
+    @BindView(R.id.home_content)
+    CoordinatorLayout homeContent;
 
     @BindView(R.id.appBarLayout)
     AppBarLayout appBarLayout;
+
+    @BindView(R.id.progressbar_downloading)
+    ProgressBar progressBar;
+
+    @BindView(R.id.progressbar_layout)
+    RelativeLayout layoutProgressBar;
+
+    @BindView(R.id.layout_content)
+    NestedScrollView nestedScrollView;
+
 
     private UserProfile userProfile;
     private Bitmap bitmap;
@@ -110,6 +130,11 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
+
+
+        layoutProgressBar.setVisibility(View.VISIBLE);
+        appBarLayout.setVisibility(View.GONE);
+        nestedScrollView.setVisibility(View.GONE);
 
         setContent();
 
@@ -169,11 +194,15 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
                     UserProfileManager.getInstance().initialize(userProfile);
                     showProfile();
                 }
+
+                layoutProgressBar.setVisibility(View.GONE);
+                appBarLayout.setVisibility(View.VISIBLE);
+                nestedScrollView.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFailure(@NonNull Call<UserProfile> call, @NonNull Throwable t) {
-
+                layoutProgressBar.setVisibility(View.GONE);
             }
         });
     }

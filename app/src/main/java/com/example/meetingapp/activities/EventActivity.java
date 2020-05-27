@@ -55,7 +55,6 @@ public class EventActivity extends AppCompatActivity {
             selectActiveTab(intent.getIntExtra("EXTRA_ACTIVE_TAB", 1));
         }
 
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);

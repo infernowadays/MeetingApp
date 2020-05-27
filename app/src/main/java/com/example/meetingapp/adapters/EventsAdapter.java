@@ -62,6 +62,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Event event = events.get(position);
 
+        if (event.getCreator().getId() == UserProfileManager.getInstance().getMyProfile().getId())
+            holder.buttonSendRequest.setEnabled(false);
+
         if (event.getCreator().getPhoto() != null) {
             holder.setImageProfile(event.getCreator().getPhoto().getPhoto());
         }
@@ -88,10 +91,15 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         eventsIds.add(events.get(position).getId());
 
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, EventInfoActivity.class);
-            intent.putExtra("EXTRA_EVENT_ID", String.valueOf(event.getId()));
-
-            context.startActivity(intent);
+            if (event.getCreator().getId() == UserProfileManager.getInstance().getMyProfile().getId()) {
+                Intent intent = new Intent(context, EventActivity.class);
+                intent.putExtra("EXTRA_EVENT_ID", String.valueOf(event.getId()));
+                context.startActivity(intent);
+            } else {
+                Intent intent = new Intent(context, EventInfoActivity.class);
+                intent.putExtra("EXTRA_EVENT_ID", String.valueOf(event.getId()));
+                context.startActivity(intent);
+            }
         });
 
         holder.buttonSendRequest.setOnClickListener(v -> {
