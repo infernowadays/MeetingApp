@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".activities.ConfirmCodeActivity">
+
+    <TextView
+        style="@style/H5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Подтверждение подлинности аккаунта"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Пожалуйста, введите код, отправленный на почту, указанную вами при создании аккаунта"
+        android:textAlignment="center" />
+
+    <com.goodiebag.pinview.Pinview
+        android:id="@+id/pin_view_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cursorVisible="true"
+        app:forceKeyboard="false"
+        app:hint="0"
+        app:inputType="number"
+        app:password="false"
+        app:pinHeight="48dp"
+        app:pinLength="4"
+        app:pinWidth="48dp" />
+
+</LinearLayout>

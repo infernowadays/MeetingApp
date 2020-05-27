@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipe_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -40,7 +40,7 @@
                         android:gravity="center"
                         tools:ignore="UselessParent">
 
-                        <LinearLayout
+                        <RelativeLayout
                             android:id="@+id/layout_profile_name_and_extra_info"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -52,7 +52,6 @@
                                 style="@style/H5"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center"
                                 android:maxWidth="196dp" />
 
                             <TextView
@@ -60,10 +59,22 @@
                                 style="@style/H5"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_below="@+id/text_first_name"
                                 android:gravity="center"
                                 android:maxWidth="196dp" />
 
-                        </LinearLayout>
+                            <ImageButton
+                                android:id="@+id/button_confirm"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:layout_below="@id/text_first_name"
+                                android:layout_margin="4dp"
+                                android:layout_toEndOf="@id/text_last_name"
+                                android:background="@drawable/ic_error_black_24dp"
+                                android:visibility="gone"
+                                tools:ignore="ContentDescription" />
+                        </RelativeLayout>
+
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/image_profile"

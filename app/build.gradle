@@ -99,11 +99,12 @@ dependencies {
     implementation 'com.amazonaws:aws-android-sdk-ddb:2.16.12'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.vipulasri:ticketview:1.0.7'
-    implementation 'com.android.support:percent:28.0.0'
     implementation 'com.fasterxml.jackson.core:com.springsource.com.fasterxml.jackson.core.jackson-annotations:2.0.2'
     implementation 'org.modelmapper:modelmapper:2.3.7'
     implementation 'org.codehaus.jackson:com.springsource.org.codehaus.jackson:1.4.3'
     implementation 'com.fasterxml.jackson.core:com.springsource.com.fasterxml.jackson.core.jackson-annotations:2.0.2'
+
+    implementation 'com.github.GoodieBag:PinView:1.3'
 
 }
 

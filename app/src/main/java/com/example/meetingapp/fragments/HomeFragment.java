@@ -27,6 +27,7 @@ import com.example.meetingapp.DownloadImageTask;
 import com.example.meetingapp.GetImageFromAsync;
 import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
+import com.example.meetingapp.activities.ConfirmCodeActivity;
 import com.example.meetingapp.activities.SettingsActivity;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Category;
@@ -52,6 +53,9 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
 
     @BindView(R.id.image_profile)
     ImageView imageProfile;
+
+    @BindView(R.id.button_confirm)
+    ImageView buttonConfirm;
 
     @BindView(R.id.text_first_name)
     TextView textFirstName;
@@ -128,7 +132,7 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
         return view;
     }
 
-    private void setContent(){
+    private void setContent() {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
 
         viewPagerAdapter.addFragment(new HomeEventsFragment("creator"), "События");
@@ -137,6 +141,13 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }
+
+    @OnClick(R.id.button_confirm)
+    void conformAccount() {
+        Intent intent = new Intent(getActivity(), ConfirmCodeActivity.class);
+        startActivity(intent);
+    }
+
 
     @OnClick(R.id.button_settings)
     void openSettings() {
@@ -176,6 +187,9 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
 
     @SuppressLint("SetTextI18n")
     private void showProfile() {
+        if (!userProfile.getConfirmed())
+            buttonConfirm.setVisibility(View.VISIBLE);
+
         if (userProfile.getPhoto().getPhoto() != null) {
             new DownloadImageTask(HomeFragment.this).execute(userProfile.getPhoto().getPhoto());
         }
