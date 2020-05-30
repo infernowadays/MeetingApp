@@ -105,6 +105,8 @@ public class TicketPublishStepperFragment extends Fragment implements BlockingSt
         textName.setText(ticketManager.getName());
         ticket.setName(ticketManager.getName());
 
+        textPrice.setText(String.valueOf(ticketManager.getPrice()));
+
         if (ticketManager.getDescription() != null) {
             textDescription.setText(ticketManager.getDescription());
             textDescription.setVisibility(View.VISIBLE);

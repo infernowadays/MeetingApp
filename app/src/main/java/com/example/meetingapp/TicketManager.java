@@ -12,9 +12,9 @@ public interface TicketManager {
 
     String getDescription();
 
-    void savePrice(Double price);
+    void savePrice(int price);
 
-    Double getPrice();
+    int getPrice();
 
     void saveDate(String date);
 

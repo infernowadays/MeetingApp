@@ -43,9 +43,6 @@ public class TicketBasicDataStepperFragment extends Fragment implements Blocking
     @BindView(R.id.text_ticket_date)
     MaterialEditText textDate;
 
-    @BindView(R.id.text_description)
-    MaterialEditText textDescription;
-
     private Context context;
     private TicketManager ticketManager;
     private String pattern = "yyyy-MM-dd";
@@ -87,8 +84,7 @@ public class TicketBasicDataStepperFragment extends Fragment implements Blocking
         String date = Objects.requireNonNull(textDate.getText()).toString();
         ticketManager.saveDate(date);
         ticketManager.saveName(Objects.requireNonNull(textName.getText()).toString());
-        ticketManager.saveDescription(Objects.requireNonNull(textDescription.getText()).toString());
-        ticketManager.savePrice(Double.valueOf(Objects.requireNonNull(textPrice.getText()).toString()));
+        ticketManager.savePrice(Integer.parseInt(Objects.requireNonNull(textPrice.getText()).toString()));
 
         callback.goToNextStep();
     }
@@ -151,6 +147,7 @@ public class TicketBasicDataStepperFragment extends Fragment implements Blocking
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 requireActivity(),
+                R.style.DialogTheme,
                 this,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),

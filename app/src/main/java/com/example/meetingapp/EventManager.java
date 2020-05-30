@@ -2,6 +2,8 @@ package com.example.meetingapp;
 
 import com.example.meetingapp.models.GeoPoint;
 
+import java.util.ArrayList;
+
 public interface EventManager {
 
     void saveAction(String action);
@@ -27,5 +29,9 @@ public interface EventManager {
     void saveLocation(GeoPoint location);
 
     GeoPoint getLocation();
+
+    void saveCategories(ArrayList<String> categories);
+
+    ArrayList<String> getCategories();
 
 }

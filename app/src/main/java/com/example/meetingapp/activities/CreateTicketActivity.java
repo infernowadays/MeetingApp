@@ -26,14 +26,14 @@ public class CreateTicketActivity extends AppCompatActivity implements TicketMan
     private String action;
     private String name;
     private String description;
-    private Double price;
+    private int price;
     private String date;
     private ArrayList<String> categories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_ticket);
+        setContentView(R.layout.step);
 
         stepperLayout = findViewById(R.id.stepperLayout);
         TicketStepperAdapter ticketStepperAdapter = new TicketStepperAdapter(getSupportFragmentManager(), this);
@@ -83,12 +83,12 @@ public class CreateTicketActivity extends AppCompatActivity implements TicketMan
     }
 
     @Override
-    public void savePrice(Double price) {
+    public void savePrice(int price) {
         this.price = price;
     }
 
     @Override
-    public Double getPrice() {
+    public int getPrice() {
         return price;
     }
 

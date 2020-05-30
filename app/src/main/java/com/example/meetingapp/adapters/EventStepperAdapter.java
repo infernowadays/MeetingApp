@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.meetingapp.activities.EventStepperActivity;
+import com.example.meetingapp.fragments.event_stepper.EventCategoriesStepperFragment;
 import com.example.meetingapp.fragments.event_stepper.EventDateStepperFragment;
 import com.example.meetingapp.fragments.event_stepper.EventGeoLocationStepperFragment;
 import com.example.meetingapp.fragments.event_stepper.EventNameStepperFragment;
@@ -39,7 +40,11 @@ public class EventStepperAdapter extends AbstractFragmentStepAdapter {
             case 2:
                 return EventGeoLocationStepperFragment.newInstance();
 
+
             case 3:
+                return EventCategoriesStepperFragment.newInstance();
+
+            case 4:
                 return EventPublishStepperFragment.newInstance();
         }
 
@@ -48,7 +53,7 @@ public class EventStepperAdapter extends AbstractFragmentStepAdapter {
 
     @Override
     public int getCount() {
-        return 4;
+        return 5;
     }
 
     @NonNull
@@ -69,6 +74,10 @@ public class EventStepperAdapter extends AbstractFragmentStepAdapter {
                         .setTitle("А где это?")
                         .create();
             case 3:
+                return new StepViewModel.Builder(context)
+                        .setTitle("Лыжи? Кино? Бар?")
+                        .create();
+            case 4:
                 return new StepViewModel.Builder(context)
                         .setTitle("Готово!")
                         .create();

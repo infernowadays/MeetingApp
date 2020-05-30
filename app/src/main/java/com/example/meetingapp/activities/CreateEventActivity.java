@@ -14,6 +14,8 @@ import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.GeoPoint;
 import com.stepstone.stepper.StepperLayout;
 
+import java.util.ArrayList;
+
 public class CreateEventActivity extends AppCompatActivity implements EventManager {
 
     private static final String CURRENT_STEP_POSITION_KEY = "position";
@@ -23,6 +25,8 @@ public class CreateEventActivity extends AppCompatActivity implements EventManag
     private static final String TIME = "time";
     private static final String LOCATION = "location";
     private static final String ACTION = "action";
+    private static final String CATEGORIES = "categories";
+
 
     private StepperLayout mStepperLayout;
 
@@ -32,6 +36,8 @@ public class CreateEventActivity extends AppCompatActivity implements EventManag
     private String mDate;
     private String mTime;
     private GeoPoint mLocation;
+    private ArrayList<String> categories;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +84,7 @@ public class CreateEventActivity extends AppCompatActivity implements EventManag
         outState.putString(DATE, mDate);
         outState.putString(TIME, mTime);
         outState.putParcelable(LOCATION, mLocation);
+        outState.putStringArrayList(CATEGORIES, categories);
 
         super.onSaveInstanceState(outState);
     }
@@ -146,5 +153,15 @@ public class CreateEventActivity extends AppCompatActivity implements EventManag
 
     public GeoPoint getLocation() {
         return mLocation;
+    }
+
+    @Override
+    public void saveCategories(ArrayList<String> categories) {
+        this.categories = categories;
+    }
+
+    @Override
+    public ArrayList<String> getCategories() {
+        return categories;
     }
 }

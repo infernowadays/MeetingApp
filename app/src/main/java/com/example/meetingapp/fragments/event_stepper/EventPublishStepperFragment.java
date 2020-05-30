@@ -17,12 +17,18 @@ import com.example.meetingapp.EventManager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.EventActivity;
 import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.utils.PreferenceUtils;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textview.MaterialTextView;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,14 +40,22 @@ public class EventPublishStepperFragment extends Fragment implements BlockingSte
 
     @BindView(R.id.text_description)
     MaterialTextView description;
+
     @BindView(R.id.text_date)
     MaterialTextView date;
+
     @BindView(R.id.text_time)
     MaterialTextView time;
+
     @BindView(R.id.text_address)
     MaterialTextView address;
+
     @BindView(R.id.header_h4)
     TextView headerH4;
+
+    @BindView(R.id.chip_group)
+    ChipGroup chipGroup;
+
     private EventManager eventManager;
     private Event event;
     private Event createdEvent;
@@ -152,11 +166,23 @@ public class EventPublishStepperFragment extends Fragment implements BlockingSte
         event.setDate(eventManager.getDate());
         date.setText(eventManager.getDate());
 
-
         if (!eventManager.getTime().equals("")) {
             time.setText(eventManager.getTime());
             event.setTime(eventManager.getTime());
         }
+
+        List<Category> categories = new ArrayList<>();
+        chipGroup.removeAllViews();
+        for (String category : eventManager.getCategories()) {
+            Chip chip = (Chip) LayoutInflater.from(getContext()).inflate(R.layout.category_item, chipGroup, false);
+            chip.setText(category);
+            chip.setCheckable(false);
+            chipGroup.addView(chip);
+
+            categories.add(new Category(category));
+        }
+
+        event.setCategories(categories);
     }
 
     @Override

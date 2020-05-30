@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".fragments.ticket_stepper.TicketBasicDataStepperFragment">
 
     <com.rengwuxian.materialedittext.MaterialEditText
@@ -16,24 +17,15 @@
         android:id="@+id/text_ticket_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Стоимость билета" />
+        android:layout_marginTop="8dp"
+        android:hint="Стоимость билета"
+        android:inputType="number" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/text_ticket_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:focusable="false"
         android:hint="Дата начала мероприятия" />
-
-    <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/text_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="false"
-        android:hint="Полезная информация *" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="* необязательно к заполнению" />
 </LinearLayout>
