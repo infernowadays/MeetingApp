@@ -30,11 +30,11 @@ import retrofit2.http.Query;
 public interface Api {
 
     @Headers("Content-Type: application/json")
-    @POST("token_auth/auth")
+    @POST("token_auth/auth/")
     Call<Token> login(@Body LoginData loginData);
 
     @Headers("Content-Type: application/json")
-    @POST("token_auth/users")
+    @POST("token_auth/users/")
     Call<UserProfile> users(@Body RegisterData registerData);
 
     @Headers("Content-Type: application/json")
@@ -46,43 +46,43 @@ public interface Api {
     Call<UserProfile> meProfile();
 
     @Headers("Content-Type: application/json")
-    @GET("token_auth/profile/{pk}")
+    @GET("token_auth/profile/{pk}/")
     Call<UserProfile> getUserProfile(@Path("pk") String pk);
 
     @Headers("Content-Type: application/json")
-    @GET("api/events")
+    @GET("api/events/")
     Call<List<Event>> getEvents(@Query("category") List<String> categories, @Query("me") List<String> roles);
 
     @Headers("Content-Type: application/json")
-    @GET("api/tickets")
+    @GET("api/tickets/")
     Call<List<Ticket>> getTickets(@Query("category") List<String> categories, @Query("me") List<String> roles);
 
     @Headers("Content-Type: application/json")
-    @GET("api/events/{pk}")
+    @GET("api/events/{pk}/")
     Call<Event> getEvent(@Path("pk") String pk);
 
     @Headers("Content-Type: application/json")
-    @GET("api/tickets/{pk}")
+    @GET("api/tickets/{pk}/")
     Call<Ticket> getTicket(@Path("pk") String pk);
 
     @Headers("Content-Type: application/json")
-    @POST("api/events")
+    @POST("api/events/")
     Call<Event> createEvent(@Body Event event);
 
     @Headers("Content-Type: application/json")
-    @PUT("api/events/{pk}")
+    @PUT("api/events/{pk}/")
     Call<Event> updateEvent(@Path("pk") String pk, @Body Event event);
 
     @Headers("Content-Type: application/json")
-    @POST("api/requests")
+    @POST("api/requests/")
     Call<EventRequest> sendRequest(@Body EventRequest eventRequest);
 
     @Headers("Content-Type: application/json")
-    @PUT("api/requests/{pk}")
+    @PUT("api/requests/{pk}/")
     Call<EventRequest> answerRequest(@Path("pk") String pk, @Body EventRequest decision);
 
     @Headers("Content-Type: application/json")
-    @GET("api/requests")
+    @GET("api/requests/")
     Call<List<EventRequest>> getRequests();
 
     @Headers("Content-Type: application/json")
@@ -90,22 +90,22 @@ public interface Api {
     Call<Token> changePassword(@Body Password password);
 
     @Headers("Content-Type: application/json")
-    @POST("api/messages")
+    @POST("api/messages/")
     Call<Message> sendMessage(@Body Message message);
 
     @Headers("Content-Type: application/json")
-    @GET("api/messages/{event_id}")
+    @GET("api/messages/{event_id}/")
     Call<List<Message>> getEventMessages(@Path("event_id") String event_id);
 
     @Headers("Content-Type: application/json")
-    @GET("api/chats")
+    @GET("api/chats/")
     Call<List<Event>> getEventChats();
 
     @Headers("Content-Type: application/json")
-    @GET("api/categories")
+    @GET("api/categories/")
     Call<List<MegaCategory>> getCategories();
 
     @Multipart
-    @POST("token_auth/profile/upload")
+    @POST("token_auth/profile/upload/")
     Call<ProfilePhoto> uploadFile(@PartMap Map<String, RequestBody> params);
 }

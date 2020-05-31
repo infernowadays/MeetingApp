@@ -103,10 +103,10 @@ public class UserCategoriesStepperFragment extends Fragment implements BlockingS
     @Nullable
     @Override
     public VerificationError verifyStep() {
-        if (categories != null) {
-            if (categories.size() < 5)
-                return new VerificationError("at least 5 categories!");
-        }
+//        if (categories != null) {
+//            if (categories.size() < 5)
+//                return new VerificationError("at least 5 categories!");
+//        }
 
         return null;
     }

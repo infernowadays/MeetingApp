@@ -44,7 +44,8 @@ public class AuthService {
                         RetrofitClient.setToken(response.body().getToken());
                     }
                 } else {
-    //                    Toast.makeText(LoginActivity.this, "Убедись, что ввели данные корректно.", Toast.LENGTH_SHORT).show();
+                    int a = 6;
+//                        Toast.makeText(LoginActivity.this, "Убедись, что ввели данные корректно.", Toast.LENGTH_SHORT).show();
                 }
             }
 

@@ -3,6 +3,7 @@ package com.example.meetingapp.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,12 +118,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         call.enqueue(new Callback<EventRequest>() {
             @Override
             public void onResponse(@NonNull Call<EventRequest> call, @NonNull Response<EventRequest> response) {
-
+                Log.d("response", response.message());
             }
 
             @Override
             public void onFailure(@NonNull Call<EventRequest> call, @NonNull Throwable t) {
-
+                Log.d("failure", "request failed");
             }
         });
     }

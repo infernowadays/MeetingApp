@@ -79,6 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
                     authService.authenticate(email, password);
 
                     UserProfile userProfile = response.body();
+
                     if (!userProfile.getConfirmed()) {
                         Intent intent = new Intent(RegisterActivity.this, CreateUserProfileActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
