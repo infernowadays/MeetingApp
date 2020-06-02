@@ -26,7 +26,8 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:fullBackupContent"
         tools:targetApi="q">
-        <activity android:name=".activities.ConfirmCodeActivity"></activity>
+        <activity android:name=".activities.ModeratorActivity"></activity>
+        <activity android:name=".activities.ConfirmCodeActivity" />
         <activity
             android:name=".activities.EventInfoActivity"
             android:parentActivityName=".activities.MainActivity" />

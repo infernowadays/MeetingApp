@@ -1,5 +1,6 @@
 package com.example.meetingapp.api;
 
+import com.example.meetingapp.models.Complaint;
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.EventRequest;
 import com.example.meetingapp.models.LoginData;
@@ -108,4 +109,8 @@ public interface Api {
     @Multipart
     @POST("token_auth/profile/upload/")
     Call<ProfilePhoto> uploadFile(@PartMap Map<String, RequestBody> params);
+
+    @Headers("Content-Type: application/json")
+    @GET("api/complaints/")
+    Call<List<Complaint>> getComplaints();
 }
