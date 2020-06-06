@@ -1,11 +1,13 @@
 package com.example.meetingapp.fragments.ticket_stepper;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,8 +15,11 @@ import androidx.fragment.app.Fragment;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.TicketManager;
+import com.example.meetingapp.activities.TicketActivity;
+import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Ticket;
+import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.stepstone.stepper.BlockingStep;
@@ -26,6 +31,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TicketPublishStepperFragment extends Fragment implements BlockingStep {
 
@@ -47,6 +55,7 @@ public class TicketPublishStepperFragment extends Fragment implements BlockingSt
     private TicketManager ticketManager;
     private Context context;
     private Ticket ticket;
+    private Ticket createdTicket;
 
     public static TicketPublishStepperFragment newInstance() {
         return new TicketPublishStepperFragment();
@@ -80,10 +89,42 @@ public class TicketPublishStepperFragment extends Fragment implements BlockingSt
 
     @Override
     public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {
-        createTicket();
+        publishTicket();
     }
 
-    private void createTicket() {
+    private void openCreatedTicket() {
+        Intent intent = new Intent(getActivity(), TicketActivity.class);
+        intent.putExtra("EXTRA_TICKET_ID", String.valueOf(createdTicket.getId()));
+
+        finishActivity();
+        startActivity(intent);
+    }
+
+    private void finishActivity() {
+        requireActivity().finish();
+    }
+
+    private void publishTicket() {
+        Call<Ticket> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(requireContext()))
+                .getApi()
+                .createTicket(ticket);
+
+        call.enqueue(new Callback<Ticket>() {
+            @Override
+            public void onResponse(@NonNull Call<Ticket> call, @NonNull Response<Ticket> response) {
+                createdTicket = response.body();
+                if (createdTicket != null) {
+                    Toast.makeText(getActivity(), "Билет опубликован!", Toast.LENGTH_SHORT).show();
+                    openCreatedTicket();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Ticket> call, @NonNull Throwable t) {
+                Toast.makeText(getActivity(), "Что-то случилось :(", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

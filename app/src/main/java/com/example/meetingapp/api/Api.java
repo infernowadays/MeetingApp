@@ -59,6 +59,10 @@ public interface Api {
     Call<List<Ticket>> getTickets(@Query("category") List<String> categories, @Query("me") List<String> roles);
 
     @Headers("Content-Type: application/json")
+    @POST("api/tickets/")
+    Call<Ticket> createTicket(@Body Ticket ticket);
+
+    @Headers("Content-Type: application/json")
     @GET("api/events/{pk}/")
     Call<Event> getEvent(@Path("pk") String pk);
 
