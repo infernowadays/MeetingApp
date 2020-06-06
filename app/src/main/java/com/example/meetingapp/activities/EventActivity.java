@@ -97,7 +97,6 @@ public class EventActivity extends AppCompatActivity {
 
         intent.putExtra("EXTRA_EVENT", EventInfoFragment.getEvent());
 
-
         EventActivity.this.startActivity(intent);
     }
 

@@ -26,7 +26,14 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:fullBackupContent"
         tools:targetApi="q">
-        <activity android:name=".activities.ModeratorActivity"></activity>
+        <activity android:name=".activities.ComplaintActivity"></activity>
+        <activity android:name=".activities.ModeratorActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activities.ConfirmCodeActivity" />
         <activity
             android:name=".activities.EventInfoActivity"

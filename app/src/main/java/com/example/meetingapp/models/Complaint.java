@@ -3,29 +3,60 @@ package com.example.meetingapp.models;
 import com.google.gson.annotations.SerializedName;
 
 public class Complaint {
-    @SerializedName("user_profile")
-    private UserProfile userProfile;
-
+    @SerializedName("id")
+    private int id;
+    @SerializedName("suspected")
+    private UserProfile suspected;
     @SerializedName("message")
     private String message;
     @SerializedName("content_id")
     private int contentId;
     @SerializedName("content_type")
     private String contentType;
-
-    public Complaint(UserProfile userProfile, String message, int contentId, String contentType) {
-        this.userProfile = userProfile;
+    @SerializedName("created")
+    private String created;
+    @SerializedName("reviewed")
+    private boolean reviewed;
+    public Complaint(int id, UserProfile suspected, String message, int contentId, String contentType, String created, boolean reviewed) {
+        this.id = id;
+        this.suspected = suspected;
         this.message = message;
         this.contentId = contentId;
         this.contentType = contentType;
+        this.created = created;
+        this.reviewed = reviewed;
     }
 
-    public UserProfile getUserProfile() {
-        return userProfile;
+    public int getId() {
+        return id;
     }
 
-    public void setUserProfile(UserProfile userProfile) {
-        this.userProfile = userProfile;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public UserProfile getSuspected() {
+        return suspected;
+    }
+
+    public void setSuspected(UserProfile suspected) {
+        this.suspected = suspected;
+    }
+
+    public String getCreated() {
+        return created;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
+    }
+
+    public boolean isReviewed() {
+        return reviewed;
+    }
+
+    public void setReviewed(boolean reviewed) {
+        this.reviewed = reviewed;
     }
 
     public String getMessage() {

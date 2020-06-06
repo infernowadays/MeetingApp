@@ -1,9 +1,5 @@
 package com.example.meetingapp.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -17,10 +13,14 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.fragments.ComplaintDialog;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.utils.PreferenceUtils;
@@ -45,7 +45,7 @@ import retrofit2.Response;
 public class EventInfoActivity extends AppCompatActivity {
 
     private static Event event;
-
+    final int REQUEST_CODE = 1337;
     @BindView(R.id.text_event_creator)
     TextView textEventCreator;
     @BindView(R.id.text_event_description)
@@ -115,7 +115,7 @@ public class EventInfoActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_complain:
-                // do your code
+                openComplaintDialog();
                 return true;
 
             default:
@@ -206,5 +206,14 @@ public class EventInfoActivity extends AppCompatActivity {
         }
 
         initMapView();
+    }
+
+    private void openComplaintDialog() {
+        ComplaintDialog dialog = ComplaintDialog.newInstance();
+        dialog.show((EventInfoActivity.this).getSupportFragmentManager(),"tag");
+    }
+
+    private void showMessage() {
+
     }
 }

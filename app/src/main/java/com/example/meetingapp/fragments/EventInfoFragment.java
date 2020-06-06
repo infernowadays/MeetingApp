@@ -39,7 +39,6 @@ import retrofit2.Response;
 public class EventInfoFragment extends Fragment {
 
     private static Event event;
-    private static EventInfoFragment instance;
 
     @BindView(R.id.text_event_creator)
     TextView textEventCreator;
@@ -62,10 +61,6 @@ public class EventInfoFragment extends Fragment {
     private Context context;
     private GoogleMap googleMap;
 
-    public static EventInfoFragment getInstance() {
-        return instance;
-    }
-
     public static Event getEvent() {
         return event;
     }
@@ -82,7 +77,6 @@ public class EventInfoFragment extends Fragment {
         loadEvent();
         mapView.onCreate(savedInstanceState);
 
-        instance = this;
         return view;
     }
 

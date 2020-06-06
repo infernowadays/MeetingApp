@@ -113,4 +113,8 @@ public interface Api {
     @Headers("Content-Type: application/json")
     @GET("api/complaints/")
     Call<List<Complaint>> getComplaints();
+
+    @Headers("Content-Type: application/json")
+    @GET("api/complaints/{pk}/")
+    Call<Complaint> getComplaint(@Path("pk") String pk);
 }

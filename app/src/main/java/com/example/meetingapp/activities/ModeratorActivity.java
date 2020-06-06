@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.ComplaintsAdapter;
@@ -26,11 +27,19 @@ public class ModeratorActivity extends AppCompatActivity {
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
+    @BindView(R.id.swipe_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_moderator);
         ButterKnife.bind(this);
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            loadContent();
+            swipeRefreshLayout.setRefreshing(false);
+        });
 
         loadContent();
     }
@@ -51,7 +60,7 @@ public class ModeratorActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<List<Complaint>> call, @NonNull Throwable t) {
-
+                int a = 5;
             }
         });
     }
