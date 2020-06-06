@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,14 +17,6 @@ import com.example.meetingapp.GetImageFromAsync;
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.EventActivity;
 import com.example.meetingapp.models.Event;
-import com.example.meetingapp.models.UserProfile;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -102,8 +93,10 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
 
         @Override
         public void getResult(Bitmap bitmap) {
-            imageProfile.setImageBitmap(bitmap);
-            this.bitmap = bitmap;
+            if (bitmap != null) {
+                imageProfile.setImageBitmap(bitmap);
+                this.bitmap = bitmap;
+            }
         }
     }
 }

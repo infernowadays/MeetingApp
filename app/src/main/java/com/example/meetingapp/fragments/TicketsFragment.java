@@ -35,7 +35,10 @@ public class TicketsFragment extends ContentFragment {
 
     @Override
     public void openFilterDialog() {
-
+        TicketsFilterDialog dialog = TicketsFilterDialog.newInstance();
+        dialog.setTargetFragment(TicketsFragment.this, REQUEST_CODE);
+        dialog.setCallback(this::loadContent);
+        dialog.show(requireActivity().getSupportFragmentManager(), "tag");
     }
 
     @Override

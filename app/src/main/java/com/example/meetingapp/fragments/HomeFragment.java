@@ -1,17 +1,13 @@
 package com.example.meetingapp.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -29,13 +25,14 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.meetingapp.CustomCallback;
 import com.example.meetingapp.DownloadImageTask;
 import com.example.meetingapp.GetImageFromAsync;
 import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.activities.ConfirmCodeActivity;
 import com.example.meetingapp.activities.SettingsActivity;
+import com.example.meetingapp.activities.UserEventsActivity;
+import com.example.meetingapp.activities.UserTicketsActivity;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.UserProfile;
@@ -48,7 +45,6 @@ import com.google.android.material.tabs.TabLayout;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -122,7 +118,6 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
     @BindView(R.id.layout_content)
     NestedScrollView nestedScrollView;
 
-
     private UserProfile userProfile;
     private Bitmap bitmap;
 
@@ -157,11 +152,12 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
         return view;
     }
 
+
     private void setContent() {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
 
         viewPagerAdapter.addFragment(new HomeEventsFragment("creator"), "События");
-        viewPagerAdapter.addFragment(new HomeEventsFragment("creator"), "Билеты");
+        viewPagerAdapter.addFragment(new HomeTicketsFragment("creator"), "Билеты");
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -177,6 +173,18 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
     @OnClick(R.id.button_settings)
     void openSettings() {
         Intent intent = new Intent(getActivity(), SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.button_user_events)
+    void openUserEvents() {
+        Intent intent = new Intent(getActivity(), UserEventsActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.button_user_tickets)
+    void openUserTickets() {
+        Intent intent = new Intent(getActivity(), UserTicketsActivity.class);
         startActivity(intent);
     }
 
@@ -210,6 +218,7 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
     @Override
     public void onResume() {
         super.onResume();
+        setContent();
         if (bitmap != null)
             imageProfile.setImageBitmap(bitmap);
     }
@@ -297,8 +306,10 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
 
     @Override
     public void getResult(Bitmap bitmap) {
-        imageProfile.setImageBitmap(bitmap);
-        this.bitmap = bitmap;
+        if (bitmap != null) {
+            imageProfile.setImageBitmap(bitmap);
+            this.bitmap = bitmap;
+        }
     }
 
     static class ViewPagerAdapter extends FragmentPagerAdapter {

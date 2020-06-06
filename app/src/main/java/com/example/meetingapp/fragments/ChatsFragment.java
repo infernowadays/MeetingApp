@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.NotificationsAdapter;
@@ -35,6 +36,9 @@ public class ChatsFragment extends Fragment {
     @BindView(R.id.recycle_view)
     RecyclerView recycleView;
 
+    @BindView(R.id.swipe_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chats, container, false);
@@ -43,9 +47,21 @@ public class ChatsFragment extends Fragment {
         recycleView.setHasFixedSize(true);
         recycleView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            chats();
+            swipeRefreshLayout.setRefreshing(false);
+        });
+
         chats();
 
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        chats();
+        super.onResume();
     }
 
     private void chats() {

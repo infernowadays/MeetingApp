@@ -6,12 +6,12 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.amar.library.ui.presenter.StickyScrollPresenter;
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.TicketActivity;
 import com.example.meetingapp.models.Ticket;
@@ -19,8 +19,6 @@ import com.example.meetingapp.models.Ticket;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,19 +57,21 @@ public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.ViewHold
         holder.textPlace.setText(ticket.getAddress());
         holder.textPrice.setText(ticket.getPrice() + " ₽");
         holder.textDate.setText(parseDate(ticket.getDate()));
-        holder.textTime.setText(parseTime(ticket.getTime()));
 
-        holder.itemView.setOnClickListener(v -> {
+        if (ticket.getTime() != null)
+            holder.textTime.setText(parseTime(ticket.getTime()));
+
+        holder.layoutTicketInfo.setOnClickListener(v -> {
             Intent intent = new Intent(context, TicketActivity.class);
             intent.putExtra("EXTRA_TICKET_ID", String.valueOf(ticket.getId()));
 
             context.startActivity(intent);
         });
 
-//        holder.buttonSendRequest.setOnClickListener(v -> {
-//            sendRequest(String.valueOf(ticket.getCreator().getId()), ticket.getId());
-//            removeItemAfterRequest(position);
-//        });
+        holder.layoutSendMessage.setOnClickListener(v -> {
+            sendMessage(String.valueOf(ticket.getCreator().getId()), ticket.getId());
+            removeItemAfterRequest(position);
+        });
     }
 
     private String parseTime(String time) {
@@ -101,7 +101,7 @@ public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.ViewHold
     }
 
 
-    private void sendRequest(String toUser, long ticket) {
+    private void sendMessage(String toUser, long ticket) {
 
     }
 
@@ -145,6 +145,12 @@ public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.ViewHold
 
         @BindView(R.id.time)
         TextView textTime;
+
+        @BindView(R.id.layout_ticket_info)
+        LinearLayout layoutTicketInfo;
+
+        @BindView(R.id.layout_send_message)
+        LinearLayout layoutSendMessage;
 
         ViewHolder(View itemView) {
             super(itemView);

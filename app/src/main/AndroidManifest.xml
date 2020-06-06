@@ -26,7 +26,9 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:fullBackupContent"
         tools:targetApi="q">
-        <activity android:name=".activities.ComplaintActivity"></activity>
+        <activity android:name=".activities.UserTicketsActivity"></activity>
+        <activity android:name=".activities.UserEventsActivity" />
+        <activity android:name=".activities.ComplaintActivity" />
         <activity android:name=".activities.ModeratorActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

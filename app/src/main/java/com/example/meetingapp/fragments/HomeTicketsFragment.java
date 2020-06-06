@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
-import com.example.meetingapp.adapters.EventsAdapter;
+import com.example.meetingapp.adapters.TicketsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
-import com.example.meetingapp.models.Event;
+import com.example.meetingapp.models.Ticket;
 import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
 
@@ -28,18 +28,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeEventsFragment extends Fragment {
+public class HomeTicketsFragment extends Fragment {
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     private String eventType;
     private UserProfile userProfile;
 
-    public HomeEventsFragment(String eventType) {
+    public HomeTicketsFragment(String eventType) {
         this.eventType = eventType;
     }
 
-    public HomeEventsFragment() {
+    public HomeTicketsFragment() {
 
     }
 
@@ -50,7 +50,7 @@ public class HomeEventsFragment extends Fragment {
 
         userProfile = UserProfileManager.getInstance().getMyProfile();
 
-        recyclerView.setAdapter(new EventsAdapter(getContext(), new ArrayList<>()));
+        recyclerView.setAdapter(new TicketsAdapter(getContext(), new ArrayList<>()));
 
         List<String> filters = new ArrayList<>();
         filters.add("creator");
@@ -62,53 +62,37 @@ public class HomeEventsFragment extends Fragment {
     }
 
     private void events(List<String> roles) {
-        Call<List<Event>> call = RetrofitClient
+        Call<List<Ticket>> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(requireContext()))
                 .getApi()
-                .getEvents(null, roles);
+                .getTickets(null, roles);
 
-        call.enqueue(new Callback<List<Event>>() {
+        call.enqueue(new Callback<List<Ticket>>() {
             @Override
-            public void onResponse(@NonNull Call<List<Event>> call, @NonNull Response<List<Event>> response) {
-                List<Event> events = response.body();
+            public void onResponse(@NonNull Call<List<Ticket>> call, @NonNull Response<List<Ticket>> response) {
+                List<Ticket> tickets = response.body();
 
-                if (events == null || eventType.equals("passed"))
-                    events = new ArrayList<>();
+                if (tickets == null || eventType.equals("passed"))
+                    tickets = new ArrayList<>();
 
                 if (eventType.equals("creator"))
-                    events = eventsByCreator(events);
+                    tickets = ticketsByCreator(tickets);
 
-                if (eventType.equals("member"))
-                    events = eventsByMember(events);
-
-                recyclerView.setAdapter(new EventsAdapter(getContext(), events));
+                recyclerView.setAdapter(new TicketsAdapter(getContext(), tickets));
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<Ticket>> call, @NonNull Throwable t) {
                 int a = 5;
             }
         });
     }
 
-    private List<Event> eventsByCreator(List<Event> events) {
+    private List<Ticket> ticketsByCreator(List<Ticket> events) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             if (events != null) {
                 events = events.stream().filter(event -> event.getCreator().getId() ==
                         userProfile.getId()).collect(Collectors.toList());
-            }
-        }
-
-        return events;
-    }
-
-    private List<Event> eventsByMember(List<Event> events) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-
-            if (events != null) {
-                events = events.stream().filter(event ->
-                        event.getMembers().stream().anyMatch(member -> member.getId() ==
-                                (userProfile.getId()))).collect(Collectors.toList());
             }
         }
 

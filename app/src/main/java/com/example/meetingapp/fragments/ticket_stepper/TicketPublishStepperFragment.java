@@ -147,6 +147,7 @@ public class TicketPublishStepperFragment extends Fragment implements BlockingSt
         ticket.setName(ticketManager.getName());
 
         textPrice.setText(String.valueOf(ticketManager.getPrice()));
+        ticket.setPrice(ticketManager.getPrice());
 
         if (ticketManager.getDescription() != null) {
             textDescription.setText(ticketManager.getDescription());
@@ -167,6 +168,8 @@ public class TicketPublishStepperFragment extends Fragment implements BlockingSt
         }
 
         ticket.setCategories(categories);
+
+        ticket.setAddress("address");
     }
 
     @Override
