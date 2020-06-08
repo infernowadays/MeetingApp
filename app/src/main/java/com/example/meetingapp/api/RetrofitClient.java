@@ -20,8 +20,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-        private static final String BASE_URL = "http://10.0.2.2:8000/";
-//    private static final String BASE_URL = "http://104.248.247.195:80/";
+    //    private static final String BASE_URL = "http://10.0.2.2:8000/";
+    private static final String BASE_URL = "http://104.248.247.195:80/";
     private static String TOKEN;
     private static RetrofitClient instance;
     private static boolean needsHeader = true;
@@ -80,7 +80,19 @@ public class RetrofitClient {
                             }
 
                             Request request = requestBuilder.build();
-                            return chain.proceed(request);
+                            okhttp3.Response response = chain.proceed(request);
+
+                            switch (response.code()) {
+                                case 404:
+                                    break;
+                                case 500:
+                                    break;
+                                default:
+
+                                    break;
+                            }
+
+                            return response;
                         }
                 )
                 .connectTimeout(15, TimeUnit.SECONDS)

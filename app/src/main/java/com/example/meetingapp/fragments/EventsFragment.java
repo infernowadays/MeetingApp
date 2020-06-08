@@ -15,6 +15,7 @@ import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.utils.PreferenceUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.OnClick;
@@ -52,8 +53,10 @@ public class EventsFragment extends ContentFragment {
             @Override
             public void onResponse(@NonNull Call<List<Event>> call, @NonNull Response<List<Event>> response) {
                 List<Event> events = response.body();
-                if (events != null)
-                    recyclerView.setAdapter(new EventsAdapter(getContext(), events));
+                if (events == null)
+                    events = new ArrayList<>();
+
+                recyclerView.setAdapter(new EventsAdapter(getContext(), events));
             }
 
             @Override

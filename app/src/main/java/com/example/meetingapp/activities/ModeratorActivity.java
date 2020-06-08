@@ -2,6 +2,7 @@ package com.example.meetingapp.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -60,7 +61,7 @@ public class ModeratorActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<List<Complaint>> call, @NonNull Throwable t) {
-                int a = 5;
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
