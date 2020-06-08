@@ -1,5 +1,6 @@
 package com.example.meetingapp.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -20,6 +21,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity implements NotificationListener, BottomSheetFragment.ItemClickListener {
 
+    private static Context context;
+    private static Context applicationContext;
     final Fragment homeFragment = new HomeFragment();
     final Fragment eventsFragment = new EventsFragment();
     final Fragment ticketsFragment = new TicketsFragment();
@@ -32,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
     private int notSeenNotifications = 0;
     private Fragment active = homeFragment;
     private String content;
-
     private BottomNavigationView navigation;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -60,10 +62,21 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         return false;
     };
 
+    public static Context getMainContext() {
+        return context;
+    }
+
+    public static Context getAppContext() {
+        return applicationContext;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        context = this;
+        applicationContext = getApplicationContext();
 
         navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);

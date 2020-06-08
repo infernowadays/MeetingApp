@@ -1,6 +1,12 @@
 package com.example.meetingapp.api;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+
+import com.example.meetingapp.activities.MainActivity;
+import com.example.meetingapp.activities.StartActivity;
+import com.example.meetingapp.utils.PreferenceUtils;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -20,8 +26,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    //    private static final String BASE_URL = "http://10.0.2.2:8000/";
-    private static final String BASE_URL = "http://104.248.247.195:80/";
+    private static final String BASE_URL = "http://10.0.2.2:8000/";
+    //    private static final String BASE_URL = "http://104.248.247.195:80/";
     private static String TOKEN;
     private static RetrofitClient instance;
     private static boolean needsHeader = true;
@@ -83,7 +89,13 @@ public class RetrofitClient {
                             okhttp3.Response response = chain.proceed(request);
 
                             switch (response.code()) {
-                                case 404:
+                                case 401:
+                                    PreferenceUtils.removeToken(MainActivity.getMainContext());
+                                    Intent intent = new Intent(MainActivity.getAppContext(), StartActivity.class)
+                                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    MainActivity.getMainContext().startActivity(intent);
                                     break;
                                 case 500:
                                     break;
@@ -125,5 +137,9 @@ public class RetrofitClient {
 
     public Api getApi() {
         return retrofit.create(Api.class);
+    }
+
+    private Context getContext() {
+        return null;
     }
 }
