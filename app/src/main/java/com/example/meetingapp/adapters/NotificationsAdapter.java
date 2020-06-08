@@ -65,7 +65,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         final EventRequest eventRequest = eventRequests.get(position);
         userProfile = UserProfileManager.getInstance().getMyProfile();
 
-        holder.textFirstName.setText(eventRequest.getFromUser().getFirstName());
+        holder.textUserName.setText(eventRequest.getFromUser().getFirstName());
         if (eventRequest.getFromUser().getPhoto() != null) {
             holder.setImageProfile(eventRequest.getFromUser().getPhoto().getPhoto());
         }
@@ -74,16 +74,16 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
         if (eventRequest.getToUser().equals(String.valueOf(userProfile.getId())) && eventRequest.getDecision().equals("ACCEPT")) {
             holder.decisionButtons.setVisibility(View.GONE);
-            holder.textFirstName.setText("Вы приняли " + eventRequest.getFromUser() + " в событие!");
+            holder.textUserName.setText("Вы приняли " + eventRequest.getFromUser().getFirstName() + " " + eventRequest.getFromUser().getLastName() + " в событие!");
         } else if (eventRequest.getToUser().equals(String.valueOf(userProfile.getId())) && eventRequest.getDecision().equals("DECLINE")) {
             holder.decisionButtons.setVisibility(View.GONE);
-            holder.textFirstName.setText("Вы отклонили запрос");
+            holder.textUserName.setText("Вы отклонили запрос");
         } else if (eventRequest.getFromUser().getId() == userProfile.getId() && eventRequest.getDecision().equals("ACCEPT")) {
             holder.decisionButtons.setVisibility(View.GONE);
-            holder.textFirstName.setText("Добро пожаловать в событие!");
+            holder.textUserName.setText("Добро пожаловать в событие!");
         } else if (eventRequest.getFromUser().getId() == userProfile.getId() && eventRequest.getDecision().equals("DECLINE")) {
             holder.decisionButtons.setVisibility(View.GONE);
-            holder.textFirstName.setText("К сожалению, Ваша заявка была отклонена :(");
+            holder.textUserName.setText("К сожалению, Ваша заявка была отклонена :(");
         } else {
             holder.decisionButtons.setVisibility(View.VISIBLE);
         }
@@ -148,7 +148,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         ImageView imageProfile;
 
         @BindView(R.id.notification_username)
-        TextView textFirstName;
+        TextView textUserName;
 
         @BindView(R.id.text_created)
         TextView textCreated;
