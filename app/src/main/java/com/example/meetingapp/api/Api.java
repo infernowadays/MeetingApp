@@ -9,6 +9,8 @@ import com.example.meetingapp.models.Message;
 import com.example.meetingapp.models.Password;
 import com.example.meetingapp.models.ProfilePhoto;
 import com.example.meetingapp.models.RegisterData;
+import com.example.meetingapp.models.RequestGet;
+import com.example.meetingapp.models.RequestSend;
 import com.example.meetingapp.models.Ticket;
 import com.example.meetingapp.models.Token;
 import com.example.meetingapp.models.UserProfile;
@@ -80,15 +82,15 @@ public interface Api {
 
     @Headers("Content-Type: application/json")
     @POST("api/requests/")
-    Call<EventRequest> sendRequest(@Body EventRequest eventRequest);
+    Call<RequestGet> sendRequest(@Body RequestSend eventRequest);
 
     @Headers("Content-Type: application/json")
     @PUT("api/requests/{pk}/")
-    Call<EventRequest> answerRequest(@Path("pk") String pk, @Body EventRequest decision);
+    Call<RequestGet> answerRequest(@Path("pk") String pk, @Body RequestSend decision);
 
     @Headers("Content-Type: application/json")
     @GET("api/requests/")
-    Call<List<EventRequest>> getRequests();
+    Call<List<RequestGet>> getRequests();
 
     @Headers("Content-Type: application/json")
     @POST("token_auth/profile/me/")

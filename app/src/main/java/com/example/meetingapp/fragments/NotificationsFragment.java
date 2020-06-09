@@ -23,6 +23,7 @@ import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.EventRequest;
 import com.example.meetingapp.models.Message;
+import com.example.meetingapp.models.RequestGet;
 import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.gson.Gson;
@@ -48,7 +49,7 @@ public class NotificationsFragment extends Fragment {
     SwipeRefreshLayout swipeRefreshLayout;
 
     private NotificationsAdapter notificationsAdapter;
-    private List<EventRequest> eventRequests;
+    private List<RequestGet> eventRequests;
     private BroadcastReceiver broadcastReceiver;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,7 +60,6 @@ public class NotificationsFragment extends Fragment {
         recycleView.setLayoutManager(linearLayoutManager);
 
         eventRequests = new ArrayList<>();
-        notificationsAdapter = new NotificationsAdapter(getContext(), eventRequests);
 
         loadNotifications();
 
@@ -72,7 +72,7 @@ public class NotificationsFragment extends Fragment {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Gson gson = new Gson();
-                EventRequest eventRequest = gson.fromJson(intent.getStringExtra(WebSocketListenerService.EXTRA_REQUEST), EventRequest.class);
+                RequestGet eventRequest = gson.fromJson(intent.getStringExtra(WebSocketListenerService.EXTRA_REQUEST), RequestGet.class);
 
                 eventRequests.add(0, eventRequest);
                 notificationsAdapter.notifyItemInserted(0);
@@ -98,14 +98,14 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void loadNotifications() {
-        Call<List<EventRequest>> call = RetrofitClient
+        Call<List<RequestGet>> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(requireContext()))
                 .getApi()
                 .getRequests();
 
-        call.enqueue(new Callback<List<EventRequest>>() {
+        call.enqueue(new Callback<List<RequestGet>>() {
             @Override
-            public void onResponse(@NonNull Call<List<EventRequest>> call, @NonNull Response<List<EventRequest>> response) {
+            public void onResponse(@NonNull Call<List<RequestGet>> call, @NonNull Response<List<RequestGet>> response) {
                 eventRequests = response.body();
                 if (eventRequests != null) {
                     notificationsAdapter = new NotificationsAdapter(getContext(), eventRequests);
@@ -114,7 +114,7 @@ public class NotificationsFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<EventRequest>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<RequestGet>> call, @NonNull Throwable t) {
                 Log.d("failure", Objects.requireNonNull(t.getMessage()));
             }
         });

@@ -9,13 +9,27 @@ public class RequestSend {
 
     @SerializedName("event")
     private long event;
+    @SerializedName("decision")
+    private String decision;
 
     public RequestSend(String toUser, long event) {
         this.toUser = toUser;
         this.event = event;
     }
 
+    public RequestSend(String decision) {
+        this.decision = decision;
+    }
+
     public RequestSend() {
+    }
+
+    public String getDecision() {
+        return decision;
+    }
+
+    public void setDecision(String decision) {
+        this.decision = decision;
     }
 
     public String getToUser() {

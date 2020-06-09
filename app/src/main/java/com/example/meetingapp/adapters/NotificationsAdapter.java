@@ -3,6 +3,14 @@ package com.example.meetingapp.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +18,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.DownloadImageTask;
@@ -19,7 +29,8 @@ import com.example.meetingapp.GetImageFromAsync;
 import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.api.RetrofitClient;
-import com.example.meetingapp.models.EventRequest;
+import com.example.meetingapp.models.RequestGet;
+import com.example.meetingapp.models.RequestSend;
 import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
 
@@ -40,14 +51,18 @@ import retrofit2.Response;
 
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.ViewHolder> {
 
-    private final String acceptMessage = "";
-    private final String noAnswerMessage = "";
-    private List<EventRequest> eventRequests;
+    private final String WANT_JOIN = " хочет вступить в ваше событие";
+    private final String SEND_REQUEST = "\nЗаявка отправлена";
+    private final String ACCEPT = "\nпринят в событие";
+    private final String ACCEPTED = " принял вашу заявку в событие";
+    private final String DECLINE = "\nЗаявка отклонена";
+    private final String DECLINED = " отклонил вашу заявку";
+
+    private List<RequestGet> eventRequests;
     private Context mContext;
     private ViewHolder holder;
-    private UserProfile userProfile;
 
-    public NotificationsAdapter(Context mContext, List<EventRequest> eventRequests) {
+    public NotificationsAdapter(Context mContext, List<RequestGet> eventRequests) {
         this.eventRequests = eventRequests;
         this.mContext = mContext;
     }
@@ -59,47 +74,87 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         return new ViewHolder(view);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "ClickableViewAccessibility"})
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final EventRequest eventRequest = eventRequests.get(position);
-        userProfile = UserProfileManager.getInstance().getMyProfile();
+        final RequestGet eventRequest = eventRequests.get(position);
+        UserProfile userProfile = UserProfileManager.getInstance().getMyProfile();
 
         holder.textUserName.setText(eventRequest.getFromUser().getFirstName());
-        if (eventRequest.getFromUser().getPhoto() != null) {
+
+
+        ClickableSpan linkClick = new ClickableSpan() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(mContext, "Link Click", Toast.LENGTH_SHORT).show();
+                view.invalidate();
+            }
+
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                ds.setColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+                ds.setTypeface(Typeface.create("Arial", Typeface.BOLD));
+
+                if (holder.textUserName.isPressed()) {
+                    ds.bgColor = ContextCompat.getColor(mContext, R.color.backgroundPrimaryLight);
+                }
+                holder.textUserName.invalidate();
+            }
+        };
+
+        String fromUser = eventRequest.getFromUser().getFirstName() + " " + eventRequest.getFromUser().getLastName();
+        String toUser = eventRequest.getToUser().getFirstName() + " " + eventRequest.getToUser().getLastName();
+        holder.textUserName.setHighlightColor(Color.TRANSPARENT);
+
+        if (eventRequest.getToUser().getId() == userProfile.getId() && eventRequest.getToUser().getPhoto() != null) {
+            holder.setImageProfile(eventRequest.getToUser().getPhoto().getPhoto());
+            setText(holder.textUserName, linkClick, fromUser, WANT_JOIN);
+        } else if (eventRequest.getFromUser().getId() == userProfile.getId() && eventRequest.getFromUser().getPhoto() != null) {
             holder.setImageProfile(eventRequest.getFromUser().getPhoto().getPhoto());
+            setText(holder.textUserName, linkClick, toUser, SEND_REQUEST);
         }
 
         holder.textCreated.setText(parseCreated(eventRequest.getCreated()));
 
-        if (eventRequest.getToUser().equals(String.valueOf(userProfile.getId())) && eventRequest.getDecision().equals("ACCEPT")) {
-            holder.decisionButtons.setVisibility(View.GONE);
-            holder.textUserName.setText("Вы приняли " + eventRequest.getFromUser().getFirstName() + " " + eventRequest.getFromUser().getLastName() + " в событие!");
-        } else if (eventRequest.getToUser().equals(String.valueOf(userProfile.getId())) && eventRequest.getDecision().equals("DECLINE")) {
-            holder.decisionButtons.setVisibility(View.GONE);
-            holder.textUserName.setText("Вы отклонили запрос");
-        } else if (eventRequest.getFromUser().getId() == userProfile.getId() && eventRequest.getDecision().equals("ACCEPT")) {
-            holder.decisionButtons.setVisibility(View.GONE);
-            holder.textUserName.setText("Добро пожаловать в событие!");
-        } else if (eventRequest.getFromUser().getId() == userProfile.getId() && eventRequest.getDecision().equals("DECLINE")) {
-            holder.decisionButtons.setVisibility(View.GONE);
-            holder.textUserName.setText("К сожалению, Ваша заявка была отклонена :(");
-        } else {
+        if (eventRequest.getToUser().getId() == userProfile.getId()) {
             holder.decisionButtons.setVisibility(View.VISIBLE);
+            if (eventRequest.getDecision().equals("ACCEPT")) {
+                holder.decisionButtons.setVisibility(View.GONE);
+                setText(holder.textUserName, linkClick, fromUser, ACCEPT);
+            } else if (eventRequest.getDecision().equals("DECLINE")) {
+                holder.decisionButtons.setVisibility(View.GONE);
+                setText(holder.textUserName, linkClick, toUser, DECLINE);
+            }
+        } else if (eventRequest.getFromUser().getId() == userProfile.getId()) {
+            holder.decisionButtons.setVisibility(View.GONE);
+            if (eventRequest.getDecision().equals("ACCEPT")) {
+                setText(holder.textUserName, linkClick, fromUser, ACCEPTED);
+            } else if (eventRequest.getDecision().equals("DECLINE")) {
+                setText(holder.textUserName, linkClick, toUser, DECLINED);
+            }
         }
+
         holder.acceptButton.setOnClickListener(v -> answerRequest(eventRequest, "ACCEPT"));
         holder.declineButton.setOnClickListener(v -> answerRequest(eventRequest, "DECLINE"));
     }
 
-    private void answerRequest(EventRequest eventRequest, String decision) {
-        Call<EventRequest> call = RetrofitClient
+    private void setText(TextView textView, ClickableSpan linkClick, String username, String supportText) {
+        Spannable spannableString = new SpannableString(username + supportText);
+        spannableString.setSpan(linkClick, 0, username.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        textView.setText(spannableString, TextView.BufferType.SPANNABLE);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    private void answerRequest(RequestGet eventRequest, String decision) {
+        Call<RequestGet> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(mContext))
                 .getApi()
-                .answerRequest(String.valueOf(eventRequest.getId()), new EventRequest(decision));
+                .answerRequest(String.valueOf(eventRequest.getId()), new RequestSend(decision));
 
-        call.enqueue(new Callback<EventRequest>() {
+        call.enqueue(new Callback<RequestGet>() {
             @Override
-            public void onResponse(@NonNull Call<EventRequest> call, @NonNull Response<EventRequest> response) {
+            public void onResponse(@NonNull Call<RequestGet> call, @NonNull Response<RequestGet> response) {
                 if (response.body() != null) {
                     eventRequest.setDecision(decision);
                     notifyDataSetChanged();
@@ -107,7 +162,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             }
 
             @Override
-            public void onFailure(@NonNull Call<EventRequest> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<RequestGet> call, @NonNull Throwable t) {
                 int a = 0;
             }
         });

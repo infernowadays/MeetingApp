@@ -24,6 +24,8 @@ import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.EventRequest;
+import com.example.meetingapp.models.RequestGet;
+import com.example.meetingapp.models.RequestSend;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.gms.common.util.ArrayUtils;
 import com.google.android.material.chip.Chip;
@@ -110,19 +112,19 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     }
 
     private void sendRequest(String toUser, long event) {
-        Call<EventRequest> call = RetrofitClient
+        Call<RequestGet> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(Objects.requireNonNull(context)))
                 .getApi()
-                .sendRequest(new EventRequest(UserProfileManager.getInstance().getMyProfile(), toUser, event));
+                .sendRequest(new RequestSend(toUser, event));
 
-        call.enqueue(new Callback<EventRequest>() {
+        call.enqueue(new Callback<RequestGet>() {
             @Override
-            public void onResponse(@NonNull Call<EventRequest> call, @NonNull Response<EventRequest> response) {
+            public void onResponse(@NonNull Call<RequestGet> call, @NonNull Response<RequestGet> response) {
                 Log.d("response", response.message());
             }
 
             @Override
-            public void onFailure(@NonNull Call<EventRequest> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<RequestGet> call, @NonNull Throwable t) {
                 Log.d("failure", "request failed");
             }
         });
