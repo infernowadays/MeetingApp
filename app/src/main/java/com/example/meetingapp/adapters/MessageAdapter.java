@@ -1,6 +1,5 @@
 package com.example.meetingapp.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -17,18 +16,13 @@ import com.example.meetingapp.DownloadImageTask;
 import com.example.meetingapp.GetImageFromAsync;
 import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
-import com.example.meetingapp.api.FirebaseClient;
 import com.example.meetingapp.models.Message;
-import com.example.meetingapp.models.UserProfile;
+import com.example.meetingapp.utils.DateConverter;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,7 +44,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @NonNull
     @Override
-    public MessageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == MSG_TYPE_RIGHT) {
             View view = LayoutInflater.from(context).inflate(R.layout.chat_item_right, parent, false);
             return new ViewHolder(view);
@@ -61,7 +55,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Message message = messages.get(position);
         holder.textMessage.setText(message.getText());
         holder.textUserName.setText(message.getFromUser().getFirstName());
@@ -72,11 +66,47 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         } else {
             Glide.with(context).load(message.getFromUser().getPhoto()).into(holder.imageProfile);
         }
+
+        long previousMillis = 0;
+        if (position > 0) {
+            Message previousMessage = messages.get(position - 1);
+            previousMillis = DateConverter.stringDateToMillis(previousMessage.getCreated());
+        }
+        setTimeTextVisibility(DateConverter.stringDateToMillis(message.getCreated()), previousMillis, holder.textDate);
+    }
+
+    private void setTimeTextVisibility(long ts1, long ts2, TextView textDate) {
+        if (ts2 == 0) {
+            textDate.setVisibility(View.VISIBLE);
+            textDate.setText(DateConverter.millisToStringDate(ts1));
+        } else {
+            Calendar cal1 = Calendar.getInstance();
+            Calendar cal2 = Calendar.getInstance();
+            cal1.setTimeInMillis(ts1);
+            cal2.setTimeInMillis(ts2);
+
+            boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                    cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+
+            if (sameDay) {
+                textDate.setVisibility(View.GONE);
+                textDate.setText("");
+            } else {
+                textDate.setVisibility(View.VISIBLE);
+                textDate.setText(DateConverter.millisToStringDate(ts1));
+            }
+
+        }
     }
 
     @Override
     public int getItemCount() {
         return messages.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
@@ -105,6 +135,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         @BindView(R.id.text_message)
         TextView textMessage;
 
+        @BindView(R.id.text_date)
+        TextView textDate;
+
         @BindView(R.id.text_message_time)
         TextView textMessageTime;
 
@@ -122,7 +155,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
 
         public void setImageProfile(String photoUrl) {
-            new DownloadImageTask(MessageAdapter.ViewHolder.this).execute(photoUrl);
+            new DownloadImageTask(ViewHolder.this).execute(photoUrl);
         }
 
         @Override

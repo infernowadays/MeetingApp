@@ -9,13 +9,17 @@ import com.example.meetingapp.R;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.Objects;
 
 public class DateConverter {
     private final static String pattern = "dd MMMM";
+    private final static String fullPattern = "yyyy/MM/dd HH:mm:ss";
     private final static String serverPattern = "YYYY-MM-dd";
 
     public static String getDate(int year, int month, int day) {
@@ -90,5 +94,56 @@ public class DateConverter {
         }
 
         return year + "-" + strMonth + "-" + strDay;
+    }
+
+    public static long stringDateToMillis(String stringDate) {
+        String newFormat = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            ZonedDateTime zdt = ZonedDateTime.parse(stringDate);
+            newFormat = zdt.format(DateTimeFormatter.ofPattern(fullPattern));
+        }
+
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat(fullPattern);
+        Date date = null;
+        try {
+            date = sdf.parse(Objects.requireNonNull(newFormat));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return Objects.requireNonNull(date).getTime();
+    }
+
+    public static String millisToStringDate(long milliSeconds) {
+        @SuppressLint("SimpleDateFormat") DateFormat formatter = new SimpleDateFormat("dd MMMM");
+
+        Date date = new Date(milliSeconds);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliSeconds);
+
+        return formatter.format(date);
+    }
+
+    public String parseCreated(String created) {
+        String newFormat = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            ZonedDateTime zdt = ZonedDateTime.parse(created);
+            newFormat = zdt.format(DateTimeFormatter.ofPattern("dd/MM hh:mm"));
+        }
+
+        SimpleDateFormat month_date = new SimpleDateFormat("dd MMMM в hh:mm", new Locale("RU"));
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM hh:mm");
+
+        Date date = null;
+        try {
+            date = sdf.parse(Objects.requireNonNull(newFormat));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (date != null) {
+            return month_date.format(date);
+        }
+
+        return "";
     }
 }

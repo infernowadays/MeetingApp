@@ -78,7 +78,6 @@ public class EventChatFragment extends Fragment {
 
         recycleView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
-        linearLayoutManager.setStackFromEnd(true);
         recycleView.setLayoutManager(linearLayoutManager);
 
         loadEvent();
@@ -152,7 +151,6 @@ public class EventChatFragment extends Fragment {
 
     private void readMessages() {
         messages = new ArrayList<>();
-
 
         Call<List<Message>> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(requireContext()))

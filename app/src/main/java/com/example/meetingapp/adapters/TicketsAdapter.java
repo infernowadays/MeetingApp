@@ -32,13 +32,10 @@ public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.ViewHold
 
     private List<Ticket> tickets;
     private Context context;
-    private List<Integer> ticketsIds;
 
     public TicketsAdapter(Context context, List<Ticket> tickets) {
         this.tickets = tickets;
         this.context = context;
-
-        ticketsIds = new ArrayList<>();
     }
 
     @NonNull
@@ -107,7 +104,6 @@ public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.ViewHold
 
     private void removeItemAfterRequest(int position) {
         tickets.remove(position);
-        ticketsIds = new ArrayList<>();
 
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, getItemCount());
