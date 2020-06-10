@@ -39,7 +39,6 @@ public class EventCategoriesStepperFragment extends Fragment implements Blocking
     RecyclerView recyclerView;
 
     private EventManager eventManager;
-    private Context context;
     private ArrayList<String> categories;
     private CategoryChipsAdapter categoryChipsAdapter;
 
@@ -65,12 +64,11 @@ public class EventCategoriesStepperFragment extends Fragment implements Blocking
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        this.context = context;
 
         if (context instanceof EventManager) {
             eventManager = (EventManager) context;
         } else {
-            throw new IllegalStateException("Activity must implement IUserProfileManager interface!");
+            throw new IllegalStateException("Activity must implement EventManager interface!");
         }
     }
 

@@ -1,11 +1,26 @@
 package com.example.meetingapp.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
-public class Ticket {
+public class Ticket implements Parcelable{
+    public static final Parcelable.Creator<Ticket> CREATOR = new Parcelable.Creator<Ticket>() {
+        public Ticket createFromParcel(Parcel in) {
+            return new Ticket(in);
+        }
+
+        public Ticket[] newArray(int size) {
+            return new Ticket[size];
+        }
+    };
     private int id;
     private String name;
-    private String address;
+    @SerializedName("geo_point")
+    private GeoPoint geoPoint;
     private int price;
     private UserProfile creator;
     private String created;
@@ -15,10 +30,10 @@ public class Ticket {
     private boolean sold;
     private List<Category> categories;
 
-    public Ticket(int id, String name, String address, int price, UserProfile creator, String created, String date, String time, String description, boolean sold, List<Category> categories) {
+    public Ticket(int id, String name, GeoPoint geoPoint, int price, UserProfile creator, String created, String date, String time, String description, boolean sold, List<Category> categories) {
         this.id = id;
         this.name = name;
-        this.address = address;
+        this.geoPoint = geoPoint;
         this.price = price;
         this.creator = creator;
         this.created = created;
@@ -39,6 +54,16 @@ public class Ticket {
 
     public Ticket() {
 
+    }
+
+    public Ticket(Parcel in) {
+        id = in.readInt();
+        price = in.readInt();
+        name = in.readString();
+        description = in.readString();
+        date = in.readString();
+        time = in.readString();
+        geoPoint = in.readParcelable(getClass().getClassLoader());
     }
 
     public String getName() {
@@ -113,12 +138,12 @@ public class Ticket {
         this.id = id;
     }
 
-    public String getAddress() {
-        return address;
+    public GeoPoint getGeoPoint() {
+        return geoPoint;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setGeoPoint(GeoPoint geoPoint) {
+        this.geoPoint = geoPoint;
     }
 
     public String getTime() {
@@ -127,5 +152,21 @@ public class Ticket {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeInt(price);
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeString(date);
+        dest.writeString(time);
+        dest.writeParcelable(geoPoint, flags);
     }
 }

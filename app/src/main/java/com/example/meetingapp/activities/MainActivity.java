@@ -2,6 +2,7 @@ package com.example.meetingapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,8 @@ import com.example.meetingapp.fragments.TicketsFragment;
 import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements NotificationListener, BottomSheetFragment.ItemClickListener {
 
@@ -75,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setLocale();
+
         context = this;
         applicationContext = getApplicationContext();
 
@@ -126,5 +131,14 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         active = addFragment;
         content = contentType;
         PreferenceUtils.saveContentType(content, this);
+    }
+
+    private void setLocale() {
+        Configuration config = getApplicationContext().getResources().getConfiguration();
+        Locale locale = new Locale("ru");
+        Locale.setDefault(locale);
+        config.locale = locale;
+        getApplicationContext().getResources().updateConfiguration(config,
+                getApplicationContext().getResources().getDisplayMetrics());
     }
 }

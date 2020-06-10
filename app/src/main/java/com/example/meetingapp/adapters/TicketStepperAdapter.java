@@ -7,8 +7,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.meetingapp.activities.TicketStepperActivity;
-import com.example.meetingapp.fragments.ticket_stepper.TicketBasicDataStepperFragment;
+import com.example.meetingapp.fragments.ticket_stepper.TicketDescriptionStepperFragment;
 import com.example.meetingapp.fragments.ticket_stepper.TicketCategoriesStepperFragment;
+import com.example.meetingapp.fragments.ticket_stepper.TicketDateStepperFragment;
+import com.example.meetingapp.fragments.ticket_stepper.TicketLocationStepperFragment;
 import com.example.meetingapp.fragments.ticket_stepper.TicketPublishStepperFragment;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.adapter.AbstractFragmentStepAdapter;
@@ -30,12 +32,18 @@ public class TicketStepperAdapter extends AbstractFragmentStepAdapter {
     public Step createStep(int position) {
         switch (position) {
             case 0:
-                return TicketBasicDataStepperFragment.newInstance();
+                return TicketDescriptionStepperFragment.newInstance();
 
             case 1:
-                return TicketCategoriesStepperFragment.newInstance();
+                return TicketDateStepperFragment.newInstance();
 
             case 2:
+                return TicketCategoriesStepperFragment.newInstance();
+
+            case 3:
+                return TicketLocationStepperFragment.newInstance();
+
+            case 4:
                 return TicketPublishStepperFragment.newInstance();
         }
 
@@ -44,7 +52,7 @@ public class TicketStepperAdapter extends AbstractFragmentStepAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 5;
     }
 
     @NonNull
@@ -58,9 +66,19 @@ public class TicketStepperAdapter extends AbstractFragmentStepAdapter {
                         .create();
             case 1:
                 return new StepViewModel.Builder(context)
+                        .setTitle("Тик-Так")
+                        .create();
+
+            case 2:
+                return new StepViewModel.Builder(context)
                         .setTitle("Выберите категории")
                         .create();
-            case 2:
+
+            case 3:
+                return new StepViewModel.Builder(context)
+                        .setTitle("Куда идем?")
+                        .create();
+            case 4:
                 return new StepViewModel.Builder(context)
                         .setTitle("Готово!")
                         .create();

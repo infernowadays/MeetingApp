@@ -81,6 +81,10 @@ public interface Api {
     Call<Event> updateEvent(@Path("pk") String pk, @Body Event event);
 
     @Headers("Content-Type: application/json")
+    @PUT("api/tickets/{pk}/")
+    Call<Ticket> updateTicket(@Path("pk") String pk, @Body Ticket ticket);
+
+    @Headers("Content-Type: application/json")
     @POST("api/requests/")
     Call<RequestGet> sendRequest(@Body RequestSend eventRequest);
 

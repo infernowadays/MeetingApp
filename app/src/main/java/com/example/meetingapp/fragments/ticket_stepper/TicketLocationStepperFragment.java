@@ -1,4 +1,4 @@
-package com.example.meetingapp.fragments.event_stepper;
+package com.example.meetingapp.fragments.ticket_stepper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -15,8 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.example.meetingapp.EventManager;
 import com.example.meetingapp.R;
+import com.example.meetingapp.TicketManager;
 import com.example.meetingapp.activities.MapsActivity;
 import com.example.meetingapp.models.GeoPoint;
 import com.google.android.gms.common.api.Status;
@@ -30,23 +30,21 @@ import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
-public class EventGeoLocationStepperFragment extends Fragment implements BlockingStep {
+public class TicketLocationStepperFragment extends Fragment implements BlockingStep {
 
     @BindView(R.id.header_h4)
     TextView headerH4;
     private GeoPoint geoPoint;
-    private EventManager eventManager;
+    private TicketManager ticketManager;
     private AutocompleteSupportFragment autocompleteFragment;
     private FragmentActivity mContext;
 
-    public static EventGeoLocationStepperFragment newInstance() {
-        return new EventGeoLocationStepperFragment();
+    public static TicketLocationStepperFragment newInstance() {
+        return new TicketLocationStepperFragment();
     }
 
     public Fragment getInstance() {
@@ -68,7 +66,7 @@ public class EventGeoLocationStepperFragment extends Fragment implements Blockin
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_event_geo_location_stepper, container, false);
+        View view = inflater.inflate(R.layout.fragment_ticket_location_stepper, container, false);
         ButterKnife.bind(this, view);
 
         int unicode = 0x1F609;
@@ -78,7 +76,7 @@ public class EventGeoLocationStepperFragment extends Fragment implements Blockin
         initAutoComplete();
 
         geoPoint = null;
-        if (eventManager.getLocation() != null)
+        if (ticketManager.getLocation() != null)
             loadGeoPoint();
 
         MaterialButton locationButton = view.findViewById(R.id.openGeo);
@@ -93,12 +91,12 @@ public class EventGeoLocationStepperFragment extends Fragment implements Blockin
 
     private void loadGeoPoint() {
         geoPoint = new GeoPoint(
-                eventManager.getLocation().getLatitude(),
-                eventManager.getLocation().getLongitude(),
-                eventManager.getLocation().getAddress()
+                ticketManager.getLocation().getLatitude(),
+                ticketManager.getLocation().getLongitude(),
+                ticketManager.getLocation().getAddress()
         );
 
-        autocompleteFragment.setText(eventManager.getLocation().getAddress());
+        autocompleteFragment.setText(ticketManager.getLocation().getAddress());
     }
 
     private void initAutoComplete() {
@@ -110,7 +108,7 @@ public class EventGeoLocationStepperFragment extends Fragment implements Blockin
 
         autocompleteFragment = (AutocompleteSupportFragment)
                 getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-        Objects.requireNonNull(autocompleteFragment).setHint("Адрес");
+        autocompleteFragment.setHint("Адрес");
 
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME));
 
@@ -137,8 +135,8 @@ public class EventGeoLocationStepperFragment extends Fragment implements Blockin
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mContext = (FragmentActivity) context;
-        if (context instanceof EventManager) {
-            eventManager = (EventManager) context;
+        if (context instanceof TicketManager) {
+            ticketManager = (TicketManager) context;
         } else {
             throw new IllegalStateException("Activity must implement EventManager interface!");
         }
@@ -166,7 +164,7 @@ public class EventGeoLocationStepperFragment extends Fragment implements Blockin
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
 //        String address = Objects.requireNonNull(editAddress.getText()).toString();
-        eventManager.saveLocation(geoPoint);
+        ticketManager.saveLocation(geoPoint);
         callback.goToNextStep();
     }
 

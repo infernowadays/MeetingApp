@@ -9,8 +9,8 @@ import androidx.fragment.app.FragmentManager;
 import com.example.meetingapp.activities.EventStepperActivity;
 import com.example.meetingapp.fragments.event_stepper.EventCategoriesStepperFragment;
 import com.example.meetingapp.fragments.event_stepper.EventDateStepperFragment;
+import com.example.meetingapp.fragments.event_stepper.EventDescriptionStepperFragment;
 import com.example.meetingapp.fragments.event_stepper.EventGeoLocationStepperFragment;
-import com.example.meetingapp.fragments.event_stepper.EventNameStepperFragment;
 import com.example.meetingapp.fragments.event_stepper.EventPublishStepperFragment;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.adapter.AbstractFragmentStepAdapter;
@@ -32,7 +32,7 @@ public class EventStepperAdapter extends AbstractFragmentStepAdapter {
     public Step createStep(int position) {
         switch (position) {
             case 0:
-                return EventNameStepperFragment.newInstance();
+                return EventDescriptionStepperFragment.newInstance();
 
             case 1:
                 return EventDateStepperFragment.newInstance();

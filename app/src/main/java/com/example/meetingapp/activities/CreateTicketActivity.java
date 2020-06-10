@@ -1,65 +1,49 @@
 package com.example.meetingapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.meetingapp.R;
 import com.example.meetingapp.TicketManager;
 import com.example.meetingapp.adapters.TicketStepperAdapter;
-import com.stepstone.stepper.StepperLayout;
+import com.example.meetingapp.models.Ticket;
 
-import java.util.ArrayList;
+public class CreateTicketActivity extends BaseCreateContentActivity implements TicketManager {
 
-public class CreateTicketActivity extends AppCompatActivity implements TicketManager {
-
-    private static final String CURRENT_STEP_POSITION_KEY = "position";
     private static final String NAME = "name";
-    private static final String DESCRIPTION = "description";
     private static final String PRICE = "price";
-    private static final String DATE = "date";
-    private static final String CATEGORIES = "categories";
-    private static final String ACTION = "action";
 
-    private StepperLayout stepperLayout;
-
-    private String action;
     private String name;
-    private String description;
     private int price;
-    private String date;
-    private ArrayList<String> categories;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.step);
-
-        stepperLayout = findViewById(R.id.stepperLayout);
+    public void setupAdapter() {
         TicketStepperAdapter ticketStepperAdapter = new TicketStepperAdapter(getSupportFragmentManager(), this);
         stepperLayout.setAdapter(ticketStepperAdapter);
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(CURRENT_STEP_POSITION_KEY, stepperLayout.getCurrentStepPosition());
-        outState.putString(NAME, name);
-        outState.putString(DESCRIPTION, description);
-        outState.putDouble(PRICE, price);
-        outState.putString(DATE, date);
-        outState.putStringArrayList(CATEGORIES, categories);
+    public void loadContent() {
+        Intent intent = getIntent();
+        this.saveAction(intent.getStringExtra("action"));
 
-        super.onSaveInstanceState(outState);
+        if (intent.hasExtra("EXTRA_TICKET")) {
+            Ticket ticket = intent.getParcelableExtra("EXTRA_TICKET");
+            if (ticket != null) {
+                this.saveId(ticket.getId());
+                this.saveDescription(ticket.getDescription());
+                this.saveDate(ticket.getDate());
+                this.saveTime(ticket.getTime());
+                this.saveLocation(ticket.getGeoPoint());
+                this.saveName(ticket.getName());
+                this.savePrice(ticket.getPrice());
+            }
+        }
     }
 
     @Override
-    public void onBackPressed() {
-        final int currentStepPosition = stepperLayout.getCurrentStepPosition();
-        if (currentStepPosition > 0) {
-            stepperLayout.onBackClicked();
-        } else {
-            finish();
-        }
+    public void setupAdditionalOnSaveInstanceState(Bundle outState) {
+        outState.putString(NAME, name);
+        outState.putDouble(PRICE, price);
     }
 
     @Override
@@ -73,16 +57,6 @@ public class CreateTicketActivity extends AppCompatActivity implements TicketMan
     }
 
     @Override
-    public void saveDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public String getDescription() {
-        return description;
-    }
-
-    @Override
     public void savePrice(int price) {
         this.price = price;
     }
@@ -90,25 +64,5 @@ public class CreateTicketActivity extends AppCompatActivity implements TicketMan
     @Override
     public int getPrice() {
         return price;
-    }
-
-    @Override
-    public void saveDate(String date) {
-        this.date = date;
-    }
-
-    @Override
-    public String getDate() {
-        return date;
-    }
-
-    @Override
-    public void saveCategories(ArrayList<String> categories) {
-        this.categories = categories;
-    }
-
-    @Override
-    public ArrayList<String> getCategories() {
-        return categories;
     }
 }

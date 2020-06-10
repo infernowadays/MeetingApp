@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".fragments.event_stepper.EventNameStepperFragment">
+    tools:context=".fragments.event_stepper.EventDescriptionStepperFragment">
 
     <TextView
         android:id="@+id/header_h4"
@@ -15,11 +15,11 @@
         android:textColor="@color/colorPrimary" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/event_name_creation"
+        android:id="@+id/text_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="top|left"
         android:layout_marginTop="8dp"
+        android:gravity="top|left"
         android:hint="Куда пойдем?"
         android:textSize="16sp"
         tools:ignore="RtlHardcoded" />

@@ -1,4 +1,4 @@
-package com.example.meetingapp.fragments.event_stepper;
+package com.example.meetingapp.fragments.ticket_stepper;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
@@ -17,8 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.meetingapp.EventManager;
 import com.example.meetingapp.R;
+import com.example.meetingapp.TicketManager;
 import com.example.meetingapp.utils.DateConverter;
 import com.example.meetingapp.utils.TimeConverter;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -33,8 +33,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-
-public class EventDateStepperFragment extends Fragment implements BlockingStep, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class TicketDateStepperFragment extends Fragment implements BlockingStep,
+        DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     @BindView(R.id.button_today)
     RadioButton buttonToday;
@@ -48,21 +48,21 @@ public class EventDateStepperFragment extends Fragment implements BlockingStep, 
     @BindView(R.id.text_time)
     MaterialEditText textTime;
 
-    private EventManager eventManager;
+    private TicketManager ticketManager;
     private Date date;
 
-    public static EventDateStepperFragment newInstance() {
-        return new EventDateStepperFragment();
+    public static TicketDateStepperFragment newInstance() {
+        return new TicketDateStepperFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_event_date_stepper, container, false);
+        View view = inflater.inflate(R.layout.fragment_ticket_date_stepper, container, false);
         ButterKnife.bind(this, view);
 
         date = new Date();
-        if (eventManager.getAction().equals("edit"))
-            date = DateConverter.getDateFromString(eventManager.getDate());
+        if (ticketManager.getAction().equals("edit"))
+            date = DateConverter.getDateFromString(ticketManager.getDate());
 
         defaultDate(date);
 
@@ -132,10 +132,10 @@ public class EventDateStepperFragment extends Fragment implements BlockingStep, 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof EventManager) {
-            eventManager = (EventManager) context;
+        if (context instanceof TicketManager) {
+            ticketManager = (TicketManager) context;
         } else {
-            throw new IllegalStateException("Activity must implement EventManager interface!");
+            throw new IllegalStateException("Activity must implement ticketManager interface!");
         }
     }
 
@@ -152,10 +152,10 @@ public class EventDateStepperFragment extends Fragment implements BlockingStep, 
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
         String stringDate = DateConverter.getStringDateFromDateForServer(date);
-        eventManager.saveDate(stringDate);
+        ticketManager.saveDate(stringDate);
 
         String time = Objects.requireNonNull(textTime.getText()).toString();
-        eventManager.saveTime(time);
+        ticketManager.saveTime(time);
 
         callback.goToNextStep();
     }

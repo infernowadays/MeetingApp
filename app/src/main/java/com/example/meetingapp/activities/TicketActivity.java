@@ -1,6 +1,7 @@
 package com.example.meetingapp.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +17,12 @@ import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Ticket;
 import com.example.meetingapp.utils.PreferenceUtils;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
@@ -45,8 +52,10 @@ public class TicketActivity extends AppCompatActivity {
     LinearLayout layoutEventTime;
     @BindView(R.id.chip_group)
     ChipGroup chipGroup;
-
+    @BindView(R.id.map_view)
+    MapView mapView;
     private Ticket ticket;
+    private GoogleMap googleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +66,8 @@ public class TicketActivity extends AppCompatActivity {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         toolbarTitle.setText("Велком");
+
+        mapView.onCreate(savedInstanceState);
     }
 
     @Override
@@ -75,11 +86,19 @@ public class TicketActivity extends AppCompatActivity {
                 // do your code
                 return true;
             case R.id.action_edit:
-
+                editTicket();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void editTicket() {
+        Intent intent = new Intent(TicketActivity.this, CreateTicketActivity.class);
+        intent.putExtra("action", "edit");
+        intent.putExtra("EXTRA_TICKET", ticket);
+
+        TicketActivity.this.startActivity(intent);
     }
 
     @Override
@@ -124,8 +143,31 @@ public class TicketActivity extends AppCompatActivity {
         textCreator.setText(ticket.getCreator().getFirstName() + " " +
                 ticket.getCreator().getLastName());
         textDescription.setText(String.valueOf(ticket.getDescription()));
-        textAddress.setText(String.valueOf(ticket.getAddress()));
+        textAddress.setText(String.valueOf(ticket.getGeoPoint().getAddress()));
         textDate.setText(ticket.getDate());
         textTime.setText(ticket.getTime());
+
+        initMapView();
+    }
+
+    private void initMapView() {
+        mapView.onResume();
+
+        try {
+            MapsInitializer.initialize(getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        mapView.getMapAsync(mMap -> {
+            googleMap = mMap;
+            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+            googleMap.getUiSettings().setCompassEnabled(false);
+            googleMap.getUiSettings().setMapToolbarEnabled(false);
+
+            LatLng latLng = new LatLng(ticket.getGeoPoint().getLatitude(), ticket.getGeoPoint().getLongitude());
+            googleMap.addMarker(new MarkerOptions().position(latLng).title("Событие начнется здесь!"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+        });
     }
 }

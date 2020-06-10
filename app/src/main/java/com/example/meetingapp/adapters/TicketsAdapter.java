@@ -54,7 +54,7 @@ public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.ViewHold
         final Ticket ticket = tickets.get(position);
 
         holder.textName.setText(ticket.getName());
-        holder.textPlace.setText(ticket.getAddress());
+        holder.textPlace.setText(ticket.getGeoPoint().getAddress());
         holder.textPrice.setText(ticket.getPrice() + " ₽");
         holder.textDate.setText(parseDate(ticket.getDate()));
 

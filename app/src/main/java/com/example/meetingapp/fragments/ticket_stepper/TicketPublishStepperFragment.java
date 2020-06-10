@@ -18,6 +18,7 @@ import com.example.meetingapp.TicketManager;
 import com.example.meetingapp.activities.TicketActivity;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Category;
+import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.Ticket;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.material.chip.Chip;
@@ -43,6 +44,10 @@ public class TicketPublishStepperFragment extends Fragment implements BlockingSt
     @BindView(R.id.text_name)
     TextView textName;
 
+    @BindView(R.id.text_address)
+    TextView textLocation;
+
+
     @BindView(R.id.chip_group)
     ChipGroup chipGroup;
 
@@ -53,7 +58,6 @@ public class TicketPublishStepperFragment extends Fragment implements BlockingSt
     TextView textDescription;
 
     private TicketManager ticketManager;
-    private Context context;
     private Ticket ticket;
     private Ticket createdTicket;
 
@@ -74,12 +78,10 @@ public class TicketPublishStepperFragment extends Fragment implements BlockingSt
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        this.context = context;
-
         if (context instanceof TicketManager) {
             ticketManager = (TicketManager) context;
         } else {
-            throw new IllegalStateException("Activity must implement ticketManager interface!");
+            throw new IllegalStateException("Activity must implement TicketManager interface!");
         }
     }
 
@@ -89,7 +91,33 @@ public class TicketPublishStepperFragment extends Fragment implements BlockingSt
 
     @Override
     public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {
-        publishTicket();
+        if (ticketManager.getAction().equals("create"))
+            publishTicket();
+        else if (ticketManager.getAction().equals("edit"))
+            updateTicket();
+    }
+
+    private void updateTicket() {
+        Call<Ticket> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(requireContext()))
+                .getApi()
+                .updateTicket(String.valueOf(ticket.getId()), ticket);
+
+        call.enqueue(new Callback<Ticket>() {
+            @Override
+            public void onResponse(@NonNull Call<Ticket> call, @NonNull Response<Ticket> response) {
+                Ticket updatedTicket = response.body();
+                if (updatedTicket != null) {
+                    Toast.makeText(getActivity(), "Событие успешно отредактировано!", Toast.LENGTH_SHORT).show();
+                    finishActivity();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Ticket> call, @NonNull Throwable t) {
+                Toast.makeText(getActivity(), "Что-то случилось :(", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void openCreatedTicket() {
@@ -140,6 +168,9 @@ public class TicketPublishStepperFragment extends Fragment implements BlockingSt
 
     @Override
     public void onSelected() {
+        ticket.setId(ticketManager.getId());
+
+
         textDate.setText(ticketManager.getDate());
         ticket.setDate(ticketManager.getDate());
 
@@ -148,6 +179,9 @@ public class TicketPublishStepperFragment extends Fragment implements BlockingSt
 
         textPrice.setText(String.valueOf(ticketManager.getPrice()));
         ticket.setPrice(ticketManager.getPrice());
+
+        ticket.setGeoPoint(ticketManager.getLocation());
+        textLocation.setText(ticketManager.getLocation().getAddress());
 
         if (ticketManager.getDescription() != null) {
             textDescription.setText(ticketManager.getDescription());
@@ -168,8 +202,6 @@ public class TicketPublishStepperFragment extends Fragment implements BlockingSt
         }
 
         ticket.setCategories(categories);
-
-        ticket.setAddress("address");
     }
 
     @Override
