@@ -30,6 +30,7 @@ import com.example.meetingapp.GetImageFromAsync;
 import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.activities.ConfirmCodeActivity;
+import com.example.meetingapp.activities.EditUserProfileActivity;
 import com.example.meetingapp.activities.SettingsActivity;
 import com.example.meetingapp.activities.UserEventsActivity;
 import com.example.meetingapp.activities.UserTicketsActivity;
@@ -180,8 +181,19 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    @OnClick(R.id.button_edit_categories)
+    void editCategories() {
+
+    }
+
+    @OnClick(R.id.button_edit_user_profile)
+    void editUserProfile() {
+        Intent intent = new Intent(getActivity(), EditUserProfileActivity.class);
+        startActivity(intent);
+    }
+
     @OnClick(R.id.button_confirm)
-    void conformAccount() {
+    void confirmAccount() {
         Intent intent = new Intent(getActivity(), ConfirmCodeActivity.class);
         startActivity(intent);
     }

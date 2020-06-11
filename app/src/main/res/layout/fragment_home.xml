@@ -196,6 +196,7 @@
                             android:text="@string/interests" />
 
                         <ImageButton
+                            android:id="@+id/button_edit_categories"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:layout_alignParentEnd="true"
@@ -234,6 +235,7 @@
                             android:text="@string/little_about_me" />
 
                         <ImageButton
+                            android:id="@+id/button_edit_user_profile"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:layout_alignParentEnd="true"
