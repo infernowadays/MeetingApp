@@ -31,6 +31,7 @@ import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.activities.ConfirmCodeActivity;
 import com.example.meetingapp.activities.EditUserProfileActivity;
+import com.example.meetingapp.activities.EditUserProfileCategoriesActivity;
 import com.example.meetingapp.activities.SettingsActivity;
 import com.example.meetingapp.activities.UserEventsActivity;
 import com.example.meetingapp.activities.UserTicketsActivity;
@@ -183,7 +184,8 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
 
     @OnClick(R.id.button_edit_categories)
     void editCategories() {
-
+        Intent intent = new Intent(getActivity(), EditUserProfileCategoriesActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.button_edit_user_profile)
@@ -274,16 +276,22 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
         if (!userProfile.getCity().equals("")) {
             textCity.setText(userProfile.getCity());
             profileCity.setVisibility(View.VISIBLE);
+        } else {
+            profileCity.setVisibility(View.GONE);
         }
 
         if (!userProfile.getEducation().equals("")) {
             textEducation.setText(userProfile.getEducation());
             profileEducation.setVisibility(View.VISIBLE);
+        } else {
+            profileEducation.setVisibility(View.GONE);
         }
 
         if (!userProfile.getJob().equals("")) {
             textJob.setText(userProfile.getJob());
             profileJob.setVisibility(View.VISIBLE);
+        } else {
+            profileJob.setVisibility(View.GONE);
         }
 
         chipGroup.removeAllViews();

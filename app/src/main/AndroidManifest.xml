@@ -26,8 +26,9 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:fullBackupContent"
         tools:targetApi="q">
-        <activity android:name=".activities.EditUserProfileActivity"></activity>
-        <activity android:name=".activities.BaseCreateContentActivity"></activity>
+        <activity android:name=".activities.EditUserProfileCategoriesActivity"></activity>
+        <activity android:name=".activities.EditUserProfileActivity" />
+        <activity android:name=".activities.BaseCreateContentActivity" />
         <activity android:name=".activities.UserTicketsActivity" />
         <activity android:name=".activities.UserEventsActivity" />
         <activity android:name=".activities.ComplaintActivity" />
