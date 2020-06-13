@@ -138,15 +138,17 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float v, int i1) {
+                swipeRefreshLayout.setEnabled(false);
             }
 
             @Override
             public void onPageSelected(int position) {
+                swipeRefreshLayout.setEnabled(false);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                swipeRefreshLayout.setEnabled(state == ViewPager.SCROLL_STATE_IDLE);
+                swipeRefreshLayout.setEnabled(state == ViewPager.SCROLL_STATE_DRAGGING);
             }
         });
 
