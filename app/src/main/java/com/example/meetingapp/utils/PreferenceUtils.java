@@ -11,6 +11,27 @@ public class PreferenceUtils {
 
     }
 
+    public static boolean hasFirebaseToken(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE);
+        return preferences.contains(Constants.KEY_FIREBASE_TOKEN);
+    }
+
+    public static void saveFirebaseToken(String token, Context context) {
+        SharedPreferences.Editor preferencesEditor = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE).edit();
+        preferencesEditor.putString(Constants.KEY_FIREBASE_TOKEN, token);
+        preferencesEditor.apply();
+    }
+
+    public static String getFirebaseToken(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE);
+        return preferences.getString(Constants.KEY_FIREBASE_TOKEN, "");
+    }
+
+    public static void removeFirebaseToken(Context context) {
+        SharedPreferences.Editor preferencesEditor = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE).edit();
+        preferencesEditor.remove(Constants.KEY_FIREBASE_TOKEN).apply();
+    }
+
     public static boolean hasToken(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE);
         return preferences.contains(Constants.KEY_TOKEN);

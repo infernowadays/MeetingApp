@@ -16,29 +16,23 @@
         android:name=".activities.OAUTHApplication"
         android:allowBackup="true"
         android:fullBackupContent="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_wolf"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_wolf"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:fullBackupContent"
         tools:targetApi="q">
-        <activity android:name=".activities.EditUserProfileCategoriesActivity"></activity>
+        <activity android:name=".activities.EditUserProfileCategoriesActivity" />
         <activity android:name=".activities.EditUserProfileActivity" />
         <activity android:name=".activities.BaseCreateContentActivity" />
         <activity android:name=".activities.UserTicketsActivity" />
         <activity android:name=".activities.UserEventsActivity" />
         <activity android:name=".activities.ComplaintActivity" />
-        <activity android:name=".activities.ModeratorActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".activities.ModeratorActivity" />
         <activity android:name=".activities.ConfirmCodeActivity" />
         <activity
             android:name=".activities.EventInfoActivity"
@@ -59,13 +53,7 @@
         <activity
             android:name=".activities.AccountSettingsActivity"
             android:parentActivityName=".activities.SettingsActivity" />
-        <activity android:name=".activities.WebSocketActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".activities.WebSocketActivity" />
         <activity android:name=".activities.GroupMessageActivity" />
         <activity android:name=".activities.CreateEventActivity" />
         <activity android:name=".activities.EventActivity" />
@@ -77,7 +65,6 @@
         <activity android:name=".activities.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -100,25 +87,11 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_bottom_navigation" />
         <activity android:name=".activities.LoginActivity" />
-        <activity android:name=".activities.LALALALALAActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".activities.LALALALALAActivity" />
 
         <service
             android:name=".services.CustomFirebaseMessagingService"
             android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".MyFirebaseMessagingService"
-            android:exported="false"
-            android:stopWithTask="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
