@@ -7,8 +7,6 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.example.meetingapp.activities.Main2Activity;
-
 
 public class KillAppService extends Service {
 
@@ -28,18 +26,18 @@ public class KillAppService extends Service {
     public void onDestroy() {
         super.onDestroy();
 
-        Main2Activity main2Activity = new Main2Activity();
-        main2Activity.initFireBase();
-        main2Activity.status("offline");
+//        Main2Activity main2Activity = new Main2Activity();
+//        main2Activity.initFireBase();
+//        main2Activity.status("offline");
 
         Log.d("ClearFromRecentService", "Service Destroyed");
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        Main2Activity main2Activity = new Main2Activity();
-        main2Activity.initFireBase();
-        main2Activity.status("offline");
+//        Main2Activity main2Activity = new Main2Activity();
+//        main2Activity.initFireBase();
+//        main2Activity.status("offline");
 
         Log.e("ClearFromRecentService", "END");
         stopSelf();

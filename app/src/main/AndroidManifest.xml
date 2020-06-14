@@ -59,8 +59,6 @@
         <activity android:name=".activities.EventActivity" />
         <activity android:name=".activities.EventStepperActivity" />
         <activity android:name=".activities.UserProfileStepperActivity" />
-        <activity android:name=".activities.MessageActivity" />
-        <activity android:name=".activities.Main2Activity" />
         <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.StartActivity">
             <intent-filter>
