@@ -106,9 +106,4 @@
         <item name="android:gravity">center|bottom</item>
     </style>
 
-    <style name="CustomChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">
-        <item name="chipBackgroundColor">@color/colorPrimaryLight</item>
-        <item name="android:textColor">@color/bg_chip_state_list</item>
-    </style>
-
 </resources>

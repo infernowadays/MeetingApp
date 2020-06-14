@@ -5,20 +5,14 @@
     <string name="password">password</string>
     <string name="title_home">Home</string>
     <string name="title_activity_bottom_navigation">BottomNavigationActivity</string>
-    <string name="button">Button</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_work_please">MapAAAA</string>
     <string name="api_key">AIzaSyDB3CO5OhPS7qyeZFb9PrIOy3m9sIlesvc</string>
-    <string name="username">Username</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="reset_password_message">By clicking Reset, you will receive an email to reset your password</string>
-    <string name="reset">Reset</string>
     <string name="add_location">Добавить</string>
     <string name="cancel_location">Отмена</string>
     <string name="set_address">Наведитесь на нужный адрес</string>
-    <string name="tickets">Tickets</string>
     <string name="events">Events</string>
     <string name="messages">Messages</string>
     <string name="write_message">Напишите сообщение...</string>
@@ -28,15 +22,11 @@
     <string name="time_optional">Время (необязательно)</string>
     <string name="interests">Интересы</string>
     <string name="little_about_me">Немного обо мне</string>
-    <string name="rus_events">События</string>
     <string name="age">Возраст</string>
     <string name="genger">Гендер</string>
-    <string name="any">Любой</string>
     <string name="man">Мужчина</string>
     <string name="woman">Женщина</string>
-    <string name="title_activity_account_settings">Settings</string>
     <string name="undefined">Undefined</string>
-
     <integer name="com_vk_sdk_AppId">7334440</integer>
 
     <!-- Preference Titles -->

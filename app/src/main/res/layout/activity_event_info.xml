@@ -68,7 +68,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/event_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -90,7 +89,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/event_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -112,7 +110,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/event_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
