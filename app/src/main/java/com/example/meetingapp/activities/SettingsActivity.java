@@ -1,11 +1,11 @@
 package com.example.meetingapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.meetingapp.R;
 
@@ -45,6 +45,12 @@ public class SettingsActivity extends AppCompatActivity {
     @OnClick(R.id.account)
     void account() {
         Intent intent = new Intent(this, AccountSettingsActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.users_suggestions)
+    void usersSuggestions() {
+        Intent intent = new Intent(this, UsersSuggestionsActivity.class);
         startActivity(intent);
     }
 }

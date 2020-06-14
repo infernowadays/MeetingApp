@@ -26,6 +26,7 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:fullBackupContent"
         tools:targetApi="q">
+        <activity android:name=".activities.UsersSuggestionsActivity"></activity>
         <activity android:name=".activities.EditUserProfileCategoriesActivity" />
         <activity android:name=".activities.EditUserProfileActivity" />
         <activity android:name=".activities.BaseCreateContentActivity" />
@@ -61,6 +62,7 @@
         <activity android:name=".activities.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
