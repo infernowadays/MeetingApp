@@ -26,7 +26,7 @@ public class WebSocketListenerService extends Service {
     static final public String EXTRA_MESSAGE = "EXTRA_MESSAGE";
     private static final String WEB_SOCKET_URL = "ws://10.0.2.2:8000/ws/chat/";
     private static final String AUTHORIZATION = "Authorization";
-    //    private static final String WEB_SOCKET_URL = "http://104.248.247.195/ws/chat/";
+    //        private static final String WEB_SOCKET_URL = "http://104.248.247.195/ws/chat/";
     private static final String EXTRA_TOKEN = "EXTRA_TOKEN";
     static WebSocket staticWebSocket;
     private LocalBroadcastManager broadcaster;
