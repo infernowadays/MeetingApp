@@ -251,7 +251,7 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
     @Override
     public void onResume() {
         super.onResume();
-        setContent();
+//        setContent();
         if (bitmap != null)
             imageProfile.setImageBitmap(bitmap);
     }
@@ -260,6 +260,8 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
     private void showProfile() {
         if (!userProfile.getConfirmed())
             buttonConfirm.setVisibility(View.VISIBLE);
+        else
+            buttonConfirm.setVisibility(View.GONE);
 
         if (userProfile.getPhoto().getPhoto() != null) {
             new DownloadImageTask(HomeFragment.this).execute(userProfile.getPhoto().getPhoto());

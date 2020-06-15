@@ -26,7 +26,7 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:fullBackupContent"
         tools:targetApi="q">
-        <activity android:name=".activities.UsersSuggestionsActivity"></activity>
+        <activity android:name=".activities.UsersSuggestionsActivity" />
         <activity android:name=".activities.EditUserProfileCategoriesActivity" />
         <activity android:name=".activities.EditUserProfileActivity" />
         <activity android:name=".activities.BaseCreateContentActivity" />
@@ -34,7 +34,9 @@
         <activity android:name=".activities.UserEventsActivity" />
         <activity android:name=".activities.ComplaintActivity" />
         <activity android:name=".activities.ModeratorActivity" />
-        <activity android:name=".activities.ConfirmCodeActivity" />
+        <activity
+            android:name=".activities.ConfirmCodeActivity"
+            android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.EventInfoActivity"
             android:parentActivityName=".activities.MainActivity" />

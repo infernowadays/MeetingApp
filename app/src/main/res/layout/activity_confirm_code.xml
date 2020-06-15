@@ -21,10 +21,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Пожалуйста, введите код, отправленный на почту, указанную вами при создании аккаунта"
+        android:text="Код был отправлен на почту, указанную вами при создании аккаунта"
         android:textAlignment="center" />
 
     <com.goodiebag.pinview.Pinview
+        app:pinBackground="@drawable/boarder"
         android:id="@+id/pin_view_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,7 +36,8 @@
         app:inputType="number"
         app:password="false"
         app:pinHeight="48dp"
-        app:pinLength="4"
-        app:pinWidth="48dp" />
+        app:pinLength="6"
+        app:pinWidth="48dp"
+        app:splitWidth="8dp" />
 
 </LinearLayout>

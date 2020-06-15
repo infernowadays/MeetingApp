@@ -1,8 +1,8 @@
 package com.example.meetingapp.api;
 
 import com.example.meetingapp.models.Complaint;
+import com.example.meetingapp.models.EmailConfirmation;
 import com.example.meetingapp.models.Event;
-import com.example.meetingapp.models.EventRequest;
 import com.example.meetingapp.models.LoginData;
 import com.example.meetingapp.models.MegaCategory;
 import com.example.meetingapp.models.Message;
@@ -32,6 +32,7 @@ import retrofit2.http.Query;
 
 public interface Api {
 
+    // Authentication
     @Headers("Content-Type: application/json")
     @POST("token_auth/auth/")
     Call<Token> login(@Body LoginData loginData);
@@ -40,6 +41,11 @@ public interface Api {
     @POST("token_auth/users/")
     Call<UserProfile> users(@Body RegisterData registerData);
 
+    @Headers("Content-Type: application/json")
+    @POST("token_auth/profile/me/")
+    Call<Token> changePassword(@Body Password password);
+
+    // User Profile
     @Headers("Content-Type: application/json")
     @PUT("token_auth/profile/me/")
     Call<UserProfile> updateProfile(@Body UserProfile userProfile);
@@ -52,26 +58,11 @@ public interface Api {
     @GET("token_auth/profile/{pk}/")
     Call<UserProfile> getUserProfile(@Path("pk") String pk);
 
-    @Headers("Content-Type: application/json")
-    @GET("api/events/")
-    Call<List<Event>> getEvents(@Query("category") List<String> categories, @Query("me") List<String> roles);
+    @Multipart
+    @POST("token_auth/profile/upload/")
+    Call<ProfilePhoto> uploadFile(@PartMap Map<String, RequestBody> params);
 
-    @Headers("Content-Type: application/json")
-    @GET("api/tickets/")
-    Call<List<Ticket>> getTickets(@Query("category") List<String> categories, @Query("me") List<String> roles);
-
-    @Headers("Content-Type: application/json")
-    @POST("api/tickets/")
-    Call<Ticket> createTicket(@Body Ticket ticket);
-
-    @Headers("Content-Type: application/json")
-    @GET("api/events/{pk}/")
-    Call<Event> getEvent(@Path("pk") String pk);
-
-    @Headers("Content-Type: application/json")
-    @GET("api/tickets/{pk}/")
-    Call<Ticket> getTicket(@Path("pk") String pk);
-
+    // Events
     @Headers("Content-Type: application/json")
     @POST("api/events/")
     Call<Event> createEvent(@Body Event event);
@@ -81,9 +72,33 @@ public interface Api {
     Call<Event> updateEvent(@Path("pk") String pk, @Body Event event);
 
     @Headers("Content-Type: application/json")
+    @GET("api/events/{pk}/")
+    Call<Event> getEvent(@Path("pk") String pk);
+
+    @Headers("Content-Type: application/json")
+    @GET("api/events/")
+    Call<List<Event>> getEvents(@Query("category") List<String> categories,
+                                @Query("me") List<String> roles);
+
+    // Tickets
+    @Headers("Content-Type: application/json")
+    @GET("api/tickets/")
+    Call<List<Ticket>> getTickets(@Query("category") List<String> categories,
+                                  @Query("me") List<String> roles);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/tickets/")
+    Call<Ticket> createTicket(@Body Ticket ticket);
+
+    @Headers("Content-Type: application/json")
+    @GET("api/tickets/{pk}/")
+    Call<Ticket> getTicket(@Path("pk") String pk);
+
+    @Headers("Content-Type: application/json")
     @PUT("api/tickets/{pk}/")
     Call<Ticket> updateTicket(@Path("pk") String pk, @Body Ticket ticket);
 
+    // Requests
     @Headers("Content-Type: application/json")
     @POST("api/requests/")
     Call<RequestGet> sendRequest(@Body RequestSend eventRequest);
@@ -96,10 +111,16 @@ public interface Api {
     @GET("api/requests/")
     Call<List<RequestGet>> getRequests();
 
+    // Moderator
     @Headers("Content-Type: application/json")
-    @POST("token_auth/profile/me/")
-    Call<Token> changePassword(@Body Password password);
+    @GET("api/complaints/")
+    Call<List<Complaint>> getComplaints();
 
+    @Headers("Content-Type: application/json")
+    @GET("api/complaints/{pk}/")
+    Call<Complaint> getComplaint(@Path("pk") String pk);
+
+    // Messages
     @Headers("Content-Type: application/json")
     @POST("api/messages/")
     Call<Message> sendMessage(@Body Message message);
@@ -112,19 +133,17 @@ public interface Api {
     @GET("api/chats/")
     Call<List<Event>> getEventChats();
 
+    // Categories
     @Headers("Content-Type: application/json")
     @GET("api/categories/")
     Call<List<MegaCategory>> getCategories();
 
-    @Multipart
-    @POST("token_auth/profile/upload/")
-    Call<ProfilePhoto> uploadFile(@PartMap Map<String, RequestBody> params);
+    // Email Confirmation
+    @Headers("Content-Type: application/json")
+    @POST("api/generate_code/")
+    Call<Void> generateCode(@Body EmailConfirmation email);
 
     @Headers("Content-Type: application/json")
-    @GET("api/complaints/")
-    Call<List<Complaint>> getComplaints();
-
-    @Headers("Content-Type: application/json")
-    @GET("api/complaints/{pk}/")
-    Call<Complaint> getComplaint(@Path("pk") String pk);
+    @POST("api/check_code/")
+    Call<Void> checkCode(@Body EmailConfirmation emailConfirmation);
 }
