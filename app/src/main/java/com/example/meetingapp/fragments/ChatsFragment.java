@@ -12,15 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.adapters.NotificationsAdapter;
 import com.example.meetingapp.adapters.ChatsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
-import com.example.meetingapp.models.ChatList;
 import com.example.meetingapp.models.Event;
-import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
 
@@ -53,7 +48,6 @@ public class ChatsFragment extends Fragment {
         });
 
         chats();
-
 
         return view;
     }

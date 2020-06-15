@@ -1,18 +1,16 @@
 package com.example.meetingapp;
 
-import androidx.annotation.NonNull;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
+
 import com.example.meetingapp.activities.MainActivity;
-import com.example.meetingapp.api.FirebaseClient;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.LoginData;
 import com.example.meetingapp.models.Token;
 import com.example.meetingapp.utils.PreferenceUtils;
-
-import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Response;

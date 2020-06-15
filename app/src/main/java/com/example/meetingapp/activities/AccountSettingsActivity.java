@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.api.FirebaseClient;
 import com.example.meetingapp.utils.PreferenceUtils;
 
 import java.util.Objects;

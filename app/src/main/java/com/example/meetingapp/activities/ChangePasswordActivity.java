@@ -11,7 +11,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.meetingapp.CustomCallback;
 import com.example.meetingapp.R;
-import com.example.meetingapp.api.FirebaseClient;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Password;
 import com.example.meetingapp.models.Token;
@@ -76,8 +75,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     int a = 5;
 
-                    FirebaseClient firebaseClient = new FirebaseClient(getContext());
-                    firebaseClient.changePassword(currentPassword, newPassword);
 
                 } else {
                     int a = 5;
