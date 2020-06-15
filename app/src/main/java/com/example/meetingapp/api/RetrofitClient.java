@@ -24,46 +24,7 @@ public class RetrofitClient {
     private Retrofit retrofit;
 
     private RetrofitClient() {
-//        /* Unsafe */
-//        final TrustManager[] trustAllCerts = new TrustManager[]{
-//                new X509TrustManager() {
-//                    @SuppressLint("TrustAllX509TrustManager")
-//                    @Override
-//                    public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-//                    }
-//
-//                    @SuppressLint("TrustAllX509TrustManager")
-//                    @Override
-//                    public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-//                    }
-//
-//                    @Override
-//                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-//                        return new java.security.cert.X509Certificate[]{};
-//                    }
-//                }
-//        };
-//
-//        // Install the all-trusting trust manager
-//        SSLContext sslContext = null;
-//        try {
-//            sslContext = SSLContext.getInstance("SSL");
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();
-//        }
-//        try {
-//            Objects.requireNonNull(sslContext).init(null, trustAllCerts, new java.security.SecureRandom());
-//        } catch (KeyManagementException e) {
-//            e.printStackTrace();
-//        }
-//
-//        // Create an ssl socket factory with our all-trusting manager\
-//        SSLSocketFactory sslSocketFactory = Objects.requireNonNull(sslContext).getSocketFactory();
-//        /* End Unsafe */
-
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-//                .sslSocketFactory(Objects.requireNonNull(sslSocketFactory), (X509TrustManager) trustAllCerts[0])
-//                .hostnameVerifier((hostname, session) -> true)
                 .addInterceptor(
                         chain -> {
                             Request original = chain.request();
