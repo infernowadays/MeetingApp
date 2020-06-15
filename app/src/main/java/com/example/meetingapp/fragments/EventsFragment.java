@@ -1,14 +1,12 @@
 package com.example.meetingapp.fragments;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.activities.CreateEventActivity;
 import com.example.meetingapp.adapters.EventsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
@@ -28,10 +26,14 @@ public class EventsFragment extends ContentFragment {
 
     @OnClick(R.id.floating_action_button)
     void createEvent() {
-        Intent intent = new Intent(getActivity(), CreateEventActivity.class);
-        intent.putExtra("action", "create");
+        if (!UserProfileManager.getInstance().getMyProfile().getConfirmed())
+            Toast.makeText(getContext(), "Чтобы создавать события, подтвердите аккаунт в личном кабинете", Toast.LENGTH_SHORT).show();
+        else {
+            Intent intent = new Intent(getActivity(), CreateEventActivity.class);
+            intent.putExtra("action", "create");
 
-        startActivity(intent);
+            startActivity(intent);
+        }
     }
 
     @Override
