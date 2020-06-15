@@ -26,7 +26,7 @@ public class WebSocketListenerService extends Service {
     static final public String EXTRA_MESSAGE = "EXTRA_MESSAGE";
     private static final String WEB_SOCKET_URL = "ws://10.0.2.2:8000/ws/chat/";
     private static final String AUTHORIZATION = "Authorization";
-    //        private static final String WEB_SOCKET_URL = "http://104.248.247.195/ws/chat/";
+    //    private static final String WEB_SOCKET_URL = "https://meetingappbackend.xyz:443/ws/chat/";
     private static final String EXTRA_TOKEN = "EXTRA_TOKEN";
     static WebSocket staticWebSocket;
     private LocalBroadcastManager broadcaster;
@@ -34,30 +34,13 @@ public class WebSocketListenerService extends Service {
     public WebSocketListenerService() {
     }
 
-//    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            intent = new Intent(context, WebSocketListenerService.class);
-//            context.startService(intent);
-//        }
-//    };
-
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-//        unregisterReceiver(receiver);
-    }
-
-    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        IntentFilter filter = new IntentFilter();
-//        registerReceiver(receiver, filter);
-
         String token = "";
         if (intent != null && intent.getExtras() != null)
             token = intent.getExtras().getString(EXTRA_TOKEN);
@@ -71,15 +54,12 @@ public class WebSocketListenerService extends Service {
         WebSocketListenerService.EchoWebSocketListener listener = new EchoWebSocketListener(broadcaster, token);
         staticWebSocket = okHttpClient.newWebSocket(request, listener);
 
-//        okHttpClient.dispatcher().executorService().shutdown();
-
         return START_NOT_STICKY;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-
         broadcaster = LocalBroadcastManager.getInstance(this);
     }
 
