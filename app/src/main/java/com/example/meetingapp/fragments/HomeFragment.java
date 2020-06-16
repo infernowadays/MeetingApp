@@ -122,6 +122,7 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
 
     private UserProfile userProfile;
     private Bitmap bitmap;
+    private boolean prevSwipeState = true;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -143,21 +144,26 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
 
             @Override
             public void onPageSelected(int position) {
-                swipeRefreshLayout.setEnabled(false);
+                swipeRefreshLayout.setEnabled(prevSwipeState);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
                 swipeRefreshLayout.setEnabled(state == ViewPager.SCROLL_STATE_DRAGGING);
+                if (state == ViewPager.SCROLL_STATE_IDLE)
+                    swipeRefreshLayout.setEnabled(prevSwipeState);
+
             }
         });
 
         appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
             if (verticalOffset == 0) {
                 swipeRefreshLayout.setEnabled(true);
+                prevSwipeState = true;
             } else {
                 swipeRefreshLayout.setRefreshing(false);
                 swipeRefreshLayout.setEnabled(false);
+                prevSwipeState = false;
             }
         });
 
