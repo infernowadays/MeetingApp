@@ -32,7 +32,7 @@ public class HomeEventsFragment extends Fragment {
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
-    private String eventType;
+    private String eventType = "";
     private UserProfile userProfile;
 
     public HomeEventsFragment(String eventType) {
@@ -104,7 +104,6 @@ public class HomeEventsFragment extends Fragment {
 
     private List<Event> eventsByMember(List<Event> events) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-
             if (events != null) {
                 events = events.stream().filter(event ->
                         event.getMembers().stream().anyMatch(member -> member.getId() ==

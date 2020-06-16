@@ -133,7 +133,7 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
         appBarLayout.setVisibility(View.GONE);
         nestedScrollView.setVisibility(View.GONE);
 
-        setContent();
+        meProfile();
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -162,13 +162,11 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
         });
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            setContent();
             meProfile();
 
             swipeRefreshLayout.setRefreshing(false);
         });
 
-        meProfile();
 
         return view;
     }
@@ -234,6 +232,7 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
                     userProfile = response.body();
                     UserProfileManager.getInstance().initialize(userProfile);
                     showProfile();
+                    setContent();
                 }
 
                 layoutProgressBar.setVisibility(View.GONE);

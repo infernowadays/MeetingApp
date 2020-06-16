@@ -32,7 +32,7 @@ public class HomeTicketsFragment extends Fragment {
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
-    private String eventType;
+    private String eventType = "";
     private UserProfile userProfile;
 
     public HomeTicketsFragment(String eventType) {

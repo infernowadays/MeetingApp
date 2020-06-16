@@ -1,5 +1,6 @@
 package com.example.meetingapp.activities;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -99,10 +100,25 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         fm.beginTransaction().add(R.id.main_container, messagesFragment, "2").hide(messagesFragment).commit();
         fm.beginTransaction().add(R.id.main_container, homeFragment, "1").commit();
 
-        Intent intent = new Intent(this, WebSocketListenerService.class);
-        intent.putExtra("EXTRA_TOKEN", PreferenceUtils.getToken(this));
-        startService(intent);
+        if(!isMyServiceRunning(WebSocketListenerService.class)){
+            Intent intent = new Intent(this, WebSocketListenerService.class);
+            intent.putExtra("EXTRA_TOKEN", PreferenceUtils.getToken(this));
+            startService(intent);
+        }
     }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        if (manager != null) {
+            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                if (serviceClass.getName().equals(service.service.getClassName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     @Override
     public void addNotificationBadge(int number) {
