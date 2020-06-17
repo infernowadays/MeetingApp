@@ -5,14 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.appyvet.materialrangebar.RangeBar;
 import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.models.Category;
@@ -32,6 +31,12 @@ public class EventsFilterDialog extends DialogFragment implements View.OnClickLi
 
     @BindView(R.id.chip_group)
     ChipGroup chipGroup;
+
+    @BindView(R.id.seek_bar_distance)
+    RangeBar seekBarDistance;
+
+    @BindView(R.id.range_bar_age)
+    RangeBar rangeBarAge;
 
     private Callback callback;
     private List<String> categories = null;
@@ -56,6 +61,8 @@ public class EventsFilterDialog extends DialogFragment implements View.OnClickLi
         View view = inflater.inflate(R.layout.fragment_events_filter_dialog, container, false);
         ButterKnife.bind(this, view);
 
+        seekBarDistance.setSeekPinByValue(50);
+        rangeBarAge.setRangePinsByValue(17, 35);
         categories = new ArrayList<>();
 
         ImageButton close = view.findViewById(R.id.fullscreen_dialog_close);

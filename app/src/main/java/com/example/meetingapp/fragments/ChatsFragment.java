@@ -1,5 +1,9 @@
 package com.example.meetingapp.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +11,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -15,7 +20,10 @@ import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.ChatsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Event;
+import com.example.meetingapp.models.Message;
+import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -34,6 +42,9 @@ public class ChatsFragment extends Fragment {
     @BindView(R.id.swipe_layout)
     SwipeRefreshLayout swipeRefreshLayout;
 
+    private BroadcastReceiver broadcastReceiver;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chats, container, false);
@@ -49,12 +60,33 @@ public class ChatsFragment extends Fragment {
 
         chats();
 
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                int a = 5;
+            }
+        };
+
         return view;
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver((broadcastReceiver),
+                new IntentFilter(WebSocketListenerService.EXTRA_RESULT)
+        );
+    }
+
+    @Override
+    public void onStop() {
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver);
+        super.onStop();
+    }
+
+    @Override
     public void onResume() {
-        chats();
+//        chats();
         super.onResume();
     }
 

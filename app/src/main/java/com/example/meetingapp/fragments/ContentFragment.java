@@ -1,5 +1,6 @@
 package com.example.meetingapp.fragments;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.meetingapp.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -40,6 +43,9 @@ public abstract class ContentFragment extends Fragment {
     @BindView(R.id.toolbar_header)
     TextView toolbarHeader;
 
+    Location currentLocation = null;
+
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -57,7 +63,30 @@ public abstract class ContentFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(false);
         });
 
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(requireActivity(), location -> {
+                    if (location != null) {
+                        currentLocation = location;
+                    }
+                });
+
+
         return view;
+    }
+
+    double distance(double lat1, double lon1, double lat2, double lon2) {
+        if ((lat1 == lat2) && (lon1 == lon2)) {
+            return 0;
+        } else {
+            double earthRadius = 6371.01; //Kilometers
+            double theta = lon1 - lon2;
+            double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+            dist = Math.acos(dist);
+            dist = dist * earthRadius;
+
+            return dist;
+        }
     }
 
     @OnClick(R.id.toolbar_header)

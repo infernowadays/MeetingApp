@@ -12,11 +12,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.meetingapp.EventManager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.EventActivity;
 import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.fragments.HomeEventsFragment;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.utils.PreferenceUtils;
@@ -38,27 +40,24 @@ import retrofit2.Response;
 
 public class EventPublishStepperFragment extends Fragment implements BlockingStep {
 
+    static final public String EXTRA_RESULT = "EXTRA_RESULT";
+    static final public String EXTRA_EVENT = "EXTRA_EVENT";
     @BindView(R.id.text_description)
     MaterialTextView description;
-
     @BindView(R.id.text_date)
     MaterialTextView date;
-
     @BindView(R.id.text_time)
     MaterialTextView time;
-
     @BindView(R.id.text_address)
     MaterialTextView address;
-
     @BindView(R.id.header_h4)
     TextView headerH4;
-
     @BindView(R.id.chip_group)
     ChipGroup chipGroup;
-
     private EventManager eventManager;
     private Event event;
     private Event createdEvent;
+    private LocalBroadcastManager broadcaster;
 
     public static EventPublishStepperFragment newInstance() {
         return new EventPublishStepperFragment();
@@ -68,6 +67,8 @@ public class EventPublishStepperFragment extends Fragment implements BlockingSte
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_publish_stepper, container, false);
         ButterKnife.bind(this, view);
+
+        broadcaster = LocalBroadcastManager.getInstance(requireContext());
 
         int unicode = 0x1F643;
         headerH4.setText("Проверьте, все ли верно " + new String(Character.toChars(unicode)));
@@ -91,6 +92,7 @@ public class EventPublishStepperFragment extends Fragment implements BlockingSte
                 if (createdEvent != null) {
                     Toast.makeText(getActivity(), "Событие создано!", Toast.LENGTH_SHORT).show();
                     openCreatedEvent();
+                    addEventToHomePage();
                 }
             }
 
@@ -99,6 +101,10 @@ public class EventPublishStepperFragment extends Fragment implements BlockingSte
                 Toast.makeText(getActivity(), "Что-то случилось :(", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void addEventToHomePage() {
+        HomeEventsFragment.getInstance().addCreatedEvent(createdEvent);
     }
 
     private void updateEvent() {

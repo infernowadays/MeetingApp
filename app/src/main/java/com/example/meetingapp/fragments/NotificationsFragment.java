@@ -20,17 +20,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.NotificationsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
-import com.example.meetingapp.models.Event;
-import com.example.meetingapp.models.EventRequest;
-import com.example.meetingapp.models.Message;
 import com.example.meetingapp.models.RequestGet;
 import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -71,12 +66,15 @@ public class NotificationsFragment extends Fragment {
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Gson gson = new Gson();
-                RequestGet eventRequest = gson.fromJson(intent.getStringExtra(WebSocketListenerService.EXTRA_REQUEST), RequestGet.class);
+                if (intent.hasExtra(WebSocketListenerService.EXTRA_REQUEST)) {
+                    Gson gson = new Gson();
+                    RequestGet eventRequest = gson.fromJson(intent.getStringExtra(
+                            WebSocketListenerService.EXTRA_REQUEST), RequestGet.class);
 
-                eventRequests.add(0, eventRequest);
-                notificationsAdapter.notifyItemInserted(0);
-                recycleView.smoothScrollToPosition(0);
+                    eventRequests.add(0, eventRequest);
+                    notificationsAdapter.notifyItemInserted(0);
+                    recycleView.smoothScrollToPosition(0);
+                }
             }
         };
 

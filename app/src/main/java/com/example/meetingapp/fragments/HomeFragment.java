@@ -1,7 +1,10 @@
 package com.example.meetingapp.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +25,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
@@ -37,12 +41,15 @@ import com.example.meetingapp.activities.UserEventsActivity;
 import com.example.meetingapp.activities.UserTicketsActivity;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Category;
+import com.example.meetingapp.models.RequestGet;
 import com.example.meetingapp.models.UserProfile;
+import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.Gson;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -172,7 +179,6 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
 
             swipeRefreshLayout.setRefreshing(false);
         });
-
 
         return view;
     }

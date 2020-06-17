@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import com.google.gson.Gson;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,20 +19,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.adapters.MessageAdapter;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Event;
-import com.example.meetingapp.models.EventRequest;
 import com.example.meetingapp.models.Message;
-import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -85,12 +77,15 @@ public class EventChatFragment extends Fragment {
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Gson gson = new Gson();
-                Message message = gson.fromJson(intent.getStringExtra(WebSocketListenerService.EXTRA_MESSAGE), Message.class);
+                if (intent.hasExtra(WebSocketListenerService.EXTRA_MESSAGE)) {
+                    Gson gson = new Gson();
+                    Message message = gson.fromJson(intent.getStringExtra(
+                            WebSocketListenerService.EXTRA_MESSAGE), Message.class);
 
-                messages.add(message);
-                messageAdapter.notifyItemInserted(messages.size() - 1);
-                recycleView.smoothScrollToPosition(messages.size() - 1);
+                    messages.add(message);
+                    messageAdapter.notifyItemInserted(messages.size() - 1);
+                    recycleView.smoothScrollToPosition(messages.size() - 1);
+                }
             }
         };
 
@@ -161,7 +156,7 @@ public class EventChatFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<List<Message>> call, @NonNull Response<List<Message>> response) {
                 messages = response.body();
-                if(messages != null){
+                if (messages != null) {
                     messageAdapter = new MessageAdapter(getContext(), messages);
                     recycleView.setAdapter(messageAdapter);
                 }

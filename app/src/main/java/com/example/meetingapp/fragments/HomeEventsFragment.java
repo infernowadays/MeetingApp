@@ -30,8 +30,11 @@ import retrofit2.Response;
 
 public class HomeEventsFragment extends Fragment {
 
+    private static HomeEventsFragment instance;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    private List<Event> events;
+    private EventsAdapter eventsAdapter;
     private String eventType = "";
     private UserProfile userProfile;
 
@@ -43,14 +46,27 @@ public class HomeEventsFragment extends Fragment {
 
     }
 
+    public static HomeEventsFragment getInstance() {
+        return instance;
+    }
+
+    public void addCreatedEvent(Event event) {
+        events.add(0, event);
+        eventsAdapter.notifyItemInserted(0);
+        recyclerView.smoothScrollToPosition(0);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_events, container, false);
         ButterKnife.bind(this, view);
 
+        instance = this;
+
+        events = new ArrayList<>();
         userProfile = UserProfileManager.getInstance().getMyProfile();
 
-        recyclerView.setAdapter(new EventsAdapter(getContext(), new ArrayList<>()));
+        recyclerView.setAdapter(eventsAdapter);
 
         List<String> filters = new ArrayList<>();
         filters.add("creator");
@@ -70,7 +86,7 @@ public class HomeEventsFragment extends Fragment {
         call.enqueue(new Callback<List<Event>>() {
             @Override
             public void onResponse(@NonNull Call<List<Event>> call, @NonNull Response<List<Event>> response) {
-                List<Event> events = response.body();
+                events = response.body();
 
                 if (events == null || eventType.equals("passed"))
                     events = new ArrayList<>();
@@ -81,12 +97,13 @@ public class HomeEventsFragment extends Fragment {
                 if (eventType.equals("member"))
                     events = eventsByMember(events);
 
-                recyclerView.setAdapter(new EventsAdapter(getContext(), events));
+                eventsAdapter = new EventsAdapter(getContext(), events);
+                recyclerView.setAdapter(eventsAdapter);
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
-                int a = 5;
+
             }
         });
     }

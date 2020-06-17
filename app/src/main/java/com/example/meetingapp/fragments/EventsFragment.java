@@ -14,6 +14,7 @@ import com.example.meetingapp.models.Event;
 import com.example.meetingapp.utils.PreferenceUtils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.OnClick;
@@ -58,6 +59,7 @@ public class EventsFragment extends ContentFragment {
                 if (events == null)
                     events = new ArrayList<>();
 
+                filterByDistance(events);
                 recyclerView.setAdapter(new EventsAdapter(getContext(), events));
             }
 
@@ -66,6 +68,22 @@ public class EventsFragment extends ContentFragment {
 
             }
         });
+    }
+
+    private void filterByDistance(List<Event> events) {
+
+        double maxDistance = 150;
+
+        if (currentLocation != null) {
+            for (Iterator<Event> iterator = events.iterator(); iterator.hasNext(); ) {
+                Event event = iterator.next();
+                double eventLatitude = event.getGeoPoint().getLatitude();
+                double eventLongitude = event.getGeoPoint().getLongitude();
+                if (distance(eventLatitude, eventLongitude, currentLocation.getLatitude(), currentLocation.getLongitude()) >= maxDistance) {
+                    iterator.remove();
+                }
+            }
+        }
     }
 
     @Override
