@@ -1,5 +1,7 @@
 package com.example.meetingapp.fragments;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,12 +10,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -44,7 +48,7 @@ public abstract class ContentFragment extends Fragment {
     TextView toolbarHeader;
 
     Location currentLocation = null;
-
+    Menu myMenu;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,13 +68,24 @@ public abstract class ContentFragment extends Fragment {
         });
 
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(requireActivity(), location -> {
-                    if (location != null) {
-                        currentLocation = location;
-                    }
-                });
+        if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(requireActivity(), location -> {
+                        if (location != null) {
+                            currentLocation = location;
+                        }
+                    });
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+        }
 
         return view;
     }
@@ -103,6 +118,7 @@ public abstract class ContentFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        myMenu = menu;
         inflater.inflate(R.menu.content_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -114,7 +130,8 @@ public abstract class ContentFragment extends Fragment {
                 openFilterDialog();
                 return true;
             case R.id.action_search:
-                // do your code
+//                MenuItem searchItem = R.id.action_search;
+                openSearchDialog();
                 return true;
 
             default:
@@ -144,6 +161,8 @@ public abstract class ContentFragment extends Fragment {
     }
 
     public abstract void openFilterDialog();
+
+    public abstract void openSearchDialog();
 
     public abstract void loadContent(List<String> categories);
 

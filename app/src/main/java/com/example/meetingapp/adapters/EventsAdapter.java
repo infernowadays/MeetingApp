@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,7 +25,6 @@ import com.example.meetingapp.activities.EventInfoActivity;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
-import com.example.meetingapp.models.EventRequest;
 import com.example.meetingapp.models.RequestGet;
 import com.example.meetingapp.models.RequestSend;
 import com.example.meetingapp.utils.PreferenceUtils;
@@ -41,14 +42,44 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
+public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> implements Filterable {
 
     private List<Event> events;
+    private List<Event> eventsFull;
     private Context context;
     private List<Integer> eventsIds;
+    private Filter eventFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Event> filteredEvents = new ArrayList<>();
+            if (constraint == null || constraint.length() == 0) {
+                filteredEvents.addAll(eventsFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (Event event : eventsFull) {
+                    if (event.getDescription().toLowerCase().contains(filterPattern))
+                        filteredEvents.add(event);
+                }
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = filteredEvents;
+
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            events.clear();
+            events.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 
     public EventsAdapter(Context context, List<Event> events) {
         this.events = events;
+        this.eventsFull = new ArrayList<>(events);
         this.context = context;
 
         eventsIds = new ArrayList<>();
@@ -138,7 +169,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         notifyItemRangeChanged(position, getItemCount());
     }
 
-
     @Override
     public int getItemCount() {
         return events.size();
@@ -152,6 +182,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return eventFilter;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder implements GetImageFromAsync {

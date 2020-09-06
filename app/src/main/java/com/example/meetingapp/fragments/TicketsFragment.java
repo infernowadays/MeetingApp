@@ -44,6 +44,11 @@ public class TicketsFragment extends ContentFragment {
     }
 
     @Override
+    public void openSearchDialog() {
+
+    }
+
+    @Override
     public void loadContent(List<String> categories) {
         Call<List<Ticket>> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(requireContext()))

@@ -1,9 +1,17 @@
 package com.example.meetingapp.fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
@@ -24,6 +32,8 @@ import retrofit2.Response;
 
 
 public class EventsFragment extends ContentFragment {
+
+    private EventsAdapter eventsAdapter;
 
     @OnClick(R.id.floating_action_button)
     void createEvent() {
@@ -46,6 +56,29 @@ public class EventsFragment extends ContentFragment {
     }
 
     @Override
+    public void openSearchDialog() {
+        MenuItem menuItem = myMenu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+
+        ImageView searchClose = (ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
+//        searchClose.setColorFilter(R.color.ms_white);
+        searchClose.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                eventsAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+    }
+
+    @Override
     public void loadContent(List<String> categories) {
         Call<List<Event>> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(requireContext()))
@@ -59,8 +92,9 @@ public class EventsFragment extends ContentFragment {
                 if (events == null)
                     events = new ArrayList<>();
 
-                filterByDistance(events);
-                recyclerView.setAdapter(new EventsAdapter(getContext(), events));
+//                filterByDistance(events);
+                eventsAdapter = new EventsAdapter(getContext(), events);
+                recyclerView.setAdapter(eventsAdapter);
             }
 
             @Override

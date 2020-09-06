@@ -4,13 +4,14 @@
 
     <item
         android:id="@+id/action_search"
-        android:title="Редактировать"
         android:icon="@drawable/ic_search_black_24dp"
-        app:showAsAction="ifRoom" />
+        android:title="Редактировать"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView" />
 
     <item
         android:id="@+id/action_filter"
-        android:title="Редактировать"
         android:icon="@drawable/ic_filter_list_black_24dp"
+        android:title="Редактировать"
         app:showAsAction="ifRoom" />
 </menu>
