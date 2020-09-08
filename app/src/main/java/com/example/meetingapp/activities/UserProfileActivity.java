@@ -1,6 +1,7 @@
 package com.example.meetingapp.activities;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -21,8 +22,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.meetingapp.DownloadImageTask;
+import com.example.meetingapp.GetImageFromAsync;
 import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.api.RetrofitClient;
@@ -30,6 +34,7 @@ import com.example.meetingapp.fragments.HomeEventsFragment;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -46,7 +51,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UserProfileActivity extends AppCompatActivity {
+public class UserProfileActivity extends AppCompatActivity implements GetImageFromAsync {
+
+    @BindView(R.id.image_profile)
+    ImageView imageProfile;
+
 
     @BindView(R.id.text_first_name)
     TextView textFirstName;
@@ -105,7 +114,15 @@ public class UserProfileActivity extends AppCompatActivity {
     @BindView(R.id.button_edit_info)
     ImageButton buttonEditInfo;
 
+    @BindView(R.id.swipe_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+
+    @BindView(R.id.appBarLayout)
+    AppBarLayout appBarLayout;
+
     private UserProfile userProfile;
+    private boolean prevSwipeState = true;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +144,51 @@ public class UserProfileActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         loadProfile();
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float v, int i1) {
+                swipeRefreshLayout.setEnabled(false);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                swipeRefreshLayout.setEnabled(prevSwipeState);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                swipeRefreshLayout.setEnabled(state == ViewPager.SCROLL_STATE_DRAGGING);
+                if (state == ViewPager.SCROLL_STATE_IDLE)
+                    swipeRefreshLayout.setEnabled(prevSwipeState);
+
+            }
+        });
+
+        appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            if (verticalOffset == 0) {
+                swipeRefreshLayout.setEnabled(true);
+                prevSwipeState = true;
+            } else {
+                swipeRefreshLayout.setRefreshing(false);
+                swipeRefreshLayout.setEnabled(false);
+                prevSwipeState = false;
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            loadProfile();
+
+            swipeRefreshLayout.setRefreshing(false);
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        setContent();
+        if (bitmap != null)
+            imageProfile.setImageBitmap(bitmap);
     }
 
     @Override
@@ -187,6 +249,10 @@ public class UserProfileActivity extends AppCompatActivity {
     private void showProfile() {
         textFirstName.setText(userProfile.getFirstName());
         textLastName.setText(userProfile.getLastName());
+
+        if (userProfile.getPhoto().getPhoto() != null) {
+            new DownloadImageTask(UserProfileActivity.this).execute(userProfile.getPhoto().getPhoto());
+        }
 
         if (!userProfile.getDateOfBirth().equals("")) {
             String age = getAgeFromBirthDateString(userProfile.getDateOfBirth());
@@ -256,12 +322,20 @@ public class UserProfileActivity extends AppCompatActivity {
         return "";
     }
 
-    private void HideIfNotCurrentUserProfile(){
-        if(userProfile.getId() == UserProfileManager.getInstance().getMyProfile().getId()){
+    private void HideIfNotCurrentUserProfile() {
+        if (userProfile.getId() == UserProfileManager.getInstance().getMyProfile().getId()) {
             contentButtons.setVisibility(View.VISIBLE);
             buttonEditCategories.setVisibility(View.VISIBLE);
             buttonEditInfo.setVisibility(View.VISIBLE);
             buttonWriteMessage.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void getResult(Bitmap bitmap) {
+        if (bitmap != null) {
+            imageProfile.setImageBitmap(bitmap);
+            this.bitmap = bitmap;
         }
     }
 
