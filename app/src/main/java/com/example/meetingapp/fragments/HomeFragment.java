@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -22,9 +23,9 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.meetingapp.CustomSwipeToRefresh;
 import com.example.meetingapp.DownloadImageTask;
 import com.example.meetingapp.GetImageFromAsync;
 import com.example.meetingapp.R;
@@ -103,7 +104,7 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
     TabLayout tabLayout;
 
     @BindView(R.id.swipe_layout)
-    SwipeRefreshLayout swipeRefreshLayout;
+    CustomSwipeToRefresh swipeRefreshLayout;
 
     @BindView(R.id.home_content)
     CoordinatorLayout homeContent;
@@ -151,7 +152,6 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
                 swipeRefreshLayout.setEnabled(state == ViewPager.SCROLL_STATE_DRAGGING);
                 if (state == ViewPager.SCROLL_STATE_IDLE)
                     swipeRefreshLayout.setEnabled(prevSwipeState);
-
             }
         });
 
