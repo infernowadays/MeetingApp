@@ -103,7 +103,7 @@ public class HomeEventsFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
-
+                int a = 5;
             }
         });
     }

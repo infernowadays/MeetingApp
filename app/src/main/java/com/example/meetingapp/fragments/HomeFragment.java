@@ -179,7 +179,7 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
     private void setContent() {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
 
-        viewPagerAdapter.addFragment(new HomeEventsFragment("creator"), "События");
+        viewPagerAdapter.addFragment(new HomeEventsFragment("all"), "События");
         viewPagerAdapter.addFragment(new HomeTicketsFragment("creator"), "Билеты");
 
         viewPager.setAdapter(viewPagerAdapter);

@@ -99,7 +99,7 @@ public class EventsFragment extends ContentFragment {
 
             @Override
             public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
-
+                int a = 5;
             }
         });
     }
