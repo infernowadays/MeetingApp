@@ -1,5 +1,6 @@
 package com.example.meetingapp.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.MegaCategory;
 import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +35,15 @@ public class EditUserProfileCategoriesActivity extends AppCompatActivity impleme
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.categories_counter)
+    MaterialButton categoriesCounter;
     private ArrayList<String> stringCategories;
     private CategoryChipsAdapter categoryChipsAdapter;
+
+    @OnClick(R.id.fullscreen_dialog_close)
+    void close() {
+        this.finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +58,6 @@ public class EditUserProfileCategoriesActivity extends AppCompatActivity impleme
     @OnClick(R.id.button_update_user_profile)
     void updateUserProfileCategories() {
         UserProfile userProfile = new UserProfile();
-
 
         List<Category> categories = new ArrayList<>();
         for (String category : stringCategories) {
@@ -110,5 +118,10 @@ public class EditUserProfileCategoriesActivity extends AppCompatActivity impleme
     @Override
     public void getResult(ArrayList<String> categories) {
         this.stringCategories = categories;
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void updateCounter(int chosen) {
+        categoriesCounter.setText(chosen + "/15");
     }
 }

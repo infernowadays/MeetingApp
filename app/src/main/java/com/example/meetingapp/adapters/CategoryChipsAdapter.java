@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.TransferCategories;
+import com.example.meetingapp.activities.EditUserProfileCategoriesActivity;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.MegaCategory;
 import com.google.android.material.chip.Chip;
@@ -85,6 +86,8 @@ public class CategoryChipsAdapter extends RecyclerView.Adapter<CategoryChipsAdap
 
                     allowChips();
                 }
+
+                ((EditUserProfileCategoriesActivity) context).updateCounter(categories.size());
             });
         }
 
@@ -104,7 +107,7 @@ public class CategoryChipsAdapter extends RecyclerView.Adapter<CategoryChipsAdap
                 selectedItem = currentItemPosition;
             }
 
-            if(categories.size() == 5)
+            if (categories.size() == 5)
                 disableChips();
         });
     }
