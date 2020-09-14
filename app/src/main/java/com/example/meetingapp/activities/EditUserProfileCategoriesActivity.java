@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.TransferCategories;
+import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.adapters.CategoryChipsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Category;
@@ -52,6 +53,11 @@ public class EditUserProfileCategoriesActivity extends AppCompatActivity impleme
         ButterKnife.bind(this);
 
         stringCategories = new ArrayList<>();
+
+        for (Category category : UserProfileManager.getInstance().getMyProfile().getCategories()) {
+            stringCategories.add(category.getName());
+        }
+
         getCategories();
     }
 
@@ -65,7 +71,6 @@ public class EditUserProfileCategoriesActivity extends AppCompatActivity impleme
         }
 
         userProfile.setCategories(categories);
-
 
         Call<UserProfile> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(getContext()))
@@ -101,6 +106,8 @@ public class EditUserProfileCategoriesActivity extends AppCompatActivity impleme
                         response.body(), EditUserProfileCategoriesActivity.this, stringCategories);
                 recyclerView.setAdapter(categoryChipsAdapter);
 
+                updateCounter(stringCategories.size());
+
                 RetrofitClient.needsHeader(true);
             }
 
@@ -118,6 +125,7 @@ public class EditUserProfileCategoriesActivity extends AppCompatActivity impleme
     @Override
     public void getResult(ArrayList<String> categories) {
         this.stringCategories = categories;
+        updateCounter(categories.size());
     }
 
     @SuppressLint("SetTextI18n")

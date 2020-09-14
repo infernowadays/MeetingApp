@@ -75,19 +75,17 @@ public class CategoryChipsAdapter extends RecyclerView.Adapter<CategoryChipsAdap
             chip.setOnCheckedChangeListener((compoundButton, checked) -> {
                 if (checked) {
                     categories.add(String.valueOf(chip.getText()));
-                    transferCategories.getResult(categories);
 
                     if (categories.size() == 5)
                         disableChips();
 
                 } else {
                     categories.remove(String.valueOf(chip.getText()));
-                    transferCategories.getResult(categories);
 
                     allowChips();
                 }
 
-                ((EditUserProfileCategoriesActivity) context).updateCounter(categories.size());
+                transferCategories.getResult(categories);
             });
         }
 
