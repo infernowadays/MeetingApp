@@ -39,6 +39,7 @@ import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -52,10 +53,10 @@ import retrofit2.Response;
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.ViewHolder> {
 
     private final String WANT_JOIN = " хочет вступить в ваше событие";
-    private final String SEND_REQUEST = "\nЗаявка отправлена";
-    private final String ACCEPT = "\nпринят в событие";
+    private final String SEND_REQUEST = "\nЗаявка отправлена"; // remove
+    private final String ACCEPT = " теперь участвует в вашем событии!";
     private final String ACCEPTED = " принял вашу заявку в событие";
-    private final String DECLINE = "\nЗаявка отклонена";
+    private final String DECLINE = "\nЗаявка отклонена"; // remove
     private final String DECLINED = " отклонил вашу заявку";
 
     private List<RequestGet> eventRequests;
@@ -63,8 +64,25 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     private ViewHolder holder;
 
     public NotificationsAdapter(Context mContext, List<RequestGet> eventRequests) {
-        this.eventRequests = eventRequests;
+        removeNoAnswerRequests(eventRequests);
+
         this.mContext = mContext;
+    }
+
+    private void removeNoAnswerRequests(List<RequestGet> eventRequests) {
+
+
+        for (Iterator<RequestGet> iterator = eventRequests.iterator(); iterator.hasNext(); ) {
+            RequestGet eventRequest = iterator.next();
+            if ((eventRequest.getFromUser().getId() == UserProfileManager.getInstance().getMyProfile().getId() &&
+                    eventRequest.getDecision().equals("NO_ANSWER")) ||
+                    eventRequest.getToUser().getId() == UserProfileManager.getInstance().getMyProfile().getId() && eventRequest.getDecision().equals("DECLINE")) {
+
+                iterator.remove();
+            }
+        }
+
+        this.eventRequests = eventRequests;
     }
 
     @NonNull
@@ -81,7 +99,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         UserProfile userProfile = UserProfileManager.getInstance().getMyProfile();
 
         holder.textUserName.setText(eventRequest.getFromUser().getFirstName());
-
 
         ClickableSpan linkClick = new ClickableSpan() {
             @Override
@@ -126,10 +143,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 holder.decisionButtons.setVisibility(View.GONE);
                 setText(holder.textUserName, linkClick, toUser, DECLINE);
             }
+
+
         } else if (eventRequest.getFromUser().getId() == userProfile.getId()) {
             holder.decisionButtons.setVisibility(View.GONE);
             if (eventRequest.getDecision().equals("ACCEPT")) {
-                setText(holder.textUserName, linkClick, fromUser, ACCEPTED);
+                setText(holder.textUserName, linkClick, toUser, ACCEPTED);
             } else if (eventRequest.getDecision().equals("DECLINE")) {
                 setText(holder.textUserName, linkClick, toUser, DECLINED);
             }

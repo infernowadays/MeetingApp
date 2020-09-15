@@ -19,7 +19,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.meetingapp.NotificationListener;
 import com.example.meetingapp.R;
-import com.example.meetingapp.activities.MainActivity;
 import com.example.meetingapp.adapters.NotificationsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.RequestGet;
@@ -76,9 +75,11 @@ public class NotificationsFragment extends Fragment {
                     RequestGet eventRequest = gson.fromJson(intent.getStringExtra(
                             WebSocketListenerService.EXTRA_REQUEST), RequestGet.class);
 
+
                     eventRequests.add(0, eventRequest);
                     notificationsAdapter.notifyItemInserted(0);
                     recycleView.smoothScrollToPosition(0);
+
                 }
             }
         };
@@ -121,6 +122,7 @@ public class NotificationsFragment extends Fragment {
             public void onResponse(@NonNull Call<List<RequestGet>> call, @NonNull Response<List<RequestGet>> response) {
                 eventRequests = response.body();
                 if (eventRequests != null) {
+
                     notificationsAdapter = new NotificationsAdapter(getContext(), eventRequests);
                     recycleView.setAdapter(notificationsAdapter);
 
