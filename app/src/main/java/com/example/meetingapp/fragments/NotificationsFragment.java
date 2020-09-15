@@ -17,7 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.meetingapp.NotificationListener;
 import com.example.meetingapp.R;
+import com.example.meetingapp.activities.MainActivity;
 import com.example.meetingapp.adapters.NotificationsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.RequestGet;
@@ -46,6 +48,9 @@ public class NotificationsFragment extends Fragment {
     private NotificationsAdapter notificationsAdapter;
     private List<RequestGet> eventRequests;
     private BroadcastReceiver broadcastReceiver;
+
+    private NotificationListener listener;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
@@ -82,6 +87,16 @@ public class NotificationsFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            listener = (NotificationListener) context;
+        } catch (ClassCastException castException) {
+            /** The activity does not implement the listener. */
+        }
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver((broadcastReceiver),
@@ -108,6 +123,10 @@ public class NotificationsFragment extends Fragment {
                 if (eventRequests != null) {
                     notificationsAdapter = new NotificationsAdapter(getContext(), eventRequests);
                     recycleView.setAdapter(notificationsAdapter);
+
+                    listener.addNotificationBadge(345);
+//                    ((MainActivity)getActivity()).aaa(6);
+
                 }
             }
 

@@ -120,6 +120,11 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
     }
 
 
+    public void aaa(int number) {
+        navigation.getOrCreateBadge(R.id.navigation_messages).setNumber(number);
+    }
+
+
     @Override
     public void addNotificationBadge(int number) {
         navigation.getOrCreateBadge(R.id.navigation_messages).setNumber(number);
