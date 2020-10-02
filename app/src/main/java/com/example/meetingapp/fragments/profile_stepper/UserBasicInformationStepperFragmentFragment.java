@@ -258,7 +258,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
         String strMonth = String.valueOf(month + 1);
-        if (month < 10) {
+        if (month + 1 < 10) {
             strMonth = "0" + (month + 1);
         }
 
@@ -295,6 +295,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
 
 
         RetrofitClient.needsHeader(true);
+        RetrofitClient.setToken(PreferenceUtils.getToken(requireContext()));
         Call<ProfilePhoto> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(requireContext()))
                 .getApi()
