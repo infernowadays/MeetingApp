@@ -1,11 +1,6 @@
 package com.example.meetingapp.api;
 
 import android.content.Context;
-import android.content.Intent;
-
-import com.example.meetingapp.activities.MainActivity;
-import com.example.meetingapp.activities.StartActivity;
-import com.example.meetingapp.utils.PreferenceUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -16,8 +11,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    private static final String BASE_URL = "http://10.0.2.2:8000/";
-//                private static final String BASE_URL = "https://meetingappbackend.xyz:443/";
+//        private static final String BASE_URL = "http://10.0.2.2:8000/";
+    private static final String BASE_URL = "https://meetingappbackend.xyz:443/";
     private static String TOKEN;
     private static RetrofitClient instance;
     private static boolean needsHeader = true;

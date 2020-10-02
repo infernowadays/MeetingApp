@@ -32,6 +32,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.loader.content.CursorLoader;
 
+import com.example.meetingapp.Compressor;
 import com.example.meetingapp.DownloadImageTask;
 import com.example.meetingapp.GetImageFromAsync;
 import com.example.meetingapp.IUserProfileManager;
@@ -284,7 +285,9 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         String fullPath = getRealPathFromUri(imageUri);
         File file = new File(fullPath);
 
-        RequestBody requestFile = RequestBody.create(file, MediaType.parse(
+        File  compressFile = Compressor.getDefault(getContext()).compressToFile(file);
+
+        RequestBody requestFile = RequestBody.create(compressFile, MediaType.parse(
                 Objects.requireNonNull(requireActivity().getContentResolver().getType(imageUri))));
 
         Map<String, RequestBody> map = new HashMap<>();

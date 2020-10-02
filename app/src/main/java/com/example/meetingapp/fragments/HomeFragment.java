@@ -266,9 +266,12 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
         else
             buttonConfirm.setVisibility(View.GONE);
 
-        if (userProfile.getPhoto().getPhoto() != null) {
-            new DownloadImageTask(HomeFragment.this).execute(userProfile.getPhoto().getPhoto());
+        if(userProfile.getPhoto() != null){
+            if (userProfile.getPhoto().getPhoto() != null) {
+                new DownloadImageTask(HomeFragment.this).execute(userProfile.getPhoto().getPhoto());
+            }
         }
+
 
         textFirstName.setText(userProfile.getFirstName());
         textLastName.setText(userProfile.getLastName());

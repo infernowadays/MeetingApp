@@ -1,6 +1,7 @@
 package com.example.meetingapp.activities;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -39,6 +40,7 @@ public class ConfirmCodeActivity extends AppCompatActivity {
 
         pinview.setActivated(true);
         pinview.setPressed(true);
+        pinview.setTextColor(Color.BLACK);
         pinview.setPinViewEventListener((pinView, fromUser) -> {
             hideKeyboard();
             confirmProfile(Long.parseLong(pinView.getValue()));
