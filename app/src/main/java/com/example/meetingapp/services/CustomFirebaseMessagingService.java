@@ -3,7 +3,9 @@ package com.example.meetingapp.services;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -17,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.activities.EventActivity;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -51,19 +54,27 @@ public class CustomFirebaseMessagingService extends com.google.firebase.messagin
         super.onMessageReceived(remoteMessage);
 
         if (remoteMessage.getData().size() > 0)
-            showNotification(remoteMessage.getData().get("sender"), remoteMessage.getData().get("message"));
+            showNotification(remoteMessage.getData().get("sender"), remoteMessage.getData().get("message"), remoteMessage.getData().get("chat_id"));
     }
 
-    public void showNotification(String sender, String message) {
+    public void showNotification(String sender, String message, String chatId) {
         Spannable sb = new SpannableString(sender);
         sb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, sender.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        Intent intent = new Intent(this, EventActivity.class);
+        intent.putExtra("EXTRA_EVENT_ID", String.valueOf(chatId));
+
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification builder = new NotificationCompat.Builder(this, "PushNotifications")
                 .setContentTitle(sb)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                .setContentText(message)
                 .setSmallIcon(R.drawable.ic_wolf)
                 .setAutoCancel(true)
-                .setPriority(Notification.PRIORITY_MAX).build();
+                .addAction(R.drawable.ic_edit_icon, "Прочитать", pIntent)
+                .setContentIntent(pIntent)
+                .build();
 
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
