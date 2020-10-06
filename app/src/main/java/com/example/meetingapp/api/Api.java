@@ -146,4 +146,8 @@ public interface Api {
     @Headers("Content-Type: application/json")
     @POST("api/check_code/")
     Call<Void> checkCode(@Body EmailConfirmation emailConfirmation);
+
+    @Headers("Content-Type: application/json")
+    @PUT("token_auth/tokens/")
+    Call<Void> updateFirebaseToken(@Body String firebaseToken);
 }
