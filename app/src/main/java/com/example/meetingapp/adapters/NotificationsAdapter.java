@@ -2,6 +2,7 @@ package com.example.meetingapp.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -28,6 +29,7 @@ import com.example.meetingapp.DownloadImageTask;
 import com.example.meetingapp.GetImageFromAsync;
 import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
+import com.example.meetingapp.activities.UserProfileActivity;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.RequestGet;
 import com.example.meetingapp.models.RequestSend;
@@ -120,6 +122,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             }
         };
 
+        holder.imageProfile.setOnClickListener(v -> {
+            openUserProfile(String.valueOf(eventRequest.getFromUser().getId()));
+        });
+
+        holder.textUserName.setOnClickListener(v -> {
+            openUserProfile(String.valueOf(eventRequest.getFromUser().getId()));
+        });
+
         String fromUser = eventRequest.getFromUser().getFirstName() + " " + eventRequest.getFromUser().getLastName();
         String toUser = eventRequest.getToUser().getFirstName() + " " + eventRequest.getToUser().getLastName();
         holder.textUserName.setHighlightColor(Color.TRANSPARENT);
@@ -163,6 +173,16 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         spannableString.setSpan(linkClick, 0, username.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textView.setText(spannableString, TextView.BufferType.SPANNABLE);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    private void openUserProfile(String profileId) {
+        Intent intent = new Intent(getContext(), UserProfileActivity.class);
+        intent.putExtra("EXTRA_USER_PROFILE_ID", profileId);
+        getContext().startActivity(intent);
+    }
+
+    private Context getContext() {
+        return mContext;
     }
 
     private void answerRequest(RequestGet eventRequest, String decision) {
