@@ -1,16 +1,11 @@
 package com.example.meetingapp.services;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -27,22 +22,6 @@ import java.util.Random;
 
 public class CustomFirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
-    public static Bitmap textAsBitmap(Context context, String messageText, String text, float textSize, int textColor) {
-        Paint paint = new Paint();
-        paint.setTextSize(textSize);
-
-        paint.setColor(textColor);
-        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        paint.setTextAlign(Paint.Align.LEFT);
-        float baseline = -paint.ascent(); // ascent() is negative
-        int width = (int) (paint.measureText(messageText) + 0.5f); // round
-        int height = (int) (baseline + paint.descent() + 0.5f);
-        Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(image);
-        canvas.drawText(text, 0, baseline, paint);
-        return image;
-    }
-
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
@@ -58,31 +37,55 @@ public class CustomFirebaseMessagingService extends com.google.firebase.messagin
     }
 
     public void showNotification(String sender, String message, String chatId) {
-        Spannable sb = new SpannableString(sender);
-        sb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, sender.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        // Make title bold
+        Spannable titleBold = new SpannableString(sender);
+        titleBold.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, sender.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
+        // Load parent activity with child
         Intent intent = new Intent(this, EventActivity.class);
         intent.putExtra("EXTRA_EVENT_ID", String.valueOf(chatId));
 
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(EventActivity.class);
+        stackBuilder.addNextIntent(intent);
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Notification builder = new NotificationCompat.Builder(this, "PushNotifications")
-                .setContentTitle(sb)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                .setContentText(message)
-                .setSmallIcon(R.drawable.ic_wolf)
-                .setAutoCancel(true)
-                .addAction(R.drawable.ic_edit_icon, "Прочитать", pIntent)
-                .setContentIntent(pIntent)
-                .build();
+        // Notification bundle
+        int bundleNotificationId = Integer.parseInt(chatId);
 
-        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("PushNotifications", "Default channel", NotificationManager.IMPORTANCE_DEFAULT);
-            if (manager != null) {
-                manager.createNotificationChannel(channel);
-                manager.notify(new Random().nextInt(100), builder);
+        String bundle_notification_id = "bundle_notification_" + chatId;
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder summaryNotificationBuilder;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel groupChannel = new NotificationChannel("bundle_channel_id", "bundle_channel_name", NotificationManager.IMPORTANCE_LOW);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(groupChannel);
+
+                NotificationChannel channel = new NotificationChannel("channel_id", "channel_name", NotificationManager.IMPORTANCE_DEFAULT);
+                notificationManager.createNotificationChannel(channel);
             }
         }
+        summaryNotificationBuilder = new NotificationCompat.Builder(this, "bundle_channel_id")
+                .setGroup(bundle_notification_id)
+                .setGroupSummary(true)
+                .setSmallIcon(R.drawable.ic_wolf)
+                .setContentIntent(pendingIntent)
+                .setContentTitle("Сообщения");
+
+
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(this, "channel_id")
+                .setGroup(bundle_notification_id)
+                .setContentTitle(titleBold)
+                .setContentText(message)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                .setContentIntent(pendingIntent)
+
+                .setSmallIcon(R.drawable.ic_wolf)
+                .setGroupSummary(false);
+
+        notificationManager.notify(new Random().nextInt(), notification.build());
+        notificationManager.notify(bundleNotificationId, summaryNotificationBuilder.build());
     }
 }

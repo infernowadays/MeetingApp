@@ -11,6 +11,18 @@ public class PreferenceUtils {
 
     }
 
+    public static void saveUserId(int userId, Context context) {
+        SharedPreferences.Editor preferencesEditor = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE).edit();
+        preferencesEditor.putInt(Constants.KEY_USER_ID, userId);
+        preferencesEditor.apply();
+    }
+
+    public static int getUserId(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE);
+        return preferences.getInt(Constants.KEY_USER_ID, 0);
+    }
+
+
     public static boolean hasFirebaseToken(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE);
         return preferences.contains(Constants.KEY_FIREBASE_TOKEN);

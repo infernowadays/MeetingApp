@@ -48,6 +48,7 @@ import com.google.android.material.tabs.TabLayout;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -235,6 +236,7 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
                 if (response.body() != null) {
                     userProfile = response.body();
                     UserProfileManager.getInstance().initialize(userProfile);
+                    PreferenceUtils.saveUserId(userProfile.getId(), requireContext());
                     showProfile();
                     setContent();
                 }
