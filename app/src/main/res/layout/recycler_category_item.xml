@@ -6,30 +6,35 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/expand_button"
-        style="@style/TextAppearance.AppCompat.Medium"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:foreground="?selectableItemBackground"
-        android:elevation="6dp"
-        android:text="Category"
-        android:padding="16dp"
-        tools:targetApi="m" />
+        android:orientation="horizontal">
 
-    <net.cachapa.expandablelayout.ExpandableLayout
-        android:id="@+id/expandable_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:el_duration="300"
-        app:el_expanded="false">
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chip_group"
+        <TextView
+            android:id="@+id/expand_button"
+            style="@style/TextAppearance.AppCompat.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:chipSpacing="8dp" />
-    </net.cachapa.expandablelayout.ExpandableLayout>
+            android:foreground="?selectableItemBackground"
+            android:padding="16dp"
+            android:text="Category"
+            tools:targetApi="m" />
 
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:contentDescription="TODO"
+            android:padding="16dp" />
+
+    </RelativeLayout>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:chipSpacing="8dp" />
 </LinearLayout>

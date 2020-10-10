@@ -104,6 +104,8 @@ dependencies {
     implementation 'org.codehaus.jackson:com.springsource.org.codehaus.jackson:1.4.3'
     implementation 'com.fasterxml.jackson.core:com.springsource.com.fasterxml.jackson.core.jackson-annotations:2.0.2'
 
+    implementation 'com.thoughtbot:expandablerecyclerview:1.4'
+
     implementation 'com.github.GoodieBag:PinView:1.4'
 
 }

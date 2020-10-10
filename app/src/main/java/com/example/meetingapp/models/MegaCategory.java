@@ -1,16 +1,16 @@
 package com.example.meetingapp.models;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 public class MegaCategory {
     private String name;
     private List<Category> categories;
+    private boolean expanded;
 
     public MegaCategory(String name, List<Category> categories) {
         this.name = name;
         this.categories = categories;
+        this.expanded = false;
     }
 
     public String getName() {
@@ -27,5 +27,13 @@ public class MegaCategory {
 
     public void setCategories(List<Category> categories) {
         this.categories = categories;
+    }
+
+    public boolean isExpanded() {
+        return expanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
     }
 }
