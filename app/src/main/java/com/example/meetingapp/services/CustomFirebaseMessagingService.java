@@ -9,16 +9,23 @@ import android.content.Intent;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.EventActivity;
+import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Objects;
 import java.util.Random;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CustomFirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
@@ -26,6 +33,26 @@ public class CustomFirebaseMessagingService extends com.google.firebase.messagin
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
         PreferenceUtils.saveFirebaseToken(s, this);
+        sendFirebaseTokenToServer();
+    }
+
+    private void sendFirebaseTokenToServer() {
+        Call<Void> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(this))
+                .getApi()
+                .updateFirebaseToken(PreferenceUtils.getFirebaseToken(this));
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                Log.d("error", Objects.requireNonNull(t.getMessage()));
+            }
+        });
     }
 
     @Override
