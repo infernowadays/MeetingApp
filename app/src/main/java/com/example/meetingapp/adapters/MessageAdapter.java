@@ -1,6 +1,7 @@
 package com.example.meetingapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,10 @@ import com.example.meetingapp.DownloadImageTask;
 import com.example.meetingapp.GetImageFromAsync;
 import com.example.meetingapp.R;
 import com.example.meetingapp.UserProfileManager;
+import com.example.meetingapp.activities.UserProfileActivity;
 import com.example.meetingapp.models.Message;
 import com.example.meetingapp.utils.DateConverter;
+import com.example.meetingapp.utils.PreferenceUtils;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -73,6 +76,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             previousMillis = DateConverter.stringDateToMillis(previousMessage.getCreated());
         }
         setTimeTextVisibility(DateConverter.stringDateToMillis(message.getCreated()), previousMillis, holder.textDate);
+
+        holder.imageProfile.setOnClickListener(v -> {
+            openUserProfile(String.valueOf(message.getFromUser().getId()));
+        });
+
+        holder.textUserName.setOnClickListener(v -> {
+            openUserProfile(String.valueOf(message.getFromUser().getId()));
+        });
+    }
+
+    private void openUserProfile(String profileId) {
+        Intent intent = new Intent(getContext(), UserProfileActivity.class);
+        intent.putExtra("EXTRA_USER_PROFILE_ID", profileId);
+        getContext().startActivity(intent);
     }
 
     private void setTimeTextVisibility(long ts1, long ts2, TextView textDate) {
@@ -111,7 +128,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        int meProfileId = UserProfileManager.getInstance().getMyProfile().getId();
+        int meProfileId = 0;
+        if (UserProfileManager.getInstance().getMyProfile() == null)
+            meProfileId = PreferenceUtils.getUserId(getContext());
+        else
+            meProfileId = UserProfileManager.getInstance().getMyProfile().getId();
+
         if (messages.get(position).getFromUser().getId() == meProfileId) {
             return MSG_TYPE_RIGHT;
         } else {
@@ -128,6 +150,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
 
         return newFormat;
+    }
+
+    private Context getContext() {
+        return context;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder implements GetImageFromAsync {

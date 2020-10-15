@@ -57,7 +57,13 @@
             android:name=".activities.AccountSettingsActivity"
             android:parentActivityName=".activities.SettingsActivity" />
         <activity android:name=".activities.CreateEventActivity" />
-        <activity android:name=".activities.EventActivity" />
+
+
+        <activity
+            android:name=".activities.EventActivity"
+            android:parentActivityName=".activities.MainActivity" />
+
+
         <activity android:name=".activities.EventStepperActivity" />
         <activity android:name=".activities.UserProfileStepperActivity" />
         <activity android:name=".activities.RegisterActivity" />
@@ -86,7 +92,6 @@
             android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_bottom_navigation" />
-        <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.LALALALALAActivity" />
 
         <service

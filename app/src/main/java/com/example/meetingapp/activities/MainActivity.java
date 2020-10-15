@@ -21,7 +21,6 @@ import com.example.meetingapp.fragments.EventsFragment;
 import com.example.meetingapp.fragments.HomeFragment;
 import com.example.meetingapp.fragments.MessagesFragment;
 import com.example.meetingapp.fragments.TicketsFragment;
-import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -35,7 +34,6 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements NotificationListener, BottomSheetFragment.ItemClickListener {
 
-    private static Context context;
     private static Context applicationContext;
     final Fragment homeFragment = new HomeFragment();
     final Fragment eventsFragment = new EventsFragment();
@@ -76,10 +74,6 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         return false;
     };
 
-    public static Context getMainContext() {
-        return context;
-    }
-
     public static Context getAppContext() {
         return applicationContext;
     }
@@ -93,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
 
         setLocale();
 
-        context = this;
         applicationContext = getApplicationContext();
 
         navigation = findViewById(R.id.nav_view);

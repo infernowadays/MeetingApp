@@ -1,10 +1,13 @@
 package com.example.meetingapp.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.OvershootInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,13 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.TransferCategories;
-import com.example.meetingapp.activities.EditUserProfileCategoriesActivity;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.MegaCategory;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-
-import net.cachapa.expandablelayout.ExpandableLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,15 +28,12 @@ import butterknife.ButterKnife;
 
 public class CategoryChipsAdapter extends RecyclerView.Adapter<CategoryChipsAdapter.ViewHolder> {
     private static final int UNSELECTED = -1;
+    List<MegaCategory> megaCategories;
+    ArrayList<String> categories;
     private int selectedItem = UNSELECTED;
-
     private RecyclerView recyclerView;
-
     private Context context;
-    private List<MegaCategory> megaCategories;
     private TransferCategories transferCategories;
-
-    private ArrayList<String> categories;
 
     public CategoryChipsAdapter(Context context, RecyclerView recyclerView, List<MegaCategory> megaCategories, TransferCategories transferCategories, ArrayList<String> categories) {
         this.context = context;
@@ -54,11 +51,24 @@ public class CategoryChipsAdapter extends RecyclerView.Adapter<CategoryChipsAdap
         return new ViewHolder(view);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final MegaCategory megaCategory = megaCategories.get(position);
 
         holder.expandButton.setText(megaCategory.getName());
+
+
+
+        if (megaCategories.get(position).isExpanded())
+            holder.arrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24);
+        else
+            holder.arrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24);
+
+//        holder.arrow.animate().rotationBy(180f).setDuration(300).start();
+
+
+        holder.chipGroup.removeAllViews();
 
         for (Category category : megaCategory.getCategories()) {
             Chip chip = (Chip) LayoutInflater.from(context).inflate(R.layout.category_item, holder.chipGroup, false);
@@ -72,16 +82,20 @@ public class CategoryChipsAdapter extends RecyclerView.Adapter<CategoryChipsAdap
 
             holder.chipGroup.addView(chip);
 
+            chip.setOnTouchListener((v, event) -> {
+                if (categories.size() == 15)
+                    disableChips();
+                return false;
+            });
+
             chip.setOnCheckedChangeListener((compoundButton, checked) -> {
                 if (checked) {
-                    categories.add(String.valueOf(chip.getText()));
-
-                    if (categories.size() == 5)
+                    if (categories.size() == 15)
                         disableChips();
-
+                    else
+                        categories.add(String.valueOf(chip.getText()));
                 } else {
                     categories.remove(String.valueOf(chip.getText()));
-
                     allowChips();
                 }
 
@@ -89,24 +103,13 @@ public class CategoryChipsAdapter extends RecyclerView.Adapter<CategoryChipsAdap
             });
         }
 
+
+        boolean isExpanded = megaCategories.get(position).isExpanded();
+        holder.chipGroup.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+
         holder.expandButton.setOnClickListener(v -> {
-            ViewHolder currentHolder = (ViewHolder) recyclerView.findViewHolderForAdapterPosition(selectedItem);
-            if (currentHolder != null) {
-                currentHolder.expandButton.setSelected(false);
-                currentHolder.expandableLayout.collapse();
-            }
-
-            int currentItemPosition = holder.getAdapterPosition();
-            if (currentItemPosition == selectedItem) {
-                selectedItem = UNSELECTED;
-            } else {
-                holder.expandButton.setSelected(true);
-                holder.expandableLayout.expand();
-                selectedItem = currentItemPosition;
-            }
-
-            if (categories.size() == 5)
-                disableChips();
+            megaCategories.get(position).setExpanded(!megaCategories.get(position).isExpanded());
+            holder.clickHandle();
         });
     }
 
@@ -143,12 +146,12 @@ public class CategoryChipsAdapter extends RecyclerView.Adapter<CategoryChipsAdap
         }
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.expandable_layout)
-        ExpandableLayout expandableLayout;
-
+    public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.expand_button)
         TextView expandButton;
+
+        @BindView(R.id.arrow)
+        ImageView arrow;
 
         @BindView(R.id.chip_group)
         ChipGroup chipGroup;
@@ -156,8 +159,13 @@ public class CategoryChipsAdapter extends RecyclerView.Adapter<CategoryChipsAdap
         ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
 
-            expandableLayout.setInterpolator(new OvershootInterpolator());
+        private void clickHandle() {
+
+//            MegaCategory megaCategory = megaCategories.get(getAdapterPosition());
+//            megaCategory.setExpanded(!megaCategory.isExpanded());
+            notifyItemChanged(getAdapterPosition());
         }
     }
 }

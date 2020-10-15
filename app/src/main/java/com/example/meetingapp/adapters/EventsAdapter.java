@@ -121,8 +121,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                 chip.setCheckable(false);
                 holder.chipGroup.addView(chip);
             }
+            eventsIds.add(events.get(position).getId());
         }
-        eventsIds.add(events.get(position).getId());
 
         holder.itemView.setOnClickListener(v -> {
             if (event.getCreator().getId() == UserProfileManager.getInstance().getMyProfile().getId()) {

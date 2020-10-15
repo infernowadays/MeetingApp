@@ -39,7 +39,7 @@ public class EditUserProfileCategoriesActivity extends AppCompatActivity impleme
     @BindView(R.id.categories_counter)
     MaterialButton categoriesCounter;
     private ArrayList<String> stringCategories;
-    private CategoryChipsAdapter categoryChipsAdapter;
+//    private CategoryChipsAdapter categoryChipsAdapter;
 
     @OnClick(R.id.fullscreen_dialog_close)
     void close() {
@@ -102,9 +102,11 @@ public class EditUserProfileCategoriesActivity extends AppCompatActivity impleme
             public void onResponse(@NonNull Call<List<MegaCategory>> call, @NonNull Response<List<MegaCategory>> response) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-                categoryChipsAdapter = new CategoryChipsAdapter(getContext(), recyclerView,
+                CategoryChipsAdapter categoryChipsAdapter = new CategoryChipsAdapter(getContext(), recyclerView,
                         response.body(), EditUserProfileCategoriesActivity.this, stringCategories);
+
                 recyclerView.setAdapter(categoryChipsAdapter);
+
 
                 updateCounter(stringCategories.size());
 
@@ -116,6 +118,10 @@ public class EditUserProfileCategoriesActivity extends AppCompatActivity impleme
                 Log.d("error", Objects.requireNonNull(t.getMessage()));
             }
         });
+    }
+
+    private void setUpCategories() {
+
     }
 
     private Context getContext() {
