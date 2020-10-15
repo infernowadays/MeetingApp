@@ -1,4 +1,4 @@
-package com.example.meetingapp;
+package com.example.meetingapp.services;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.meetingapp.customviews.CustomCallback;
 import com.example.meetingapp.activities.CreateUserProfileActivity;
 import com.example.meetingapp.activities.MainActivity;
 import com.example.meetingapp.api.RetrofitClient;

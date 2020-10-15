@@ -3,7 +3,7 @@ package com.example.meetingapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.meetingapp.EventManager;
+import com.example.meetingapp.interfaces.EventManager;
 import com.example.meetingapp.adapters.EventStepperAdapter;
 import com.example.meetingapp.models.Event;
 

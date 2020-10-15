@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.meetingapp.BaseContentManager;
+import com.example.meetingapp.interfaces.BaseContentManager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.models.GeoPoint;
 import com.stepstone.stepper.StepperLayout;

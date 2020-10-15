@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.meetingapp.NotificationListener;
+import com.example.meetingapp.interfaces.NotificationListener;
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.NotificationsAdapter;
 import com.example.meetingapp.api.RetrofitClient;

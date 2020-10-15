@@ -1,10 +1,11 @@
-package com.example.meetingapp;
+package com.example.meetingapp.utils.images;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ImageView;
+
+import com.example.meetingapp.interfaces.GetImageFromAsync;
 
 import java.io.InputStream;
 import java.util.Objects;

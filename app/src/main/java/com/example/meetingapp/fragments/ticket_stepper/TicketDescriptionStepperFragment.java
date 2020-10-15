@@ -11,13 +11,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.TicketManager;
+import com.example.meetingapp.interfaces.TicketManager;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
-import java.util.Date;
 import java.util.Objects;
 
 import butterknife.BindView;

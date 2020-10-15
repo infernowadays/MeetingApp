@@ -1,21 +1,15 @@
 package com.example.meetingapp.activities;
 
-import android.app.Fragment;
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 
-import com.example.meetingapp.IUserProfileManager;
+import com.example.meetingapp.interfaces.IUserProfileManager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.UserStepperAdapter;
-import com.example.meetingapp.models.Category;
 import com.stepstone.stepper.StepperLayout;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CreateUserProfileActivity extends AppCompatActivity implements IUserProfileManager {
 

@@ -1,4 +1,4 @@
-package com.example.meetingapp;
+package com.example.meetingapp.utils.images.compression;
 
 import android.content.Context;
 import android.graphics.Bitmap;

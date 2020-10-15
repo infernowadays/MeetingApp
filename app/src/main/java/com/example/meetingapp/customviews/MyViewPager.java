@@ -1,4 +1,4 @@
-package com.example.meetingapp;
+package com.example.meetingapp.customviews;
 
 import android.annotation.TargetApi;
 import android.content.Context;

@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.TicketManager;
+import com.example.meetingapp.interfaces.TicketManager;
 import com.example.meetingapp.activities.MapsActivity;
 import com.example.meetingapp.models.GeoPoint;
 import com.google.android.gms.common.api.Status;
