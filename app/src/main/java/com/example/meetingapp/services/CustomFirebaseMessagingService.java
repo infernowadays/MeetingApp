@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.activities.EventActivity;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.utils.PreferenceUtils;
@@ -33,7 +34,9 @@ public class CustomFirebaseMessagingService extends com.google.firebase.messagin
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
         PreferenceUtils.saveFirebaseToken(s, this);
-        sendFirebaseTokenToServer(s);
+
+        if(UserProfileManager.getInstance().getMyProfile() != null)
+            sendFirebaseTokenToServer(s);
     }
 
     private void sendFirebaseTokenToServer(String newToken) {
