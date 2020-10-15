@@ -33,14 +33,14 @@ public class CustomFirebaseMessagingService extends com.google.firebase.messagin
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
         PreferenceUtils.saveFirebaseToken(s, this);
-        sendFirebaseTokenToServer();
+        sendFirebaseTokenToServer(s);
     }
 
-    private void sendFirebaseTokenToServer() {
+    private void sendFirebaseTokenToServer(String newToken) {
         Call<Void> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(this))
                 .getApi()
-                .updateFirebaseToken(PreferenceUtils.getFirebaseToken(this));
+                .updateFirebaseToken(newToken);
 
         call.enqueue(new Callback<Void>() {
             @Override
