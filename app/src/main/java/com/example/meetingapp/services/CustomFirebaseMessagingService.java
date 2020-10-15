@@ -30,24 +30,16 @@ import retrofit2.Response;
 
 public class CustomFirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
-    @Override
-    public void onNewToken(@NonNull String s) {
-        super.onNewToken(s);
-        PreferenceUtils.saveFirebaseToken(s, this);
-
-        if(UserProfileManager.getInstance().getMyProfile() != null)
-            sendFirebaseTokenToServer(s);
-    }
-
-    private void sendFirebaseTokenToServer(String newToken) {
+    public static void sendFirebaseTokenToServer(String newFirebaseToken, String token) {
         Call<Void> call = RetrofitClient
-                .getInstance(PreferenceUtils.getToken(this))
+                .getInstance(token)
                 .getApi()
-                .updateFirebaseToken(newToken);
+                .updateFirebaseToken(newFirebaseToken);
 
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                Log.d("token send", Objects.requireNonNull("ok"));
 
             }
 
@@ -56,6 +48,15 @@ public class CustomFirebaseMessagingService extends com.google.firebase.messagin
                 Log.d("error", Objects.requireNonNull(t.getMessage()));
             }
         });
+    }
+
+    @Override
+    public void onNewToken(@NonNull String s) {
+        super.onNewToken(s);
+        PreferenceUtils.saveFirebaseToken(s, this);
+
+        if (UserProfileManager.getInstance().getMyProfile() != null)
+            sendFirebaseTokenToServer(PreferenceUtils.getFirebaseToken(this), PreferenceUtils.getToken(this));
     }
 
     @Override

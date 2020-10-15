@@ -34,7 +34,6 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements NotificationListener, BottomSheetFragment.ItemClickListener {
 
-    private static Context applicationContext;
     final Fragment homeFragment = new HomeFragment();
     final Fragment eventsFragment = new EventsFragment();
     final Fragment ticketsFragment = new TicketsFragment();
@@ -74,20 +73,12 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         return false;
     };
 
-    public static Context getAppContext() {
-        return applicationContext;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sendFirebaseTokenToServer(PreferenceUtils.getFirebaseToken(this));
-
         setLocale();
-
-        applicationContext = getApplicationContext();
 
         navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -166,24 +157,5 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         config.locale = locale;
         getApplicationContext().getResources().updateConfiguration(config,
                 getApplicationContext().getResources().getDisplayMetrics());
-    }
-
-    private void sendFirebaseTokenToServer(String newToken) {
-        Call<Void> call = RetrofitClient
-                .getInstance(PreferenceUtils.getToken(this))
-                .getApi()
-                .updateFirebaseToken(newToken);
-
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                Log.d("error", Objects.requireNonNull(t.getMessage()));
-            }
-        });
     }
 }
