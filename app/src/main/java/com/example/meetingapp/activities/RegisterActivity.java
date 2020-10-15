@@ -1,7 +1,6 @@
 package com.example.meetingapp.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.EditText;
@@ -78,14 +77,14 @@ public class RegisterActivity extends AppCompatActivity {
                     AuthService authService = new AuthService(getContext());
                     authService.authenticate(email, password);
 
-                    UserProfile userProfile = response.body();
-
-                    if (!userProfile.getConfirmed()) {
-                        Intent intent = new Intent(RegisterActivity.this, CreateUserProfileActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        finish();
-                    }
+//                    UserProfile userProfile = response.body();
+//
+//                    if (!userProfile.getConfirmed()) {
+//                        Intent intent = new Intent(RegisterActivity.this, CreateUserProfileActivity.class);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                        startActivity(intent);
+//                        finish();
+//                    }
                 } else {
                     Toast.makeText(RegisterActivity.this, ":(", Toast.LENGTH_SHORT).show();
                 }
@@ -94,7 +93,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<UserProfile> call, @NonNull Throwable t) {
                 super.onFailure(call, t);
-                Toast.makeText(RegisterActivity.this, "error :(", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "Ошибка подключения к интернету", Toast.LENGTH_SHORT).show();
             }
         });
 

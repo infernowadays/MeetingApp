@@ -3,7 +3,6 @@ package com.example.meetingapp.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -49,6 +48,9 @@ public class AccountSettingsActivity extends AppCompatActivity {
     @OnClick(R.id.text_logout)
     void logout() {
         PreferenceUtils.removeToken(getContext());
+        PreferenceUtils.removeFilled(getContext());
+        PreferenceUtils.removeFirebaseToken(getContext());
+
         Intent intent = new Intent(this, StartActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

@@ -37,7 +37,6 @@ public class StartActivity extends AppCompatActivity {
     LinearLayout layoutLogo;
     @BindView(R.id.layout_start)
     LinearLayout layoutStart;
-    UserProfile userProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +57,7 @@ public class StartActivity extends AppCompatActivity {
 
         AuthService authService = new AuthService(getContext());
         authService.authenticate(email, password);
-        authService.finishAuth();
+//        authService.finishAuth();
     }
 
     @OnClick(R.id.button_register)
@@ -69,7 +68,6 @@ public class StartActivity extends AppCompatActivity {
     private void loadApp() {
         final Handler handler = new Handler();
         handler.postDelayed(() -> {
-            userProfile = null;
             if (PreferenceUtils.hasToken(this)) {
                 if (PreferenceUtils.isFilled(this)) {
                     Intent intent = new Intent(StartActivity.this, MainActivity.class);

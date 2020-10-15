@@ -92,7 +92,6 @@
             android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_bottom_navigation" />
-        <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.LALALALALAActivity" />
 
         <service
