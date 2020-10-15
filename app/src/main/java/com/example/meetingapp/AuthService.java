@@ -86,6 +86,7 @@ public class AuthService {
                         ((Activity) getContext()).finish();
                     } else {
                         PreferenceUtils.saveFilled(true, getContext());
+                        PreferenceUtils.saveFirebaseToken(userProfile.getFirebaseUid(), getContext());
 
                         Intent intent = new Intent(getContext(), MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
