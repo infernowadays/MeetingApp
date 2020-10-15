@@ -83,8 +83,6 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sendFirebaseTokenToServer();
-
         setLocale();
 
         applicationContext = getApplicationContext();
@@ -166,24 +164,5 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         config.locale = locale;
         getApplicationContext().getResources().updateConfiguration(config,
                 getApplicationContext().getResources().getDisplayMetrics());
-    }
-
-    private void sendFirebaseTokenToServer() {
-        Call<Void> call = RetrofitClient
-                .getInstance(PreferenceUtils.getToken(this))
-                .getApi()
-                .updateFirebaseToken(PreferenceUtils.getFirebaseToken(this));
-
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                int a = 5;
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                Log.d("error", Objects.requireNonNull(t.getMessage()));
-            }
-        });
     }
 }
