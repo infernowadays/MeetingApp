@@ -7,11 +7,14 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 
 import com.example.meetingapp.NotificationListener;
 import com.example.meetingapp.R;
@@ -21,6 +24,7 @@ import com.example.meetingapp.fragments.EventsFragment;
 import com.example.meetingapp.fragments.HomeFragment;
 import com.example.meetingapp.fragments.MessagesFragment;
 import com.example.meetingapp.fragments.TicketsFragment;
+import com.example.meetingapp.services.NetworkConnection;
 import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -28,13 +32,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.Locale;
 import java.util.Objects;
 
+import kotlin.jvm.internal.Intrinsics;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements NotificationListener, BottomSheetFragment.ItemClickListener {
 
-    private static Context applicationContext;
     final Fragment homeFragment = new HomeFragment();
     final Fragment eventsFragment = new EventsFragment();
     final Fragment ticketsFragment = new TicketsFragment();
@@ -48,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
     private Fragment active = homeFragment;
     private String content;
     private BottomNavigationView navigation;
-
+   // private NetworkConnection networkConnection = new NetworkConnection(applicationContext);
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {
         switch (item.getItemId()) {
@@ -74,10 +78,6 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         return false;
     };
 
-    public static Context getAppContext() {
-        return applicationContext;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
 
         setLocale();
 
-        applicationContext = getApplicationContext();
 
         navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -101,11 +100,31 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
             fm.beginTransaction().add(R.id.main_container, ticketsFragment, "3").hide(ticketsFragment).commit();
         }
 
+        //!!!!
+        Intrinsics.checkExpressionValueIsNotNull(this, "applicationContext");
+        NetworkConnection networkConnection = new NetworkConnection(this);
+        networkConnection.observe(this, new Observer() {
+
+            public void onChanged(Object var1) {
+                this.onChanged((Boolean) var1);
+            }
+
+            public final void onChanged(Boolean isConnected) {
+                Intrinsics.checkExpressionValueIsNotNull(isConnected, "isConnected");
+                if (isConnected) {
+                    Toast.makeText(MainActivity.this, "Internet is fine", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Internet is not fine", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+        //!!!!
 
         fm.beginTransaction().add(R.id.main_container, messagesFragment, "2").hide(messagesFragment).commit();
         fm.beginTransaction().add(R.id.main_container, homeFragment, "1").commit();
 
-        if(!isMyServiceRunning(WebSocketListenerService.class)){
+        if (!isMyServiceRunning(WebSocketListenerService.class)) {
             Intent intent = new Intent(this, WebSocketListenerService.class);
             intent.putExtra("EXTRA_TOKEN", PreferenceUtils.getToken(this));
             startService(intent);
