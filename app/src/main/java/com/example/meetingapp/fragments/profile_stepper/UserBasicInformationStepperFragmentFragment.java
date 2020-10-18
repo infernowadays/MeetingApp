@@ -32,10 +32,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.loader.content.CursorLoader;
 
-import com.example.meetingapp.Compressor;
-import com.example.meetingapp.DownloadImageTask;
-import com.example.meetingapp.GetImageFromAsync;
-import com.example.meetingapp.IUserProfileManager;
+import com.example.meetingapp.utils.images.compression.Compressor;
+import com.example.meetingapp.utils.images.DownloadImageTask;
+import com.example.meetingapp.interfaces.GetImageFromAsync;
+import com.example.meetingapp.interfaces.IUserProfileManager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.ProfilePhoto;

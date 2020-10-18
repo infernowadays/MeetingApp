@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.example.meetingapp.EventManager;
+import com.example.meetingapp.interfaces.EventManager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.EventActivity;
 import com.example.meetingapp.api.RetrofitClient;

@@ -10,9 +10,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.meetingapp.CustomCallback;
+import com.example.meetingapp.customviews.CustomCallback;
 import com.example.meetingapp.R;
-import com.example.meetingapp.UserProfileManager;
+import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.EmailConfirmation;
 import com.example.meetingapp.utils.PreferenceUtils;

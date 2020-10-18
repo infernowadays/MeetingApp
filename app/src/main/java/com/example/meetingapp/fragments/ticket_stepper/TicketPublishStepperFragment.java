@@ -14,11 +14,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.TicketManager;
+import com.example.meetingapp.interfaces.TicketManager;
 import com.example.meetingapp.activities.TicketActivity;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Category;
-import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.Ticket;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.material.chip.Chip;

@@ -119,6 +119,11 @@ public class PreferenceUtils {
         preferencesEditor.apply();
     }
 
+    public static void removeFilled(Context context) {
+        SharedPreferences.Editor preferencesEditor = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE).edit();
+        preferencesEditor.remove(Constants.KEY_FILLED).apply();
+    }
+
     public static boolean isFilled(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE);
         return preferences.getBoolean(Constants.KEY_FILLED, false);

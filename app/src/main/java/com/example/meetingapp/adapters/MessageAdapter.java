@@ -13,10 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.meetingapp.DownloadImageTask;
-import com.example.meetingapp.GetImageFromAsync;
+import com.example.meetingapp.utils.images.DownloadImageTask;
+import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.R;
-import com.example.meetingapp.UserProfileManager;
+import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.activities.UserProfileActivity;
 import com.example.meetingapp.models.Message;
 import com.example.meetingapp.utils.DateConverter;

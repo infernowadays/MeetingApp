@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.UserProfileManager;
+import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.adapters.EventsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Event;

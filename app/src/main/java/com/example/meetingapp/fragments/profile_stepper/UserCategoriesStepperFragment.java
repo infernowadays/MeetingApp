@@ -15,9 +15,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.meetingapp.IUserProfileManager;
+import com.example.meetingapp.interfaces.IUserProfileManager;
 import com.example.meetingapp.R;
-import com.example.meetingapp.TransferCategories;
+import com.example.meetingapp.interfaces.TransferCategories;
 import com.example.meetingapp.adapters.CategoryChipsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.MegaCategory;

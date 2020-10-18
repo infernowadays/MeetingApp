@@ -3,10 +3,7 @@ package com.example.meetingapp.fragments;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -14,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.UserProfileManager;
+import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.activities.CreateEventActivity;
 import com.example.meetingapp.adapters.EventsAdapter;
 import com.example.meetingapp.api.RetrofitClient;

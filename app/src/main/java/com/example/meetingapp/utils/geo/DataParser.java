@@ -1,4 +1,4 @@
-package com.example.meetingapp;
+package com.example.meetingapp.utils.geo;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;

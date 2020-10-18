@@ -16,10 +16,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.meetingapp.DownloadImageTask;
-import com.example.meetingapp.GetImageFromAsync;
+import com.example.meetingapp.utils.images.DownloadImageTask;
+import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.R;
-import com.example.meetingapp.UserProfileManager;
+import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.activities.EventActivity;
 import com.example.meetingapp.activities.EventInfoActivity;
 import com.example.meetingapp.api.RetrofitClient;

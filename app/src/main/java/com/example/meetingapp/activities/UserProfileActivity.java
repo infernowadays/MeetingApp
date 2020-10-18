@@ -25,10 +25,10 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.meetingapp.DownloadImageTask;
-import com.example.meetingapp.GetImageFromAsync;
+import com.example.meetingapp.utils.images.DownloadImageTask;
+import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.R;
-import com.example.meetingapp.UserProfileManager;
+import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.fragments.HomeEventsFragment;
 import com.example.meetingapp.models.Category;

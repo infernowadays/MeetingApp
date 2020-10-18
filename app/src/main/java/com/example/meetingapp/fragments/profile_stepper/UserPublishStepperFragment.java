@@ -17,7 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.meetingapp.IUserProfileManager;
+import com.example.meetingapp.interfaces.IUserProfileManager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.MainActivity;
 import com.example.meetingapp.api.RetrofitClient;

@@ -15,6 +15,18 @@
         android:padding="16dp"
         tools:ignore="UnknownIdInLayout" />
 
+    <ImageView
+        android:id="@+id/scroll_down_btn"
+        android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dp"
+        android:tint="@color/colorPrimary"
+        android:backgroundTint="@color/colorSecondary"
+        android:visibility="gone"/>
+
     <RelativeLayout
         android:id="@+id/message_box"
         android:layout_width="match_parent"

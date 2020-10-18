@@ -2,9 +2,7 @@ package com.example.meetingapp.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Handler;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.TransferCategories;
+import com.example.meetingapp.interfaces.TransferCategories;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.MegaCategory;
 import com.google.android.material.chip.Chip;

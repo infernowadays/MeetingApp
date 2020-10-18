@@ -4,28 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.meetingapp.AuthService;
+import com.example.meetingapp.services.AuthService;
 import com.example.meetingapp.R;
-import com.example.meetingapp.UserProfileManager;
 import com.example.meetingapp.api.RetrofitClient;
-import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -37,7 +30,6 @@ public class StartActivity extends AppCompatActivity {
     LinearLayout layoutLogo;
     @BindView(R.id.layout_start)
     LinearLayout layoutStart;
-    UserProfile userProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +50,7 @@ public class StartActivity extends AppCompatActivity {
 
         AuthService authService = new AuthService(getContext());
         authService.authenticate(email, password);
-        authService.finishAuth();
+//        authService.finishAuth();
     }
 
     @OnClick(R.id.button_register)
@@ -69,7 +61,6 @@ public class StartActivity extends AppCompatActivity {
     private void loadApp() {
         final Handler handler = new Handler();
         handler.postDelayed(() -> {
-            userProfile = null;
             if (PreferenceUtils.hasToken(this)) {
                 if (PreferenceUtils.isFilled(this)) {
                     Intent intent = new Intent(StartActivity.this, MainActivity.class);
