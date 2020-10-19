@@ -13,7 +13,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.appyvet.materialrangebar.RangeBar;
 import com.example.meetingapp.R;
-import com.example.meetingapp.UserProfileManager;
+import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.UserProfile;
 import com.google.android.material.chip.Chip;

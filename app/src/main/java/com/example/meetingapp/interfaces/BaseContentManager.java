@@ -1,4 +1,4 @@
-package com.example.meetingapp;
+package com.example.meetingapp.interfaces;
 
 import com.example.meetingapp.models.GeoPoint;
 

@@ -1,4 +1,4 @@
-package com.example.meetingapp;
+package com.example.meetingapp.customviews;
 
 import android.content.Context;
 import android.graphics.Canvas;

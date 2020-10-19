@@ -1,4 +1,4 @@
-package com.example.meetingapp;
+package com.example.meetingapp.services;
 
 import com.example.meetingapp.models.UserProfile;
 

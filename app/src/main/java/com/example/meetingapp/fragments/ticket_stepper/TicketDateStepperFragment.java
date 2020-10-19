@@ -18,7 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.TicketManager;
+import com.example.meetingapp.interfaces.TicketManager;
 import com.example.meetingapp.utils.DateConverter;
 import com.example.meetingapp.utils.TimeConverter;
 import com.rengwuxian.materialedittext.MaterialEditText;

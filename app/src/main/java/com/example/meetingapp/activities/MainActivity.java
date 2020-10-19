@@ -1,21 +1,17 @@
 package com.example.meetingapp.activities;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.meetingapp.NotificationListener;
+import com.example.meetingapp.interfaces.NotificationListener;
 import com.example.meetingapp.R;
-import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.fragments.BottomSheetFragment;
 import com.example.meetingapp.fragments.EventsFragment;
 import com.example.meetingapp.fragments.HomeFragment;
@@ -26,15 +22,9 @@ import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Locale;
-import java.util.Objects;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements NotificationListener, BottomSheetFragment.ItemClickListener {
 
-    private static Context applicationContext;
     final Fragment homeFragment = new HomeFragment();
     final Fragment eventsFragment = new EventsFragment();
     final Fragment ticketsFragment = new TicketsFragment();
@@ -74,20 +64,12 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         return false;
     };
 
-    public static Context getAppContext() {
-        return applicationContext;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sendFirebaseTokenToServer();
-
         setLocale();
-
-        applicationContext = getApplicationContext();
 
         navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -166,24 +148,5 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         config.locale = locale;
         getApplicationContext().getResources().updateConfiguration(config,
                 getApplicationContext().getResources().getDisplayMetrics());
-    }
-
-    private void sendFirebaseTokenToServer() {
-        Call<Void> call = RetrofitClient
-                .getInstance(PreferenceUtils.getToken(this))
-                .getApi()
-                .updateFirebaseToken(PreferenceUtils.getFirebaseToken(this));
-
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                int a = 5;
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                Log.d("error", Objects.requireNonNull(t.getMessage()));
-            }
-        });
     }
 }

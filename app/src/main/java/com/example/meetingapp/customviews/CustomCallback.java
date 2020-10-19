@@ -1,4 +1,4 @@
-package com.example.meetingapp;
+package com.example.meetingapp.customviews;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+
+import com.example.meetingapp.R;
 
 import java.util.Objects;
 

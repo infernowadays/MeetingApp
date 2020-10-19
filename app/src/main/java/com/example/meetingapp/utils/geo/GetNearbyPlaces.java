@@ -1,4 +1,4 @@
-package com.example.meetingapp;
+package com.example.meetingapp.utils.geo;
 
 import android.os.AsyncTask;
 

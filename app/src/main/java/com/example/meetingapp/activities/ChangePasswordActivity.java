@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.meetingapp.CustomCallback;
+import com.example.meetingapp.customviews.CustomCallback;
 import com.example.meetingapp.R;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Password;

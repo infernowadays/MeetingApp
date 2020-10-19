@@ -4,15 +4,25 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,9 +35,11 @@ import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.Message;
 import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.gson.Gson;
 
+import java.security.Policy;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,6 +65,9 @@ public class EventChatFragment extends Fragment {
     @BindView(R.id.recycle_view)
     RecyclerView recycleView;
 
+    @BindView(R.id.scroll_down_btn)
+    ImageView scroll_down_btn;
+
     private MessageAdapter messageAdapter;
     private List<Message> messages;
 
@@ -62,7 +77,6 @@ public class EventChatFragment extends Fragment {
 
     private Event event;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_chat, container, false);
@@ -70,7 +84,25 @@ public class EventChatFragment extends Fragment {
 
         recycleView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
+        linearLayoutManager.setStackFromEnd(true);
         recycleView.setLayoutManager(linearLayoutManager);
+
+        recycleView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                LinearLayoutManager layoutManager=LinearLayoutManager.class.cast(recyclerView.getLayoutManager());
+                assert layoutManager != null;
+                int totalItemCount = layoutManager.getItemCount();
+                int lastVisible = layoutManager.findLastVisibleItemPosition();
+
+                boolean endHasBeenReached = lastVisible + 10 >= totalItemCount;
+                if (totalItemCount > 0 && endHasBeenReached) {
+                    scroll_down_btn.setVisibility(View.GONE);
+                } else {
+                    scroll_down_btn.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         loadEvent();
 
@@ -117,6 +149,11 @@ public class EventChatFragment extends Fragment {
             Toast.makeText(requireActivity().getApplicationContext(), "You can't send empty message", Toast.LENGTH_SHORT).show();
         }
         textMessage.setText("");
+    }
+
+    @OnClick(R.id.scroll_down_btn)
+    void scrollDown(){
+        recycleView.scrollToPosition(messages.size()-1);
     }
 
     private void sendMessage(String text, String date) {

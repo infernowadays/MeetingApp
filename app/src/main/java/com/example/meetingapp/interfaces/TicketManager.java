@@ -1,4 +1,4 @@
-package com.example.meetingapp;
+package com.example.meetingapp.interfaces;
 
 public interface TicketManager extends BaseContentManager {
 

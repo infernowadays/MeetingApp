@@ -3,7 +3,7 @@ package com.example.meetingapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.meetingapp.TicketManager;
+import com.example.meetingapp.interfaces.TicketManager;
 import com.example.meetingapp.adapters.TicketStepperAdapter;
 import com.example.meetingapp.models.Ticket;
 

@@ -6,7 +6,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.UserProfileManager;
+import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.activities.CreateTicketActivity;
 import com.example.meetingapp.adapters.TicketsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
