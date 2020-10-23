@@ -158,32 +158,25 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     @OnClick(R.id.image_profile)
     void openImage() {
         verifyStoragePermissions(requireActivity());
-
         selectImage();
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(requireActivity(),
-//                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-//            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//            startActivityForResult(intent, IMAGE_REQUEST);
-//        }
     }
 
     private void selectImage() {
-        final CharSequence[] items = { "Take Photo", "Choose from Library",
-                "Cancel" };
+        final CharSequence[] items = { "Камера", "Галерея",
+                "Отмена" };
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Add Photo!");
+        builder.setTitle("Фото профиля");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 Intent intent = new Intent(getContext(), CropImageActivity.class);
-                if (items[item].equals("Take Photo")) {
+                if (items[item].equals("Камера")) {
                     intent.putExtra("request", CAMERA_REQUEST);
                     startActivityForResult(intent, CROP_REQUEST);
-                } else if (items[item].equals("Choose from Library")) {
+                } else if (items[item].equals("Галерея")) {
                     intent.putExtra("request", IMAGE_REQUEST);
                     startActivityForResult(intent, CROP_REQUEST);
-                } else if (items[item].equals("Cancel")) {
+                } else if (items[item].equals("Отмена")) {
                     dialog.dismiss();
                 }
             }
@@ -207,7 +200,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CROP_REQUEST && resultCode == RESULT_OK && data != null) {
             Bundle bundle = data.getExtras();
-            Uri imageUri = Uri.parse((String)bundle.get("uri"));
+            Uri imageUri = data.getData();
             layoutAvatarMask.setVisibility(View.GONE);
             imageProfile.setImageURI(imageUri);
         }

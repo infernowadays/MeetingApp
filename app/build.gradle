@@ -108,8 +108,7 @@ dependencies {
 
     implementation 'com.github.GoodieBag:PinView:1.4'
 
-    implementation 'com.steelkiwi:cropiwa:1.0.3'
-
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
 }
 
 configurations.all {
