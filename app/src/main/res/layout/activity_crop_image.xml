@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.CropImageActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/crop_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <ImageView
+        android:id="@+id/crop_btn"
+        android:src="@drawable/ic_ab_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/crop_toolbar"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:tint="@color/colorPrimary"/>
+
+    <com.steelkiwi.cropiwa.CropIwaView
+        android:id="@+id/crop_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/crop_toolbar"/>
+
+</RelativeLayout>

@@ -108,6 +108,8 @@ dependencies {
 
     implementation 'com.github.GoodieBag:PinView:1.4'
 
+    implementation 'com.steelkiwi:cropiwa:1.0.3'
+
 }
 
 configurations.all {
