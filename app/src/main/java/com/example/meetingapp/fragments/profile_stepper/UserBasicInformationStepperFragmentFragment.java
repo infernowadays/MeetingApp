@@ -208,6 +208,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         if (requestCode == CROP_REQUEST && resultCode == RESULT_OK && data != null) {
             Bundle bundle = data.getExtras();
             Uri imageUri = Uri.parse((String)bundle.get("uri"));
+            layoutAvatarMask.setVisibility(View.GONE);
             imageProfile.setImageURI(imageUri);
         }
     }
@@ -241,8 +242,11 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     @Nullable
     @Override
     public VerificationError verifyStep() {
-        if (bitmap == null || date.toString().equals("")) {
+        if (Objects.requireNonNull(textBirthDate.getText()).toString().equals("")) {
             return new VerificationError("Пожалуйста, заполните все данные!");
+        }
+        if (bitmap == null){
+            return new VerificationError("Добавьте фотографию, чтобы продолжить");
         }
 
         return null;

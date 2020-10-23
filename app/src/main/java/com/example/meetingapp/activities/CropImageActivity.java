@@ -49,8 +49,9 @@ public class CropImageActivity extends AppCompatActivity {
 
                 //Не уверен, что это удачный uri
 
-                Uri resourceURI = Uri.parse("android.resource://" + getPackageName() + "/cropped.png");
+                Uri resourceURI = Uri.fromFile(new File(getCacheDir()+"/cropped.png"));
 
+                cropView.setImageUri(resourceURI);
                 cropView.crop(new CropIwaSaveConfig.Builder(resourceURI)
                         .setCompressFormat(Bitmap.CompressFormat.PNG)
                         .setQuality(100)
