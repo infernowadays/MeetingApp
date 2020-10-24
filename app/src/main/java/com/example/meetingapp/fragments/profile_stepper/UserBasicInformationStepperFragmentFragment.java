@@ -49,6 +49,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -102,6 +103,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     private String sex;
 
     private Uri mCropImageUri;
+    private String currentPhotoPath;
 
     public static UserBasicInformationStepperFragmentFragment newInstance() {
         return new UserBasicInformationStepperFragmentFragment();
@@ -177,7 +179,6 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Uri imageUri = CropImage.getPickImageResultUri(this.requireContext(), data);
             if (CropImage.isReadExternalStoragePermissionsRequired(this.requireContext(), imageUri)) {
-                mCropImageUri = imageUri;
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},   CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE);
             } else {
                 startCropImageActivity(imageUri);
@@ -188,6 +189,11 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
                 mCropImageUri = result.getUri();
                 imageProfile.setImageURI(mCropImageUri);
                 layoutAvatarMask.setVisibility(View.GONE);
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), mCropImageUri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
