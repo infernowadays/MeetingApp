@@ -12,7 +12,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -29,12 +28,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.loader.content.CursorLoader;
 
-import com.example.meetingapp.activities.CropImageActivity;
 import com.example.meetingapp.utils.images.compression.Compressor;
 import com.example.meetingapp.utils.images.DownloadImageTask;
 import com.example.meetingapp.interfaces.GetImageFromAsync;
@@ -47,6 +44,8 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -101,6 +100,8 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     private String pattern = "yyyy-MM-dd";
     private Date date;
     private String sex;
+
+    private Uri mCropImageUri;
 
     public static UserBasicInformationStepperFragmentFragment newInstance() {
         return new UserBasicInformationStepperFragmentFragment();
@@ -158,30 +159,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     @OnClick(R.id.image_profile)
     void openImage() {
         verifyStoragePermissions(requireActivity());
-        selectImage();
-    }
-
-    private void selectImage() {
-        final CharSequence[] items = { "Камера", "Галерея",
-                "Отмена" };
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Фото профиля");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                Intent intent = new Intent(getContext(), CropImageActivity.class);
-                if (items[item].equals("Камера")) {
-                    intent.putExtra("request", CAMERA_REQUEST);
-                    startActivityForResult(intent, CROP_REQUEST);
-                } else if (items[item].equals("Галерея")) {
-                    intent.putExtra("request", IMAGE_REQUEST);
-                    startActivityForResult(intent, CROP_REQUEST);
-                } else if (items[item].equals("Отмена")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
+        CropImage.startPickImageActivity(requireContext(), this);
     }
 
     private String getRealPathFromUri(Uri contentUri) {
@@ -195,15 +173,38 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         return result;
     }
 
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CROP_REQUEST && resultCode == RESULT_OK && data != null) {
-            Bundle bundle = data.getExtras();
-            Uri imageUri = data.getData();
-            layoutAvatarMask.setVisibility(View.GONE);
-            imageProfile.setImageURI(imageUri);
+        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Uri imageUri = CropImage.getPickImageResultUri(this.requireContext(), data);
+            if (CropImage.isReadExternalStoragePermissionsRequired(this.requireContext(), imageUri)) {
+                mCropImageUri = imageUri;
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},   CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE);
+            } else {
+                startCropImageActivity(imageUri);
+            }
+        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                mCropImageUri = result.getUri();
+                imageProfile.setImageURI(mCropImageUri);
+                layoutAvatarMask.setVisibility(View.GONE);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
         }
+    }
+
+    private void startCropImageActivity(Uri imageUri) {
+        CropImage.activity(imageUri)
+                .setMinCropResultSize(300, 300)
+                .setAllowRotation(false)
+                .setAllowFlipping(false)
+                .setActivityMenuIconColor(R.color.ms_white)
+                .setBackgroundColor(R.color.colorPrimary)
+                .setMultiTouchEnabled(true)
+                .setActivityTitle("WALK")
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .start(this.requireContext(), this);
     }
 
     @SuppressLint("WrongThread")
