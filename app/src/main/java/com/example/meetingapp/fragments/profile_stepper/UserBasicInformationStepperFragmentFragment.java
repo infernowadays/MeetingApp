@@ -76,9 +76,6 @@ import static android.app.Activity.RESULT_OK;
 public class UserBasicInformationStepperFragmentFragment extends Fragment implements BlockingStep,
         DatePickerDialog.OnDateSetListener, GetImageFromAsync {
 
-    public static final int IMAGE_REQUEST = 100;
-    public static final int CAMERA_REQUEST = 101;
-    private static final int CROP_REQUEST = 102;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -164,14 +161,28 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         CropImage.startPickImageActivity(requireContext(), this);
     }
 
-    private String getRealPathFromUri(Uri contentUri) {
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-        CursorLoader loader = new CursorLoader(requireActivity(), contentUri, filePathColumn, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-        int column_index = Objects.requireNonNull(cursor).getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String result = cursor.getString(column_index);
-        cursor.close();
+//    private String getRealPathFromUri(Uri contentUri) {
+//        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+//        CursorLoader loader = new CursorLoader(requireActivity(), contentUri, filePathColumn, null, null, null);
+//        Cursor cursor = loader.loadInBackground();
+//        int column_index = Objects.requireNonNull(cursor).getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+//        cursor.moveToFirst();
+//        String result = cursor.getString(column_index);
+//        cursor.close();
+//        return result;
+//    }
+
+    private String getRealPathFromURI(Uri contentURI) {
+        String result;
+        Cursor cursor = getContext().getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
         return result;
     }
 
@@ -231,7 +242,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
 
     @Override
     public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {
-
+        upload(mCropImageUri);
     }
 
     @Override
@@ -317,13 +328,14 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     }
 
     private void upload(Uri imageUri) {
-        String fullPath = getRealPathFromUri(imageUri);
+
+        //String fullPath = System.currentTimeMillis()+"";
+        String fullPath = getRealPathFromURI(imageUri);
         File file = new File(fullPath);
 
         File  compressFile = Compressor.getDefault(getContext()).compressToFile(file);
 
-        RequestBody requestFile = RequestBody.create(compressFile, MediaType.parse(
-                Objects.requireNonNull(requireActivity().getContentResolver().getType(imageUri))));
+        RequestBody requestFile = RequestBody.create(compressFile, MediaType.parse(fullPath));
 
         Map<String, RequestBody> map = new HashMap<>();
         map.put("photo\"; filename=\"" + fullPath + "\"", requestFile);
