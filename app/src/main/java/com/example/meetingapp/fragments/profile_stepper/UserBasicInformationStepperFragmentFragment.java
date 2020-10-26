@@ -3,10 +3,8 @@ package com.example.meetingapp.fragments.profile_stepper;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -30,7 +28,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.loader.content.CursorLoader;
 
 import com.example.meetingapp.utils.images.compression.Compressor;
 import com.example.meetingapp.utils.images.DownloadImageTask;
@@ -161,17 +158,6 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         CropImage.startPickImageActivity(requireContext(), this);
     }
 
-//    private String getRealPathFromUri(Uri contentUri) {
-//        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-//        CursorLoader loader = new CursorLoader(requireActivity(), contentUri, filePathColumn, null, null, null);
-//        Cursor cursor = loader.loadInBackground();
-//        int column_index = Objects.requireNonNull(cursor).getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-//        cursor.moveToFirst();
-//        String result = cursor.getString(column_index);
-//        cursor.close();
-//        return result;
-//    }
-
     private String getRealPathFromURI(Uri contentURI) {
         String result;
         Cursor cursor = getContext().getContentResolver().query(contentURI, null, null, null, null);
@@ -230,6 +216,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         String date = Objects.requireNonNull(textBirthDate.getText()).toString();
         iUserProfileManager.saveBirthDate(date);
         iUserProfileManager.saveSex(sex);
+        upload(mCropImageUri);
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -242,7 +229,6 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
 
     @Override
     public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {
-        upload(mCropImageUri);
     }
 
     @Override
@@ -329,7 +315,6 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
 
     private void upload(Uri imageUri) {
 
-        //String fullPath = System.currentTimeMillis()+"";
         String fullPath = getRealPathFromURI(imageUri);
         File file = new File(fullPath);
 
