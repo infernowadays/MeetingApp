@@ -14,12 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.TicketActivity;
+import com.example.meetingapp.fragments.TicketChatFragment;
 import com.example.meetingapp.models.Ticket;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -68,6 +68,10 @@ public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.ViewHold
         holder.layoutSendMessage.setOnClickListener(v -> {
             sendMessage(String.valueOf(ticket.getCreator().getId()), ticket.getId());
             removeItemAfterRequest(position);
+
+            Intent intent = new Intent(context, TicketChatFragment.class);
+            intent.putExtra("EXTRA_USER_PROFILE_ID", String.valueOf(ticket.getCreator().getId()));
+            context.startActivity(intent);
         });
     }
 

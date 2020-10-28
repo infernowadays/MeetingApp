@@ -10,13 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.meetingapp.interfaces.NotificationListener;
 import com.example.meetingapp.R;
 import com.example.meetingapp.fragments.BottomSheetFragment;
 import com.example.meetingapp.fragments.EventsFragment;
 import com.example.meetingapp.fragments.HomeFragment;
 import com.example.meetingapp.fragments.MessagesFragment;
 import com.example.meetingapp.fragments.TicketsFragment;
+import com.example.meetingapp.interfaces.NotificationListener;
 import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         fm.beginTransaction().add(R.id.main_container, messagesFragment, "2").hide(messagesFragment).commit();
         fm.beginTransaction().add(R.id.main_container, homeFragment, "1").commit();
 
-        if(!isMyServiceRunning(WebSocketListenerService.class)){
+        if (!isMyServiceRunning(WebSocketListenerService.class)) {
             Intent intent = new Intent(this, WebSocketListenerService.class);
             intent.putExtra("EXTRA_TOKEN", PreferenceUtils.getToken(this));
             startService(intent);

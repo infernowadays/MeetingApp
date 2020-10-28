@@ -24,7 +24,11 @@ public class WebSocketListenerService extends Service {
     static final public String EXTRA_RESULT = "EXTRA_RESULT";
     static final public String EXTRA_REQUEST = "EXTRA_REQUEST";
     static final public String EXTRA_MESSAGE = "EXTRA_MESSAGE";
-//        private static final String WEB_SOCKET_URL = "ws://10.0.2.2:8000/ws/chat/";
+
+    static final public String EXTRA_PRIVATE_MESSAGE = "EXTRA_PRIVATE_MESSAGE";
+
+
+    //    private static final String WEB_SOCKET_URL = "ws://10.0.2.2:8000/ws/chat/";
     private static final String AUTHORIZATION = "Authorization";
     private static final String WEB_SOCKET_URL = "https://meetingappbackend.xyz:443/ws/chat/";
     private static final String EXTRA_TOKEN = "EXTRA_TOKEN";
@@ -89,7 +93,11 @@ public class WebSocketListenerService extends Service {
                 intent.putExtra(EXTRA_REQUEST, text);
             } else if (webSocketEvent.isMessageEvent()) {
                 intent.putExtra(EXTRA_MESSAGE, text);
+            } else if (webSocketEvent.isPrivateMessageEvent()) {
+                intent.putExtra(EXTRA_PRIVATE_MESSAGE, text);
             }
+
+
             broadcaster.sendBroadcast(intent);
         }
 

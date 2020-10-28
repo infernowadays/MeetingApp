@@ -12,11 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.meetingapp.utils.images.DownloadImageTask;
-import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.EventActivity;
-import com.example.meetingapp.models.Event;
+import com.example.meetingapp.activities.TicketActivity;
+import com.example.meetingapp.interfaces.GetImageFromAsync;
+import com.example.meetingapp.models.Chat;
+import com.example.meetingapp.utils.images.DownloadImageTask;
 
 import java.util.List;
 
@@ -27,10 +28,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> {
     private String theLastMessage;
     private Context context;
-    private List<Event> events;
+    private List<Chat> events;
     private boolean is_chat;
 
-    public ChatsAdapter(Context context, List<Event> events) {
+    public ChatsAdapter(Context context, List<Chat> events) {
         this.events = events;
         this.context = context;
     }
@@ -45,22 +46,29 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        final Event event = events.get(position);
+        final Chat event = events.get(position);
 
-        holder.textFirstName.setText(event.getCreator().getFirstName());
-        holder.textDescription.setText(event.getDescription());
+        holder.textFirstName.setText(event.getFromUser().getFirstName());
+        holder.textDescription.setText(event.getTitle());
 
-        if (event.getCreator().getPhoto() != null) {
-            holder.setImageProfile(event.getCreator().getPhoto().getPhoto());
+        if (event.getFromUser().getPhoto() != null) {
+            holder.setImageProfile(event.getFromUser().getPhoto().getPhoto());
         } else {
-            Glide.with(context).load(event.getCreator().getPhoto()).into(holder.imageProfile);
+            Glide.with(context).load(event.getFromUser().getPhoto()).into(holder.imageProfile);
         }
 
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, EventActivity.class);
-            intent.putExtra("EXTRA_EVENT_ID", String.valueOf(event.getId()));
+            if (event.getContentType().equals("message")) {
+                Intent intent = new Intent(context, EventActivity.class);
+                intent.putExtra("EXTRA_EVENT_ID", String.valueOf(event.getContentId()));
+                context.startActivity(intent);
+            }
 
-            context.startActivity(intent);
+            if (event.getContentType().equals("private_message")) {
+                Intent intent = new Intent(context, TicketActivity.class);
+                intent.putExtra("EXTRA_TICKET_ID", String.valueOf(event.getContentId()));
+                context.startActivity(intent);
+            }
         });
     }
 

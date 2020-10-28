@@ -32,6 +32,8 @@
         <activity android:name=".activities.BaseCreateContentActivity" />
         <activity android:name=".activities.UserTicketsActivity" />
         <activity android:name=".activities.UserEventsActivity" />
+        <activity android:name=".fragments.TicketChatFragment" />
+
         <activity android:name=".activities.ComplaintActivity" />
         <activity android:name=".activities.ModeratorActivity" />
         <activity

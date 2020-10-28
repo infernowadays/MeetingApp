@@ -4,26 +4,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.view.ViewCompat;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,15 +21,13 @@ import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.MessageAdapter;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.CommonMessage;
-import com.example.meetingapp.models.Event;
-import com.example.meetingapp.models.Message;
+import com.example.meetingapp.models.PrivateMessage;
+import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.gson.Gson;
 
-import java.security.Policy;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,7 +42,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class EventChatFragment extends Fragment {
+public class TicketChatFragment extends AppCompatActivity {
 
     @BindView(R.id.button_send)
     ImageButton buttonSend;
@@ -70,28 +57,29 @@ public class EventChatFragment extends Fragment {
     ImageView scroll_down_btn;
 
     private MessageAdapter messageAdapter;
-    private List<CommonMessage> messages;
+    private List<PrivateMessage> messages;
 
     private DatabaseReference databaseReference;
     private String eventId;
     private BroadcastReceiver broadcastReceiver;
 
-    private Event event;
+    private UserProfile toUser;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_event_chat, container, false);
-        ButterKnife.bind(this, view);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_event_chat);
+        ButterKnife.bind(this);
 
         recycleView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
         recycleView.setLayoutManager(linearLayoutManager);
 
         recycleView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                LinearLayoutManager layoutManager=LinearLayoutManager.class.cast(recyclerView.getLayoutManager());
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 assert layoutManager != null;
                 int totalItemCount = layoutManager.getItemCount();
                 int lastVisible = layoutManager.findLastVisibleItemPosition();
@@ -105,15 +93,15 @@ public class EventChatFragment extends Fragment {
             }
         });
 
-        loadEvent();
+        loadProfile();
 
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.hasExtra(WebSocketListenerService.EXTRA_MESSAGE)) {
+                if (intent.hasExtra(WebSocketListenerService.EXTRA_PRIVATE_MESSAGE)) {
                     Gson gson = new Gson();
-                    Message message = gson.fromJson(intent.getStringExtra(
-                            WebSocketListenerService.EXTRA_MESSAGE), Message.class);
+                    PrivateMessage message = gson.fromJson(intent.getStringExtra(
+                            WebSocketListenerService.EXTRA_PRIVATE_MESSAGE), PrivateMessage.class);
 
                     messages.add(message);
                     messageAdapter.notifyItemInserted(messages.size() - 1);
@@ -122,20 +110,19 @@ public class EventChatFragment extends Fragment {
             }
         };
 
-        return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver((broadcastReceiver),
+        LocalBroadcastManager.getInstance(this).registerReceiver((broadcastReceiver),
                 new IntentFilter(WebSocketListenerService.EXTRA_RESULT)
         );
     }
 
     @Override
     public void onStop() {
-        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         super.onStop();
     }
 
@@ -147,37 +134,37 @@ public class EventChatFragment extends Fragment {
             String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
             sendMessage(message, currentDate);
         } else {
-            Toast.makeText(requireActivity().getApplicationContext(), "You can't send empty message", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "You can't send empty message", Toast.LENGTH_SHORT).show();
         }
         textMessage.setText("");
     }
 
     @OnClick(R.id.scroll_down_btn)
-    void scrollDown(){
-        recycleView.scrollToPosition(messages.size()-1);
+    void scrollDown() {
+        recycleView.scrollToPosition(messages.size() - 1);
     }
 
     private void sendMessage(String text, String date) {
-        Message message = new Message(text, date, false, event.getId());
+        PrivateMessage privateMessage = new PrivateMessage(toUser.getId(), text, date, false);
 
-        Call<CommonMessage> call = RetrofitClient
-                .getInstance(PreferenceUtils.getToken(requireContext()))
+        Call<PrivateMessage> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(this))
                 .getApi()
-                .sendMessage(message);
+                .sendPrivateMessage(privateMessage);
 
-        call.enqueue(new Callback<CommonMessage>() {
+        call.enqueue(new Callback<PrivateMessage>() {
             @Override
-            public void onResponse(@NonNull Call<CommonMessage> call, @NonNull Response<CommonMessage> response) {
-                CommonMessage message = response.body();
-                if (message != null) {
-                    messages.add(message);
+            public void onResponse(@NonNull Call<PrivateMessage> call, @NonNull Response<PrivateMessage> response) {
+                PrivateMessage privateMessage = response.body();
+                if (privateMessage != null) {
+                    messages.add(privateMessage);
                     recycleView.scrollToPosition(messages.size() - 1);
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<CommonMessage> call, @NonNull Throwable t) {
-
+            public void onFailure(@NonNull Call<PrivateMessage> call, @NonNull Throwable t) {
+                int a = 5;
             }
         });
     }
@@ -186,18 +173,20 @@ public class EventChatFragment extends Fragment {
         messages = new ArrayList<>();
 
         Call<List<CommonMessage>> call = RetrofitClient
-                .getInstance(PreferenceUtils.getToken(requireContext()))
+                .getInstance(PreferenceUtils.getToken(this))
                 .getApi()
-                .getEventMessages(String.valueOf(event.getId()));
+                .getPrivateMessage(String.valueOf(toUser.getId()));
 
         call.enqueue(new Callback<List<CommonMessage>>() {
             @Override
             public void onResponse(@NonNull Call<List<CommonMessage>> call, @NonNull Response<List<CommonMessage>> response) {
-                messages = response.body();
-                if (messages != null) {
-                    messageAdapter = new MessageAdapter(getContext(), messages);
-                    recycleView.setAdapter(messageAdapter);
-                }
+                List<CommonMessage> commonMessage = response.body();
+
+                if (commonMessage == null)
+                    commonMessage = new ArrayList<>();
+
+//                messageAdapter = new MessageAdapter(getContext(), commonMessage);
+//                recycleView.setAdapter(messageAdapter);
             }
 
             @Override
@@ -207,24 +196,30 @@ public class EventChatFragment extends Fragment {
         });
     }
 
-    private void loadEvent() {
-        String eventId = requireActivity().getIntent().getStringExtra("EXTRA_EVENT_ID");
+    private Context getContext() {
+        return this;
+    }
 
-        Call<Event> call = RetrofitClient
-                .getInstance(PreferenceUtils.getToken(requireContext()))
+    private void loadProfile() {
+        String pk = getIntent().getStringExtra("EXTRA_USER_PROFILE_ID");
+
+
+        Call<UserProfile> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(this))
                 .getApi()
-                .getEvent(eventId);
+                .getUserProfile(pk);
 
-        call.enqueue(new Callback<Event>() {
+        call.enqueue(new Callback<UserProfile>() {
             @Override
-            public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
-                event = response.body();
-                readMessages();
-
+            public void onResponse(@NonNull Call<UserProfile> call, @NonNull Response<UserProfile> response) {
+                if (response.body() != null) {
+                    toUser = response.body();
+                    readMessages();
+                }
             }
 
             @Override
-            public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<UserProfile> call, @NonNull Throwable t) {
 
             }
         });
