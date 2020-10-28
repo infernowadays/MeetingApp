@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -27,10 +26,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.loader.content.CursorLoader;
 
 import com.example.meetingapp.utils.images.compression.Compressor;
 import com.example.meetingapp.utils.images.DownloadImageTask;
@@ -44,9 +41,12 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -73,7 +73,6 @@ import static android.app.Activity.RESULT_OK;
 public class UserBasicInformationStepperFragmentFragment extends Fragment implements BlockingStep,
         DatePickerDialog.OnDateSetListener, GetImageFromAsync {
 
-    private static final int IMAGE_REQUEST = 100;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -96,6 +95,9 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     private String pattern = "yyyy-MM-dd";
     private Date date;
     private String sex;
+
+    private Uri mCropImageUri;
+    private String currentPhotoPath;
 
     public static UserBasicInformationStepperFragmentFragment newInstance() {
         return new UserBasicInformationStepperFragmentFragment();
@@ -153,32 +155,59 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     @OnClick(R.id.image_profile)
     void openImage() {
         verifyStoragePermissions(requireActivity());
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(requireActivity(),
-                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(intent, IMAGE_REQUEST);
-        }
+        CropImage.startPickImageActivity(requireContext(), this);
     }
 
-    private String getRealPathFromUri(Uri contentUri) {
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-        CursorLoader loader = new CursorLoader(requireActivity(), contentUri, filePathColumn, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-        int column_index = Objects.requireNonNull(cursor).getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String result = cursor.getString(column_index);
-        cursor.close();
+    private String getRealPathFromURI(Uri contentURI) {
+        String result;
+        Cursor cursor = getContext().getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
         return result;
     }
 
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            Uri imageUri = data.getData();
-            upload(imageUri);
+        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Uri imageUri = CropImage.getPickImageResultUri(this.requireContext(), data);
+            if (CropImage.isReadExternalStoragePermissionsRequired(this.requireContext(), imageUri)) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},   CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE);
+            } else {
+                startCropImageActivity(imageUri);
+            }
+        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                mCropImageUri = result.getUri();
+                imageProfile.setImageURI(mCropImageUri);
+                layoutAvatarMask.setVisibility(View.GONE);
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), mCropImageUri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
         }
+    }
+
+    private void startCropImageActivity(Uri imageUri) {
+        CropImage.activity(imageUri)
+                .setMinCropResultSize(300, 300)
+                .setAllowRotation(false)
+                .setAllowFlipping(false)
+                .setActivityMenuIconColor(R.color.ms_white)
+                .setBackgroundColor(R.color.colorPrimary)
+                .setMultiTouchEnabled(true)
+                .setActivityTitle("WALK")
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .start(this.requireContext(), this);
     }
 
     @SuppressLint("WrongThread")
@@ -187,6 +216,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         String date = Objects.requireNonNull(textBirthDate.getText()).toString();
         iUserProfileManager.saveBirthDate(date);
         iUserProfileManager.saveSex(sex);
+        upload(mCropImageUri);
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -199,7 +229,6 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
 
     @Override
     public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {
-
     }
 
     @Override
@@ -210,8 +239,11 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     @Nullable
     @Override
     public VerificationError verifyStep() {
-        if (bitmap == null || date.toString().equals("")) {
+        if (Objects.requireNonNull(textBirthDate.getText()).toString().equals("")) {
             return new VerificationError("Пожалуйста, заполните все данные!");
+        }
+        if (bitmap == null){
+            return new VerificationError("Добавьте фотографию, чтобы продолжить");
         }
 
         return null;
@@ -282,13 +314,13 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     }
 
     private void upload(Uri imageUri) {
-        String fullPath = getRealPathFromUri(imageUri);
+
+        String fullPath = getRealPathFromURI(imageUri);
         File file = new File(fullPath);
 
         File  compressFile = Compressor.getDefault(getContext()).compressToFile(file);
 
-        RequestBody requestFile = RequestBody.create(compressFile, MediaType.parse(
-                Objects.requireNonNull(requireActivity().getContentResolver().getType(imageUri))));
+        RequestBody requestFile = RequestBody.create(compressFile, MediaType.parse(fullPath));
 
         Map<String, RequestBody> map = new HashMap<>();
         map.put("photo\"; filename=\"" + fullPath + "\"", requestFile);
