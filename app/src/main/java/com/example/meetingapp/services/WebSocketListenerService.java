@@ -28,7 +28,7 @@ public class WebSocketListenerService extends Service {
     static final public String EXTRA_PRIVATE_MESSAGE = "EXTRA_PRIVATE_MESSAGE";
 
 
-    //    private static final String WEB_SOCKET_URL = "ws://10.0.2.2:8000/ws/chat/";
+    //        private static final String WEB_SOCKET_URL = "ws://10.0.2.2:8000/ws/chat/";
     private static final String AUTHORIZATION = "Authorization";
     private static final String WEB_SOCKET_URL = "https://meetingappbackend.xyz:443/ws/chat/";
     private static final String EXTRA_TOKEN = "EXTRA_TOKEN";
