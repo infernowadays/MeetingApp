@@ -1,4 +1,5 @@
 <resources>
+    <integer name="com_vk_sdk_AppId">7334440</integer>
     <string name="app_name">WALK</string>
     <string name="login">Login</string>
     <string name="email">email</string>
@@ -6,9 +7,9 @@
     <string name="title_home">Home</string>
     <string name="title_activity_bottom_navigation">BottomNavigationActivity</string>
     <string name="title_activity_maps">Map</string>
-    <string name="api_key">AIzaSyDB3CO5OhPS7qyeZFb9PrIOy3m9sIlesvc</string>
 
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="api_key">AIzaSyDB3CO5OhPS7qyeZFb9PrIOy3m9sIlesvc</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_location">Добавить</string>
     <string name="cancel_location">Отмена</string>
@@ -27,7 +28,6 @@
     <string name="man">Мужчина</string>
     <string name="woman">Женщина</string>
     <string name="undefined">Undefined</string>
-    <integer name="com_vk_sdk_AppId">7334440</integer>
 
     <!-- Preference Titles -->
 

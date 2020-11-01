@@ -1,11 +1,25 @@
 package com.example.meetingapp.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class UserProfile {
+public class UserProfile implements Parcelable {
 
+    public static final Creator<UserProfile> CREATOR = new Creator<UserProfile>() {
+        @Override
+        public UserProfile createFromParcel(Parcel in) {
+            return new UserProfile(in);
+        }
+
+        @Override
+        public UserProfile[] newArray(int size) {
+            return new UserProfile[size];
+        }
+    };
     @SerializedName("id")
     private int id;
     @SerializedName("firebase_uid")
@@ -73,7 +87,7 @@ public class UserProfile {
         this.filled = filled;
     }
 
-    public UserProfile(int id, String firstName, String lastName){
+    public UserProfile(int id, String firstName, String lastName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -84,6 +98,13 @@ public class UserProfile {
     }
 
     public UserProfile() {
+    }
+
+    protected UserProfile(Parcel in) {
+        id = in.readInt();
+        firstName = in.readString();
+        lastName = in.readString();
+        photo = in.readParcelable(getClass().getClassLoader());
     }
 
     public Boolean getFilled() {
@@ -212,5 +233,18 @@ public class UserProfile {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+        dest.writeParcelable(photo, flags);
     }
 }

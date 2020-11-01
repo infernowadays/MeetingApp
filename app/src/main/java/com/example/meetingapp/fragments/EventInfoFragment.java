@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.activities.EventMembersActivity;
 import com.example.meetingapp.activities.UserProfileActivity;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Category;
@@ -28,6 +30,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,6 +54,8 @@ public class EventInfoFragment extends Fragment {
     TextView textEventDate;
     @BindView(R.id.text_event_time)
     TextView textEventTime;
+    @BindView(R.id.text_event_members)
+    TextView textEventMembers;
     @BindView(R.id.event_time)
     LinearLayout layoutEventTime;
     @BindView(R.id.map_view)
@@ -84,6 +90,17 @@ public class EventInfoFragment extends Fragment {
     void openCreatorProfile() {
         Intent intent = new Intent(getActivity(), UserProfileActivity.class);
         intent.putExtra("EXTRA_USER_PROFILE_ID", String.valueOf(event.getCreator().getId()));
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.event_members)
+    void showMembers() {
+        Intent intent = new Intent(getActivity(), EventMembersActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("EXTRA_MEMBERS", (ArrayList<? extends Parcelable>) event.getMembers());
+
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 
@@ -156,6 +173,7 @@ public class EventInfoFragment extends Fragment {
                 event.getCreator().getLastName());
         textEventDescription.setText(String.valueOf(event.getDescription()));
         textEventLocation.setText(String.valueOf(event.getGeoPoint().getAddress()));
+        textEventMembers.setText(String.valueOf(event.getMembers().size()));
         textEventDate.setText(event.getDate());
         if (event.getTime() != null) {
             layoutEventTime.setVisibility(View.VISIBLE);

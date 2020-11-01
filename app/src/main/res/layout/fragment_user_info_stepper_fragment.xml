@@ -37,8 +37,8 @@
                 android:background="@drawable/add_avatar" />
 
             <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_add_white_24dp"
                 tools:ignore="ContentDescription" />
