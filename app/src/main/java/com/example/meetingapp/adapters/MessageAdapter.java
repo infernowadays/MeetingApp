@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.meetingapp.models.CommonMessage;
 import com.example.meetingapp.utils.images.DownloadImageTask;
 import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.R;
@@ -36,11 +37,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     private static final int MSG_TYPE_LEFT = 0;
     private static final int MSG_TYPE_RIGHT = 1;
 
-    private List<Message> messages;
+    private List<CommonMessage> messages;
 
     private Context context;
 
-    public MessageAdapter(Context context, List<Message> messages) {
+    public MessageAdapter(Context context, List<CommonMessage> messages) {
         this.messages = messages;
         this.context = context;
     }
@@ -59,7 +60,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Message message = messages.get(position);
+        CommonMessage message = messages.get(position);
         holder.textMessage.setText(message.getText());
         holder.textUserName.setText(message.getFromUser().getFirstName());
         holder.textMessageTime.setText(parseCreated(message.getCreated()));
@@ -72,7 +73,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         long previousMillis = 0;
         if (position > 0) {
-            Message previousMessage = messages.get(position - 1);
+            CommonMessage previousMessage = messages.get(position - 1);
             previousMillis = DateConverter.stringDateToMillis(previousMessage.getCreated());
         }
         setTimeTextVisibility(DateConverter.stringDateToMillis(message.getCreated()), previousMillis, holder.textDate);

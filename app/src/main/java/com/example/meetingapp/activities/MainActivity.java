@@ -13,13 +13,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 
-import com.example.meetingapp.interfaces.NotificationListener;
 import com.example.meetingapp.R;
 import com.example.meetingapp.fragments.BottomSheetFragment;
 import com.example.meetingapp.fragments.EventsFragment;
 import com.example.meetingapp.fragments.HomeFragment;
 import com.example.meetingapp.fragments.MessagesFragment;
 import com.example.meetingapp.fragments.TicketsFragment;
+import com.example.meetingapp.interfaces.NotificationListener;
 import com.example.meetingapp.services.NetworkConnection;
 import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
     private Fragment active = homeFragment;
     private String content;
     private BottomNavigationView navigation;
-   // private NetworkConnection networkConnection = new NetworkConnection(applicationContext);
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {
         switch (item.getItemId()) {
@@ -73,8 +73,6 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         }
         return false;
     };
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

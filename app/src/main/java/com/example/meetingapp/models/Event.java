@@ -1,14 +1,19 @@
 package com.example.meetingapp.models;
 
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.RequiresApi;
+
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Event implements Parcelable {
     public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
+        @RequiresApi(api = Build.VERSION_CODES.Q)
         public Event createFromParcel(Parcel in) {
             return new Event(in);
         }
@@ -43,12 +48,16 @@ public class Event implements Parcelable {
     public Event() {
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public Event(Parcel in) {
         id = in.readInt();
         description = in.readString();
         date = in.readString();
         time = in.readString();
         geoPoint = in.readParcelable(getClass().getClassLoader());
+
+//        members = new ArrayList<>();
+//        in.readTypedList(members, UserProfile.CREATOR);
     }
 
     public List<Category> getCategories() {
@@ -128,6 +137,7 @@ public class Event implements Parcelable {
         return 0;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
@@ -135,5 +145,6 @@ public class Event implements Parcelable {
         dest.writeString(date);
         dest.writeString(time);
         dest.writeParcelable(geoPoint, flags);
+//        dest.writeTypedList(members);
     }
 }

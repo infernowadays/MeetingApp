@@ -112,6 +112,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.3.72"
 
 
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
 }
 
 configurations.all {

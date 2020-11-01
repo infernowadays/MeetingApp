@@ -17,6 +17,11 @@ public class WebSocketEvent {
         return type.equals(typeMessage);
     }
 
+    public boolean isPrivateMessageEvent(){
+        String typeMessage = "private_message_event";
+        return type.equals(typeMessage);
+    }
+
     public String getType() {
         return type;
     }

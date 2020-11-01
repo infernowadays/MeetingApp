@@ -19,6 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.ChatsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.models.Chat;
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.Message;
 import com.example.meetingapp.services.WebSocketListenerService;
@@ -91,15 +92,15 @@ public class ChatsFragment extends Fragment {
     }
 
     private void chats() {
-        Call<List<Event>> call = RetrofitClient
+        Call<List<Chat>> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(requireContext()))
                 .getApi()
                 .getEventChats();
 
-        call.enqueue(new Callback<List<Event>>() {
+        call.enqueue(new Callback<List<Chat>>() {
             @Override
-            public void onResponse(@NonNull Call<List<Event>> call, @NonNull Response<List<Event>> response) {
-                List<Event> events = response.body();
+            public void onResponse(@NonNull Call<List<Chat>> call, @NonNull Response<List<Chat>> response) {
+                List<Chat> events = response.body();
                 if (events != null) {
                     ChatsAdapter chatsAdapter = new ChatsAdapter(getContext(), events);
                     recycleView.setAdapter(chatsAdapter);
@@ -107,7 +108,7 @@ public class ChatsFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<Chat>> call, @NonNull Throwable t) {
 
             }
         });

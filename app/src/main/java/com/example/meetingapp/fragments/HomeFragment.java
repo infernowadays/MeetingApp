@@ -24,21 +24,19 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.meetingapp.customviews.CustomSwipeToRefresh;
-import com.example.meetingapp.utils.images.DownloadImageTask;
-import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.R;
-import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.activities.ConfirmCodeActivity;
 import com.example.meetingapp.activities.EditUserProfileActivity;
 import com.example.meetingapp.activities.EditUserProfileCategoriesActivity;
 import com.example.meetingapp.activities.SettingsActivity;
-import com.example.meetingapp.activities.UserEventsActivity;
-import com.example.meetingapp.activities.UserTicketsActivity;
 import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.customviews.CustomSwipeToRefresh;
+import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.UserProfile;
+import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.utils.PreferenceUtils;
+import com.example.meetingapp.utils.images.DownloadImageTask;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -210,17 +208,17 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
         startActivity(intent);
     }
 
-    @OnClick(R.id.button_user_events)
-    void openUserEvents() {
-        Intent intent = new Intent(getActivity(), UserEventsActivity.class);
-        startActivity(intent);
-    }
+//    @OnClick(R.id.button_user_events)
+//    void openUserEvents() {
+//        Intent intent = new Intent(getActivity(), UserEventsActivity.class);
+//        startActivity(intent);
+//    }
 
-    @OnClick(R.id.button_user_tickets)
-    void openUserTickets() {
-        Intent intent = new Intent(getActivity(), UserTicketsActivity.class);
-        startActivity(intent);
-    }
+//    @OnClick(R.id.button_user_tickets)
+//    void openUserTickets() {
+//        Intent intent = new Intent(getActivity(), UserTicketsActivity.class);
+//        startActivity(intent);
+//    }
 
     private void meProfile() {
         Call<UserProfile> call = RetrofitClient
