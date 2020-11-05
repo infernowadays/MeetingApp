@@ -1,5 +1,6 @@
 package com.example.meetingapp.activities;
 
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +26,7 @@ public class CreateUserProfileActivity extends AppCompatActivity implements IUse
     private StepperLayout stepperLayout;
 
     private String sex;
+    private Uri uri;
     private byte[] photo;
     private String birthDate;
     private String city;
@@ -64,6 +66,16 @@ public class CreateUserProfileActivity extends AppCompatActivity implements IUse
         } else {
             finish();
         }
+    }
+
+    @Override
+    public void saveUri(Uri uri) {
+        this.uri = uri;
+    }
+
+    @Override
+    public Uri getUri() {
+        return uri;
     }
 
     @Override
