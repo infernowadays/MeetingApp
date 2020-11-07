@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,11 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.activities.MainActivity;
 import com.example.meetingapp.adapters.ChatsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Chat;
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.Message;
+import com.example.meetingapp.services.NetworkConnection;
 import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.gson.Gson;
@@ -74,6 +77,10 @@ public class ChatsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        boolean isNetworkOnline = new NetworkConnection(getActivity()).isNetworkOnline(getActivity());
+        if (!isNetworkOnline) {
+            Toast.makeText(getActivity(), "Произошла сетевая ошибка. Проверьте что подключение к интернет работает стабильно.", Toast.LENGTH_SHORT).show();}
+
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver((broadcastReceiver),
                 new IntentFilter(WebSocketListenerService.EXTRA_RESULT)
         );
@@ -89,6 +96,7 @@ public class ChatsFragment extends Fragment {
     public void onResume() {
 //        chats();
         super.onResume();
+        
     }
 
     private void chats() {

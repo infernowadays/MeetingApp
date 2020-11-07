@@ -38,11 +38,7 @@ import androidx.lifecycle.LiveData
 
     override fun onInactive() {
         super.onInactive()
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            connectivityManager.unregisterNetworkCallback(connectivityManagerCallback())
-        } else {
-            context.unregisterReceiver(networkReceiver)
-        }
+        connectivityManager.unregisterNetworkCallback(connectivityManagerCallback())
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -58,23 +54,37 @@ import androidx.lifecycle.LiveData
         )
     }
 
-    private fun connectivityManagerCallback(): ConnectivityManager.NetworkCallback {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            networkCallback = object : ConnectivityManager.NetworkCallback() {
-                override fun onLost(network: Network) {
-                    super.onLost(network)
-                    postValue(false)
-                }
-
-                override fun onAvailable(network: Network) {
-                    super.onAvailable(network)
-                    postValue(true)
-                }
+    fun isNetworkOnline(context: Context): Boolean {
+        var status = false
+        try {
+            val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            var netInfo = cm.getNetworkInfo(0)
+            if (netInfo != null && netInfo.state == NetworkInfo.State.CONNECTED) {
+                status = true
+            } else {
+                netInfo = cm.getNetworkInfo(1)
+                if (netInfo != null && netInfo.state == NetworkInfo.State.CONNECTED) status = true
             }
-            return networkCallback
-        } else {
-            throw IllegalAccessError("Error")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
         }
+        return status
+
+    }
+    private fun connectivityManagerCallback(): ConnectivityManager.NetworkCallback {
+        networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                postValue(false)
+            }
+
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                postValue(true)
+            }
+        }
+        return networkCallback
     }
 
     private val networkReceiver = object : BroadcastReceiver() {

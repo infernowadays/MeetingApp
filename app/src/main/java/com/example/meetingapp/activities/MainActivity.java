@@ -4,6 +4,8 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -74,6 +76,13 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         return false;
     };
 
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i("MainActivity", "onStop called");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,25 +102,31 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
             fm.beginTransaction().add(R.id.main_container, ticketsFragment, "3").hide(ticketsFragment).commit();
         }
 
+
+        boolean isNetworkOnline = new NetworkConnection(this).isNetworkOnline(this);
+        if (!isNetworkOnline) {
+        Toast.makeText(MainActivity.this, "Произошла сетевая ошибка. Проверьте что подключение к интернет работает стабильно.", Toast.LENGTH_SHORT).show();}
+
+
         //!!!!
-        Intrinsics.checkExpressionValueIsNotNull(this, "applicationContext");
-        NetworkConnection networkConnection = new NetworkConnection(this);
-        networkConnection.observe(this, new Observer() {
-
-            public void onChanged(Object var1) {
-                this.onChanged((Boolean) var1);
-            }
-
-            public final void onChanged(Boolean isConnected) {
-                Intrinsics.checkExpressionValueIsNotNull(isConnected, "isConnected");
-                if (isConnected) {
-                    Toast.makeText(MainActivity.this, "Internet is fine", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Internet is not fine", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
+//        Intrinsics.checkExpressionValueIsNotNull(this, "applicationContext");
+//        NetworkConnection networkConnection = new NetworkConnection(this);
+//        networkConnection.observe(this, new Observer() {
+//
+//            public void onChanged(Object var1) {
+//                this.onChanged((Boolean) var1);
+//            }
+//
+//            public final void onChanged(Boolean isConnected) {
+//                Intrinsics.checkExpressionValueIsNotNull(isConnected, "isConnected");
+//                if (isConnected) {
+//                    Toast.makeText(MainActivity.this, "Internet is fine", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(MainActivity.this, "Internet is not fine", Toast.LENGTH_SHORT).show();
+//                }
+//
+//            }
+//        });
         //!!!!
 
         fm.beginTransaction().add(R.id.main_container, messagesFragment, "2").hide(messagesFragment).commit();
@@ -122,6 +137,25 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
             intent.putExtra("EXTRA_TOKEN", PreferenceUtils.getToken(this));
             startService(intent);
         }
+    }
+    public boolean isNetworkOnline(Context context) {
+        boolean status = false;
+        try {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
+                status = true;
+            } else {
+                netInfo = cm.getNetworkInfo(1);
+                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED)
+                    status = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return status;
+
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {

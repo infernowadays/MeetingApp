@@ -69,13 +69,15 @@
             android:parentActivityName=".activities.MainActivity" />
         <activity android:name=".activities.EventStepperActivity" />
         <activity android:name=".activities.UserProfileStepperActivity" />
-        <activity android:name=".activities.RegisterActivity" />
+        <activity android:name=".activities.RegisterActivity"/>
+
         <activity android:name=".activities.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".activities.MapsActivity"

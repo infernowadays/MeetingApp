@@ -1,9 +1,13 @@
 package com.example.meetingapp.activities;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -59,40 +63,64 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
     @OnClick(R.id.button_change_password)
     void changePassword() {
-        String currentPassword = textCurrentPassword.getText().toString();
-        String newPassword = textNewPassword.getText().toString();
+        if (isNetworkOnline(this)) {String currentPassword = textCurrentPassword.getText().toString();
+            String newPassword = textNewPassword.getText().toString();
 
-        Call<Token> call = RetrofitClient
-                .getInstance(PreferenceUtils.getToken(getContext()))
-                .getApi()
-                .changePassword(new Password(currentPassword, newPassword));
+            Call<Token> call = RetrofitClient
+                    .getInstance(PreferenceUtils.getToken(getContext()))
+                    .getApi()
+                    .changePassword(new Password(currentPassword, newPassword));
 
-        call.enqueue(new CustomCallback<Token>(getContext()) {
-            @Override
-            public void onResponse(@NonNull Call<Token> call, @NonNull Response<Token> response) {
-                super.onResponse(call, response);
+            call.enqueue(new CustomCallback<Token>(getContext()) {
+                @Override
+                public void onResponse(@NonNull Call<Token> call, @NonNull Response<Token> response) {
+                    super.onResponse(call, response);
 
-                if (response.isSuccessful() && response.body() != null) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        int a = 5;
+
+
+                    } else {
+                        int a = 5;
+                        // wrong password
+
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Token> call, @NonNull Throwable t) {
                     int a = 5;
-
-
-                } else {
-                    int a = 5;
-                    // wrong password
 
                 }
-            }
+            });}
+        else {
+            Toast.makeText(ChangePasswordActivity.this, "Произошла сетевая ошибка. Проверьте что подключение к интернет работает стабильно.", Toast.LENGTH_SHORT).show();}
 
-            @Override
-            public void onFailure(@NonNull Call<Token> call, @NonNull Throwable t) {
-                int a = 5;
 
-            }
-        });
 
     }
 
     private Context getContext() {
         return this;
+    }
+
+    public boolean isNetworkOnline(Context context) {
+        boolean status = false;
+        try {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
+                status = true;
+            } else {
+                netInfo = cm.getNetworkInfo(1);
+                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED)
+                    status = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return status;
+
     }
 }

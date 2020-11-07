@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import com.example.meetingapp.R;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Ticket;
+import com.example.meetingapp.services.NetworkConnection;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -114,6 +116,10 @@ public class TicketActivity extends AppCompatActivity {
                 .getInstance(PreferenceUtils.getToken(this))
                 .getApi()
                 .getTicket(ticketId);
+        boolean isNetworkOnline = new NetworkConnection(this).isNetworkOnline(this);
+        if (!isNetworkOnline) {
+            Toast.makeText(this, "Произошла сетевая ошибка. Проверьте что подключение к интернет работает стабильно.", Toast.LENGTH_SHORT).show();}
+
 
         call.enqueue(new Callback<Ticket>() {
             @Override
