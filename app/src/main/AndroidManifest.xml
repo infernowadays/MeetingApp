@@ -70,7 +70,9 @@
         <activity android:name=".activities.EventStepperActivity" />
         <activity android:name=".activities.UserProfileStepperActivity" />
         <activity android:name=".activities.RegisterActivity" />
-        <activity android:name=".activities.StartActivity">
+        <activity android:name=".activities.StartActivity"
+            android:windowSoftInputMode="adjustResize"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
