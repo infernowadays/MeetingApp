@@ -143,7 +143,7 @@ public class UserPublishStepperFragment extends Fragment implements BlockingStep
                 requireContext().startActivity(intent);
                 ((Activity) requireContext()).finish();
 
-                PreferenceUtils.saveFilled(true, getContext());
+                PreferenceUtils.saveFilled(true, requireContext());
             }
 
             @Override
@@ -244,7 +244,7 @@ public class UserPublishStepperFragment extends Fragment implements BlockingStep
             public void onResponse(@NonNull Call<ProfilePhoto> call, @NonNull Response<ProfilePhoto> response) {
                 ProfilePhoto profilePhoto = response.body();
                 if (profilePhoto != null) {
-                    Toast.makeText(getContext(), "Loaded!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "Loaded!", Toast.LENGTH_SHORT).show();
 
                     String imageUrl = profilePhoto.getPhoto();
                     new DownloadImageTask(UserPublishStepperFragment.this).execute(imageUrl);

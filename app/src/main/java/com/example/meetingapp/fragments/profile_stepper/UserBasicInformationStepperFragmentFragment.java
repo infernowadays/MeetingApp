@@ -3,6 +3,7 @@ package com.example.meetingapp.fragments.profile_stepper;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -99,6 +100,8 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     private Date date;
     private String sex;
 
+    private byte[] photoBytes;
+
     private Uri mCropImageUri;
 
     private class CompressBitmap extends AsyncTask<Bitmap, Integer, byte[]>{
@@ -118,7 +121,9 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         @Override
         protected void onPostExecute(byte[] bytes) {
             super.onPostExecute(bytes);
-            iUserProfileManager.savePhoto(bytes);
+            photoBytes = bytes;
+            iUserProfileManager.savePhoto(photoBytes);
+            Log.d("@@@@@@@@@@@@@@@@@@@", "onNextClicked: new photo saved");
         }
     }
 
@@ -177,7 +182,8 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
 
     @OnClick(R.id.image_profile)
     void openImage() {
-        verifyStoragePermissions(requireActivity());
+        verifyStoragePermissions(getActivity());
+        iUserProfileManager.savePhoto(null);
         CropImage.startPickImageActivity(requireContext(), this);
     }
 
@@ -200,6 +206,10 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                CompressBitmap compressBitmap = new CompressBitmap();
+                compressBitmap.execute(bitmap);
+
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
@@ -224,22 +234,9 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
         String date = Objects.requireNonNull(textBirthDate.getText()).toString();
         iUserProfileManager.saveBirthDate(date);
+        Log.d("@@@@@@@@@@@@@@@@@@@", "date: "+date);
         iUserProfileManager.saveSex(sex);
         iUserProfileManager.saveUri(mCropImageUri);
-
-        layoutAvatarMask.setVisibility(View.GONE);
-        imageProfile.setImageBitmap(bitmap);
-        //upload(mCropImageUri);
-
-//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//        byte[] byteArray = stream.toByteArray();
-//
-//        iUserProfileManager.savePhoto(byteArray);
-
-        CompressBitmap compressBitmap = new CompressBitmap();
-        compressBitmap.execute(bitmap);
-
         callback.goToNextStep();
     }
 
@@ -281,13 +278,13 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 requireActivity(),
-                R.style.DialogTheme,
+                AlertDialog.THEME_HOLO_LIGHT,
                 this,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
         );
-        datePickerDialog.getDatePicker();
+        datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() - 441797328000L);
         datePickerDialog.show();
     }
 
