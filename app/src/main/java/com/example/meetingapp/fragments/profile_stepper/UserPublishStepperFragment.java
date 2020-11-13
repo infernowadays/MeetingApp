@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -120,9 +122,12 @@ public class UserPublishStepperFragment extends Fragment implements BlockingStep
 
     @Override
     public void onCompleteClicked(StepperLayout.OnCompleteClickedCallback callback) {
-        if (iUserProfileManager.getUri()!=null){
-            upload(iUserProfileManager.getUri());
-        } else Log.d("@@@@@@@@@@@@@@@@@@@@@@", "onCompleteClicked: no uri");
+//        try {
+//            Thread.sleep(2000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
         createUserProfile();
     }
 
@@ -137,13 +142,10 @@ public class UserPublishStepperFragment extends Fragment implements BlockingStep
         call.enqueue(new Callback<UserProfile>() {
             @Override
             public void onResponse(@NonNull Call<UserProfile> call, @NonNull Response<UserProfile> response) {
-                Intent intent = new Intent(getContext(), MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                if (iUserProfileManager.getUri()!=null){
+                    upload(iUserProfileManager.getUri());
+                } else Log.d("@@@@@@@@@@@@@@@@@@@@@@", "onCompleteClicked: no uri");
 
-                requireContext().startActivity(intent);
-                ((Activity) requireContext()).finish();
-
-                PreferenceUtils.saveFilled(true, requireContext());
             }
 
             @Override
@@ -248,6 +250,13 @@ public class UserPublishStepperFragment extends Fragment implements BlockingStep
 
                     String imageUrl = profilePhoto.getPhoto();
                     new DownloadImageTask(UserPublishStepperFragment.this).execute(imageUrl);
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    requireContext().startActivity(intent);
+                    ((Activity) requireContext()).finish();
+
+                    PreferenceUtils.saveFilled(true, requireContext());
+                    Log.d("@@@@@@@@@@@@@@@@", "UserProfileCallback ok");
                 }
             }
 
