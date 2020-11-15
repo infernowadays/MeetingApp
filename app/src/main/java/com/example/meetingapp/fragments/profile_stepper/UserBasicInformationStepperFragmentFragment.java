@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.FontRequest;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -69,6 +70,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
+import static com.vk.sdk.VKUIHelper.getApplicationContext;
 
 public class UserBasicInformationStepperFragmentFragment extends Fragment implements BlockingStep,
         DatePickerDialog.OnDateSetListener, GetImageFromAsync {
@@ -103,12 +105,11 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         return new UserBasicInformationStepperFragmentFragment();
     }
 
-    private static void verifyStoragePermissions(Activity activity) {
+    private void verifyStoragePermissions(Activity activity) {
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE);
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    activity,
+            requestPermissions(
                     PERMISSIONS_STORAGE,
                     REQUEST_EXTERNAL_STORAGE
             );
@@ -155,7 +156,22 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     @OnClick(R.id.image_profile)
     void openImage() {
         verifyStoragePermissions(requireActivity());
-        CropImage.startPickImageActivity(requireContext(), this);
+        int permission = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (permission == PackageManager.PERMISSION_GRANTED) {
+            CropImage.startPickImageActivity(requireContext(), this);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_EXTERNAL_STORAGE) {
+            int permission = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE);
+            if (permission == PackageManager.PERMISSION_GRANTED) {
+                CropImage.startPickImageActivity(requireContext(), this);
+            }
+        }
+
     }
 
     private String getRealPathFromURI(Uri contentURI) {
@@ -176,7 +192,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Uri imageUri = CropImage.getPickImageResultUri(this.requireContext(), data);
             if (CropImage.isReadExternalStoragePermissionsRequired(this.requireContext(), imageUri)) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},   CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE);
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE);
             } else {
                 startCropImageActivity(imageUri);
             }
@@ -209,6 +225,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .start(this.requireContext(), this);
     }
+
 
     @SuppressLint("WrongThread")
     @Override
@@ -318,7 +335,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         String fullPath = getRealPathFromURI(imageUri);
         File file = new File(fullPath);
 
-        File  compressFile = Compressor.getDefault(getContext()).compressToFile(file);
+        File compressFile = Compressor.getDefault(getContext()).compressToFile(file);
 
         RequestBody requestFile = RequestBody.create(compressFile, MediaType.parse(fullPath));
 
