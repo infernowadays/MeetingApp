@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorTransparent">#80000000</color>
+
+
     <color name="colorPrimary">#448aff</color>
     <color name="colorPrimaryDark">#005ecb</color>
     <color name="colorPrimaryLight">#83b9ff</color>
@@ -12,4 +15,6 @@
 
     <color name="backgroundColor">#ffffff</color>
     <color name="backgroundPrimaryLight">#90448aff</color>
+
+    <color name="chatColor">#5083b9ff</color>
 </resources>

@@ -3,26 +3,43 @@ package com.example.meetingapp.models;
 import com.google.gson.annotations.SerializedName;
 
 public class CommonMessage {
+    private int id;
     @SerializedName("from_user")
     private UserProfile fromUser;
     private String text;
     private String created;
-    private boolean seen;
+    @SerializedName("is_systemic")
+    private boolean isSystemic;
 
-    public CommonMessage(String text, String created, boolean seen) {
+    public CommonMessage(String text, String created) {
         this.text = text;
         this.created = created;
-        this.seen = seen;
     }
 
-    public CommonMessage(UserProfile fromUser, String text, String created, boolean seen) {
+    public CommonMessage(int id, UserProfile fromUser, String text, String created, boolean isSystemic) {
         this.fromUser = fromUser;
         this.text = text;
         this.created = created;
-        this.seen = seen;
+        this.isSystemic = isSystemic;
     }
 
     public CommonMessage() {
+    }
+
+    public boolean isSystemic() {
+        return isSystemic;
+    }
+
+    public void setSystemic(boolean systemic) {
+        isSystemic = systemic;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public UserProfile getFromUser() {
@@ -47,13 +64,5 @@ public class CommonMessage {
 
     public void setCreated(String created) {
         this.created = created;
-    }
-
-    public boolean getSeen() {
-        return seen;
-    }
-
-    public void setSeen(boolean seen) {
-        this.seen = seen;
     }
 }

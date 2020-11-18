@@ -53,6 +53,15 @@ public class UserProfile implements Parcelable {
     @SerializedName("is_filled")
     private Boolean filled;
 
+    @SerializedName("chats")
+    private List<ShortChat> shortChats;
+    @SerializedName("requests")
+    private List<ShortRequest> shortRequests;
+    @SerializedName("new_messages_count")
+    private int newMessagesCount;
+    @SerializedName("new_requests_count")
+    private int newRequestsCount;
+
     public UserProfile(int id,
                        String firebaseUid,
                        String dateOfBirth,
@@ -68,7 +77,9 @@ public class UserProfile implements Parcelable {
                        String sex,
                        List<Category> categories,
                        Boolean confirmed,
-                       Boolean filled) {
+                       Boolean filled,
+                       int newMessagesCount,
+                       int newRequestsCount) {
         this.id = id;
         this.firebaseUid = firebaseUid;
         this.dateOfBirth = dateOfBirth;
@@ -85,6 +96,8 @@ public class UserProfile implements Parcelable {
         this.categories = categories;
         this.confirmed = confirmed;
         this.filled = filled;
+        this.newMessagesCount = newMessagesCount;
+        this.newRequestsCount = newRequestsCount;
     }
 
     public UserProfile(int id, String firstName, String lastName) {
@@ -96,7 +109,6 @@ public class UserProfile implements Parcelable {
     public UserProfile(int id) {
         this.id = id;
     }
-
     public UserProfile() {
     }
 
@@ -105,6 +117,38 @@ public class UserProfile implements Parcelable {
         firstName = in.readString();
         lastName = in.readString();
         photo = in.readParcelable(getClass().getClassLoader());
+    }
+
+    public List<ShortChat> getShortChats() {
+        return shortChats;
+    }
+
+    public void setShortChats(List<ShortChat> shortChats) {
+        this.shortChats = shortChats;
+    }
+
+    public List<ShortRequest> getShortRequests() {
+        return shortRequests;
+    }
+
+    public void setShortRequests(List<ShortRequest> shortRequests) {
+        this.shortRequests = shortRequests;
+    }
+
+    public int getNewMessagesCount() {
+        return newMessagesCount;
+    }
+
+    public void setNewMessagesCount(int newMessagesCount) {
+        this.newMessagesCount = newMessagesCount;
+    }
+
+    public int getNewRequestsCount() {
+        return newRequestsCount;
+    }
+
+    public void setNewRequestsCount(int newRequestsCount) {
+        this.newRequestsCount = newRequestsCount;
     }
 
     public Boolean getFilled() {

@@ -1,5 +1,6 @@
 package com.example.meetingapp.utils.images;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -10,11 +11,21 @@ import com.example.meetingapp.interfaces.GetImageFromAsync;
 import java.io.InputStream;
 import java.util.Objects;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     private GetImageFromAsync bitmapListener;
+    @SuppressLint("StaticFieldLeak")
+    private CircleImageView imageView;
 
     public DownloadImageTask(GetImageFromAsync bitmapListener) {
         this.bitmapListener = bitmapListener;
+        this.imageView = null;
+    }
+
+    public DownloadImageTask(GetImageFromAsync bitmapListener, CircleImageView imageView) {
+        this.bitmapListener = bitmapListener;
+        this.imageView = imageView;
     }
 
     protected Bitmap doInBackground(String... urls) {
@@ -31,6 +42,9 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     }
 
     protected void onPostExecute(Bitmap result) {
-        this.bitmapListener.getResult(result);
+        if (imageView != null)
+            imageView.setImageBitmap(result);
+        else
+            this.bitmapListener.getResult(result);
     }
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,7 +29,7 @@ import butterknife.ButterKnife;
 public class EventDescriptionStepperFragment extends Fragment implements BlockingStep {
 
     @BindView(R.id.text_description)
-    MaterialEditText textDescription;
+    EditText textDescription;
     @BindView(R.id.header_h4)
     TextView headerH4;
     private EventManager eventManager;

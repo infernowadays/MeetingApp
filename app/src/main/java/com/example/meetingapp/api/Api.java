@@ -5,6 +5,9 @@ import com.example.meetingapp.models.CommonMessage;
 import com.example.meetingapp.models.Complaint;
 import com.example.meetingapp.models.EmailConfirmation;
 import com.example.meetingapp.models.Event;
+import com.example.meetingapp.models.Feedback;
+import com.example.meetingapp.models.ForgetPassword;
+import com.example.meetingapp.models.LastSeenMessage;
 import com.example.meetingapp.models.LoginData;
 import com.example.meetingapp.models.MegaCategory;
 import com.example.meetingapp.models.Message;
@@ -24,6 +27,7 @@ import java.util.Map;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
@@ -34,6 +38,21 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface Api {
+    @Headers("Content-Type: application/json")
+    @DELETE("api/events/{pk}/members/{uid}/")
+    Call<Void> removeMember(@Path("pk") String pk, @Path("uid") String uid);
+
+    @Headers("Content-Type: application/json")
+    @DELETE("api/requests/{pk}/")
+    Call<Void> removeRequest(@Path("pk") String pk);
+
+    @Headers("Content-Type: application/json")
+    @DELETE("api/events/{pk}/")
+    Call<Void> removeEvent(@Path("pk") String pk);
+
+    @Headers("Content-Type: application/json")
+    @DELETE("token_auth/profile/me/")
+    Call<Void> removeProfile();
 
     // Authentication
     @Headers("Content-Type: application/json")
@@ -47,6 +66,10 @@ public interface Api {
     @Headers("Content-Type: application/json")
     @POST("token_auth/profile/me/")
     Call<Token> changePassword(@Body Password password);
+
+    @Headers("Content-Type: application/json")
+    @POST("token_auth/forget_password/")
+    Call<ForgetPassword> restorePassword(@Body ForgetPassword forgetPassword);
 
     // User Profile
     @Headers("Content-Type: application/json")
@@ -81,7 +104,18 @@ public interface Api {
     @Headers("Content-Type: application/json")
     @GET("api/events/")
     Call<List<Event>> getEvents(@Query("category") List<String> categories,
-                                @Query("me") List<String> roles);
+                                @Query("sex") List<String> sex,
+                                @Query("from_age") String fromAge,
+                                @Query("to_age") String toAge,
+                                @Query("latitude") String latitude,
+                                @Query("longitude") String longitude,
+                                @Query("distance") String distance,
+                                @Query("text") String text,
+                                @Query("me") String me,
+                                @Query("requested") String requested,
+                                @Query("ended") String ended,
+                                @Query("offset") int offset,
+                                @Query("user_id") String userId);
 
     // Tickets
     @Headers("Content-Type: application/json")
@@ -123,6 +157,10 @@ public interface Api {
     @GET("api/complaints/{pk}/")
     Call<Complaint> getComplaint(@Path("pk") String pk);
 
+    @Headers("Content-Type: application/json")
+    @POST("api/complaints/")
+    Call<Complaint> sendComplaint(@Body Complaint complaint);
+
     // Messages
     @Headers("Content-Type: application/json")
     @POST("api/messages/")
@@ -130,11 +168,19 @@ public interface Api {
 
     @Headers("Content-Type: application/json")
     @GET("api/messages/{event_id}/")
-    Call<List<CommonMessage>> getEventMessages(@Path("event_id") String event_id);
+    Call<List<CommonMessage>> getEventMessages(@Path("event_id") String event_id, @Query("offset") String offset);
 
     @Headers("Content-Type: application/json")
     @POST("api/private-messages/")
     Call<PrivateMessage> sendPrivateMessage(@Body PrivateMessage privateMessage);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/feedback/")
+    Call<Feedback> sendFeedback(@Body Feedback feedback);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/new_messages/")
+    Call<LastSeenMessage> updateLastSeenMessageInChat(@Body LastSeenMessage lastSeenMessage);
 
     @Headers("Content-Type: application/json")
     @GET("api/private-messages/{user_id}/")
@@ -142,7 +188,7 @@ public interface Api {
 
     @Headers("Content-Type: application/json")
     @GET("api/chats/")
-    Call<List<Chat>> getEventChats();
+    Call<List<Chat>> getEventChats(@Query("chat_id") String chatId);
 
     // Categories
     @Headers("Content-Type: application/json")

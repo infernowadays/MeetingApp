@@ -1,8 +1,11 @@
 package com.example.meetingapp.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,33 +14,44 @@ import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.meetingapp.utils.images.DownloadImageTask;
-import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.R;
-import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.activities.EventActivity;
 import com.example.meetingapp.activities.EventInfoActivity;
+import com.example.meetingapp.activities.EventMembersActivity;
 import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.RequestGet;
 import com.example.meetingapp.models.RequestSend;
+import com.example.meetingapp.models.UserProfile;
+import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.utils.PreferenceUtils;
+import com.example.meetingapp.utils.images.DownloadImageTask;
 import com.google.android.gms.common.util.ArrayUtils;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -92,32 +106,86 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         return new ViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Event event = events.get(position);
 
+        boolean isMember = false;
+        for (UserProfile userProfile : event.getMembers()) {
+            if (userProfile.getId() == UserProfileManager.getInstance().getMyProfile().getId()) {
+                isMember = true;
+                break;
+            }
+        }
+
+        boolean isCreator = false;
         if (event.getCreator().getId() == UserProfileManager.getInstance().getMyProfile().getId())
+            isCreator = true;
+
+
+        if (isCreator || isMember || event.isEnded())
             holder.buttonSendRequest.setEnabled(false);
 
-        if (event.getCreator().getPhoto() != null) {
-            holder.setImageProfile(event.getCreator().getPhoto().getPhoto());
+        boolean finalIsCreator = isCreator;
+        boolean finalIsMember = isMember;
+
+        if (event.isRequested()) {
+            holder.buttonSendRequest.setBackgroundColor(holder.buttonSendRequest.getContext().getResources().getColor(R.color.colorSecondaryDark));
+            holder.buttonSendRequest.setText("ОТМЕНИТЬ ЗАЯВКУ");
         }
+
+        holder.buttonSendRequest.setOnClickListener(v -> {
+            if (!finalIsMember && !finalIsCreator)
+                if (event.isRequested()) {
+                    removeRequest(event);
+                    holder.buttonSendRequest.setText("ХОЧУ ПОЙТИ");
+                    holder.buttonSendRequest.setBackgroundColor(holder.buttonSendRequest.getContext().getResources().getColor(R.color.colorPrimary));
+                    holder.buttonSendRequest.setTextColor(holder.buttonSendRequest.getContext().getResources().getColor(R.color.ms_white));
+
+                } else {
+                    sendRequest(event);
+                    holder.buttonSendRequest.setText("ОТМЕНИТЬ ЗАЯВКУ");
+                    holder.buttonSendRequest.setBackgroundColor(holder.buttonSendRequest.getContext().getResources().getColor(R.color.colorSecondaryDark));
+                }
+        });
+
+
+        if (event.getCreator().getPhoto() != null)
+            holder.setImageProfile(event.getCreator().getPhoto().getPhoto());
 
         int membersCount = event.getMembers().size();
         holder.textMembersCount.setText(String.valueOf(membersCount));
 
-        TextView textCreatorName = holder.textCreatorName;
-        String fullName = event.getCreator().getFirstName() + " " + event.getCreator().getLastName();
-        textCreatorName.setText(fullName);
+        ArrayList<String> urls = new ArrayList<>();
+        for (int i = 0; i < event.getMembers().size(); i++)
+            urls.add(event.getMembers().get(i).getPhoto().getPhoto());
+        holder.setImageMembers(urls);
 
-        TextView textEventDescription = holder.textEventDescription;
-        textEventDescription.setText(event.getDescription());
+        String fullName = event.getCreator().getFirstName() + " " + event.getCreator().getLastName();
+        holder.textCreatorName.setText(fullName);
+
+        holder.textEventDescription.setText(event.getDescription());
+        String time = "";
+        if (event.getTime() != null && !event.getTime().equals(""))
+            time = event.getTime().substring(0, event.getTime().length() - 3);
+
+        holder.textEventCreated.setText(parseCreated(event.getDate()) + " в " + time);
+
+        if (event.isEnded()) {
+            holder.parentLayout.setAlpha((float) 0.5);
+            holder.buttonSendRequest.setEnabled(false);
+        }
+
+//        if (event.isRequested())
+//            holder.buttonSendRequest.setEnabled(false);
 
 
         if (!ArrayUtils.contains(eventsIds.toArray(), events.get(position).getId())) {
             for (Category category : event.getCategories()) {
                 Chip chip = (Chip) LayoutInflater.from(context).inflate(R.layout.category_item, holder.chipGroup, false);
                 chip.setText(category.getName());
+                chip.setChecked(true);
                 chip.setCheckable(false);
                 holder.chipGroup.addView(chip);
             }
@@ -125,9 +193,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         }
 
         holder.itemView.setOnClickListener(v -> {
-            if (event.getCreator().getId() == UserProfileManager.getInstance().getMyProfile().getId()) {
+            if (event.getCreator().getId() == UserProfileManager.getInstance().getMyProfile().getId() || finalIsMember) {
                 Intent intent = new Intent(context, EventActivity.class);
                 intent.putExtra("EXTRA_EVENT_ID", String.valueOf(event.getId()));
+                intent.putExtra("EXTRA_EVENT_CREATOR_ID", event.getCreator().getId());
                 context.startActivity(intent);
             } else {
                 Intent intent = new Intent(context, EventInfoActivity.class);
@@ -136,26 +205,74 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             }
         });
 
-        holder.buttonSendRequest.setOnClickListener(v -> {
-            sendRequest(String.valueOf(event.getCreator().getId()), event.getId());
-            removeItemAfterRequest(position);
+        holder.members.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), EventMembersActivity.class);
+
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList("EXTRA_MEMBERS", (ArrayList<? extends Parcelable>) event.getMembers());
+
+            intent.putExtras(bundle);
+            getContext().startActivity(intent);
+
         });
     }
 
-    private void sendRequest(String toUser, long event) {
+    private String parseCreated(String created) {
+        DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        DateFormat targetFormat = new SimpleDateFormat("dd MMMM");
+        Date date = null;
+        try {
+            date = originalFormat.parse(created);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return targetFormat.format(date);
+    }
+
+    private Context getContext() {
+        return context;
+    }
+
+    private void sendRequest(Event event) {
         Call<RequestGet> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(Objects.requireNonNull(context)))
                 .getApi()
-                .sendRequest(new RequestSend(toUser, event));
+                .sendRequest(new RequestSend(String.valueOf(event.getCreator().getId()), event.getId()));
 
         call.enqueue(new Callback<RequestGet>() {
             @Override
             public void onResponse(@NonNull Call<RequestGet> call, @NonNull Response<RequestGet> response) {
                 Log.d("response", response.message());
+                event.setRequested(true);
+                notifyDataSetChanged();
+                Toast.makeText(getContext(), "Заявка была успешно отправлена!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(@NonNull Call<RequestGet> call, @NonNull Throwable t) {
+                Log.d("failure", "request failed");
+            }
+        });
+    }
+
+    private void removeRequest(Event event) {
+        Call<Void> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(Objects.requireNonNull(context)))
+                .getApi()
+                .removeRequest(String.valueOf(event.getId()));
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                Log.d("response", response.message());
+                event.setRequested(false);
+                notifyDataSetChanged();
+                Toast.makeText(getContext(), "Заявка была удалена!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                 Log.d("failure", "request failed");
             }
         });
@@ -190,17 +307,35 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder implements GetImageFromAsync {
+        @BindView(R.id.parent_layout)
+        RelativeLayout parentLayout;
+
         @BindView(R.id.image_profile)
         ImageView imageProfile;
 
         @BindView(R.id.text_creator_name)
         TextView textCreatorName;
 
+        @BindView(R.id.text_event_created)
+        TextView textEventCreated;
+
         @BindView(R.id.text_event_description)
         TextView textEventDescription;
 
         @BindView(R.id.text_members_count)
         TextView textMembersCount;
+
+        @BindView(R.id.member_first)
+        CircleImageView imageMemberFirst;
+
+        @BindView(R.id.member_second)
+        CircleImageView imageMemberSecond;
+
+        @BindView(R.id.member_third)
+        CircleImageView imageMemberThird;
+
+        @BindView(R.id.members)
+        LinearLayout members;
 
         @BindView(R.id.button_send_request)
         Button buttonSendRequest;
@@ -217,6 +352,21 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
         public void setImageProfile(String photoUrl) {
             new DownloadImageTask(ViewHolder.this).execute(photoUrl);
+        }
+
+        public void setImageMembers(ArrayList<String> urls) {
+            if (urls.size() >= 1)
+                new DownloadImageTask(ViewHolder.this, imageMemberThird).execute(urls.get(0));
+
+            if (urls.size() >= 2) {
+                new DownloadImageTask(ViewHolder.this, imageMemberSecond).execute(urls.get(1));
+                imageMemberSecond.setVisibility(View.VISIBLE);
+            }
+
+            if (urls.size() >= 3) {
+                new DownloadImageTask(ViewHolder.this, imageMemberFirst).execute(urls.get(2));
+                imageMemberFirst.setVisibility(View.VISIBLE);
+            }
         }
 
         @Override

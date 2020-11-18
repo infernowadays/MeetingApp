@@ -1,5 +1,6 @@
 package com.example.meetingapp.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,12 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.meetingapp.services.AuthService;
 import com.example.meetingapp.R;
 import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.services.AuthService;
 import com.example.meetingapp.utils.PreferenceUtils;
 
 import butterknife.BindView;
@@ -30,6 +32,10 @@ public class StartActivity extends AppCompatActivity {
     LinearLayout layoutLogo;
     @BindView(R.id.layout_start)
     LinearLayout layoutStart;
+    @BindView(R.id.layout_parent)
+    LinearLayout layoutParent;
+    @BindView(R.id.text_welcome)
+    TextView textWelcome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,13 @@ public class StartActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         loadApp();
+    }
+
+    @OnClick(R.id.forget_password)
+    void forgetPassword() {
+        Intent intent = new Intent(StartActivity.this, ForgetPasswordActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @OnClick(R.id.button_login)
@@ -58,6 +71,7 @@ public class StartActivity extends AppCompatActivity {
         startActivity(new Intent(StartActivity.this, RegisterActivity.class));
     }
 
+    @SuppressLint("ResourceAsColor")
     private void loadApp() {
         final Handler handler = new Handler();
         handler.postDelayed(() -> {
@@ -75,6 +89,8 @@ public class StartActivity extends AppCompatActivity {
                 layoutLogo.setLayoutParams(new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 layoutStart.setVisibility(View.VISIBLE);
+                layoutParent.setBackgroundColor(getResources().getColor(R.color.ms_white));
+                textWelcome.setTextColor(getResources().getColor(R.color.colorPrimary));
             }
         }, 1000);
     }

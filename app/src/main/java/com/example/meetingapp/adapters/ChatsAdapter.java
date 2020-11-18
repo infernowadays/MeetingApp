@@ -1,11 +1,13 @@
 package com.example.meetingapp.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +19,9 @@ import com.example.meetingapp.activities.EventActivity;
 import com.example.meetingapp.activities.TicketActivity;
 import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.models.Chat;
+import com.example.meetingapp.services.NotificationBadgeManager;
+import com.example.meetingapp.utils.DateConverter;
+import com.example.meetingapp.utils.PreferenceUtils;
 import com.example.meetingapp.utils.images.DownloadImageTask;
 
 import java.util.List;
@@ -43,13 +48,33 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
         return new ViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         final Chat event = events.get(position);
+        NotificationBadgeManager.getInstance().notifyChat(event);
 
         holder.textFirstName.setText(event.getFromUser().getFirstName());
         holder.textDescription.setText(event.getTitle());
+        holder.textLastMessage.setText(event.getLastMessage());
+        if (!event.getLastMessage().equals(""))
+            holder.lastMessageFromUserName.setText(event.getLastMessageFromUserName() + ":");
+
+        holder.textLastMessageDate.setText(DateConverter.getDateTimeInCurrentTimezone(event.getLastMessageCreated()));
+
+        if (event.getLastMessageCreated().equals("0")) {
+            holder.lastMessageFromUserName.setVisibility(View.GONE);
+            holder.textLastMessageDate.setVisibility(View.GONE);
+        } else {
+            holder.lastMessageFromUserName.setVisibility(View.VISIBLE);
+            holder.textLastMessageDate.setVisibility(View.VISIBLE);
+        }
+
+        if (NotificationBadgeManager.getInstance().chatHasNotificationBadge(event.getContentId()))
+            holder.readPoint.setVisibility(View.VISIBLE);
+        else
+            holder.readPoint.setVisibility(View.INVISIBLE);
+
 
         if (event.getFromUser().getPhoto() != null) {
             holder.setImageProfile(event.getFromUser().getPhoto().getPhoto());
@@ -61,6 +86,11 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
             if (event.getContentType().equals("message")) {
                 Intent intent = new Intent(context, EventActivity.class);
                 intent.putExtra("EXTRA_EVENT_ID", String.valueOf(event.getContentId()));
+
+                PreferenceUtils.saveChatLastMessagePosition(event.getContentId(), event.getLastSeenMessageId(), getContext());
+
+
+                intent.putExtra("EXTRA_ACTIVE_TAB", 1);
                 context.startActivity(intent);
             }
 
@@ -77,6 +107,10 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
         return events.size();
     }
 
+    private Context getContext() {
+        return context;
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder implements GetImageFromAsync {
 
         @BindView(R.id.text_first_name)
@@ -85,8 +119,21 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
         @BindView(R.id.text_event_description_brief)
         TextView textDescription;
 
+        @BindView(R.id.text_last_message)
+        TextView textLastMessage;
+
+        @BindView(R.id.text_last_message_date)
+        TextView textLastMessageDate;
+
+
+        @BindView(R.id.last_message_from_user_name)
+        TextView lastMessageFromUserName;
+
         @BindView(R.id.image_profile)
         CircleImageView imageProfile;
+
+        @BindView(R.id.read_point)
+        ImageButton readPoint;
 
         Bitmap bitmap;
 

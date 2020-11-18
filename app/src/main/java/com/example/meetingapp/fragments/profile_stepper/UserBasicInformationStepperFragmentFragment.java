@@ -29,14 +29,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.example.meetingapp.utils.images.compression.Compressor;
-import com.example.meetingapp.utils.images.DownloadImageTask;
-import com.example.meetingapp.interfaces.GetImageFromAsync;
-import com.example.meetingapp.interfaces.IUserProfileManager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.interfaces.GetImageFromAsync;
+import com.example.meetingapp.interfaces.IUserProfileManager;
 import com.example.meetingapp.models.ProfilePhoto;
 import com.example.meetingapp.utils.PreferenceUtils;
+import com.example.meetingapp.utils.images.DownloadImageTask;
+import com.example.meetingapp.utils.images.compression.Compressor;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
@@ -103,7 +103,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         return new UserBasicInformationStepperFragmentFragment();
     }
 
-    private static void verifyStoragePermissions(Activity activity) {
+    private void verifyStoragePermissions(Activity activity) {
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE);
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
@@ -112,9 +112,12 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
                     PERMISSIONS_STORAGE,
                     REQUEST_EXTERNAL_STORAGE
             );
+        } else {
+            CropImage.startPickImageActivity(requireContext(), this);
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -155,7 +158,6 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     @OnClick(R.id.image_profile)
     void openImage() {
         verifyStoragePermissions(requireActivity());
-        CropImage.startPickImageActivity(requireContext(), this);
     }
 
     private String getRealPathFromURI(Uri contentURI) {
@@ -176,7 +178,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Uri imageUri = CropImage.getPickImageResultUri(this.requireContext(), data);
             if (CropImage.isReadExternalStoragePermissionsRequired(this.requireContext(), imageUri)) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},   CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE);
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE);
             } else {
                 startCropImageActivity(imageUri);
             }
@@ -242,7 +244,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         if (Objects.requireNonNull(textBirthDate.getText()).toString().equals("")) {
             return new VerificationError("Пожалуйста, заполните все данные!");
         }
-        if (bitmap == null){
+        if (bitmap == null) {
             return new VerificationError("Добавьте фотографию, чтобы продолжить");
         }
 
@@ -318,7 +320,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         String fullPath = getRealPathFromURI(imageUri);
         File file = new File(fullPath);
 
-        File  compressFile = Compressor.getDefault(getContext()).compressToFile(file);
+        File compressFile = Compressor.getDefault(getContext()).compressToFile(file);
 
         RequestBody requestFile = RequestBody.create(compressFile, MediaType.parse(fullPath));
 

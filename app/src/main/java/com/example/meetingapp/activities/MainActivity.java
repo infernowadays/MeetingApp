@@ -4,7 +4,9 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -16,15 +18,26 @@ import com.example.meetingapp.fragments.EventsFragment;
 import com.example.meetingapp.fragments.HomeFragment;
 import com.example.meetingapp.fragments.MessagesFragment;
 import com.example.meetingapp.fragments.TicketsFragment;
-import com.example.meetingapp.interfaces.NotificationListener;
+import com.example.meetingapp.models.Chat;
+import com.example.meetingapp.models.RequestGet;
+import com.example.meetingapp.models.ShortChat;
+import com.example.meetingapp.models.ShortRequest;
+import com.example.meetingapp.models.UserProfile;
+import com.example.meetingapp.services.NotificationBadgeManager;
+import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Locale;
+import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements NotificationListener, BottomSheetFragment.ItemClickListener {
+public class MainActivity extends AppCompatActivity implements BottomSheetFragment.ItemClickListener {
 
+    //    NotificationListener
+    public static MainActivity instance;
+    private static BottomNavigationView navigation;
+    private static int notifications = 0;
     final Fragment homeFragment = new HomeFragment();
     final Fragment eventsFragment = new EventsFragment();
     final Fragment ticketsFragment = new TicketsFragment();
@@ -34,11 +47,11 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
     private final int TICKET_ICON = R.drawable.ic_tickets;
     private final String EVENTS = "СОБЫТИЯ";
     private final String TICKETS = "БИЛЕТЫ";
+    Intent webSocketIntent;
     private int notSeenNotifications = 0;
-    private Fragment active = homeFragment;
+    private Fragment active = eventsFragment;
     private String content;
-    private BottomNavigationView navigation;
-
+    private boolean isInit = false;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {
         switch (item.getItemId()) {
@@ -64,20 +77,36 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         return false;
     };
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        instance = this;
         setLocale();
 
         navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        MenuItem item = navigation.getMenu().findItem(R.id.navigation_content);
+        item.setChecked(true);
+
         content = PreferenceUtils.getContentType(this);
         if (content.equals(EVENTS)) {
             navigation.getMenu().findItem(R.id.navigation_content).setIcon(EVENT_ICON);
-            fm.beginTransaction().add(R.id.main_container, eventsFragment, "3").hide(eventsFragment).commit();
+            fm.beginTransaction().add(R.id.main_container, eventsFragment, "3").commit();
         } else if (content.equals(TICKETS)) {
             navigation.getMenu().findItem(R.id.navigation_content).setIcon(TICKET_ICON);
             fm.beginTransaction().add(R.id.main_container, ticketsFragment, "3").hide(ticketsFragment).commit();
@@ -85,12 +114,26 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
 
 
         fm.beginTransaction().add(R.id.main_container, messagesFragment, "2").hide(messagesFragment).commit();
-        fm.beginTransaction().add(R.id.main_container, homeFragment, "1").commit();
+        fm.beginTransaction().add(R.id.main_container, homeFragment, "1").hide(homeFragment).commit();
+
+        startWebSocketListener();
+    }
+
+    public void stopWebSocketListener() {
+        if (isMyServiceRunning(WebSocketListenerService.class) && webSocketIntent != null) {
+            stopService(webSocketIntent);
+        }
+    }
+
+    public void startWebSocketListener() {
+        stopWebSocketListener();
 
         if (!isMyServiceRunning(WebSocketListenerService.class)) {
-            Intent intent = new Intent(this, WebSocketListenerService.class);
-            intent.putExtra("EXTRA_TOKEN", PreferenceUtils.getToken(this));
-            startService(intent);
+            webSocketIntent = new Intent(this, WebSocketListenerService.class);
+            webSocketIntent.putExtra("EXTRA_TOKEN", PreferenceUtils.getToken(this));
+            webSocketIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+
+            startService(webSocketIntent);
         }
     }
 
@@ -106,20 +149,103 @@ public class MainActivity extends AppCompatActivity implements NotificationListe
         return false;
     }
 
+    public void addNotificationBadge(int notificationsToAdd) {
+        if (!isBadgeVisible())
+            showNotificationBadge();
 
-    public void aaa(int number) {
-        navigation.getOrCreateBadge(R.id.navigation_messages).setNumber(number);
+        notifications += notificationsToAdd;
+        if (notifications < 1)
+            hideNotificationBadge();
+        else
+            navigation.getOrCreateBadge(R.id.navigation_messages).setNumber(notifications);
     }
 
+    public void subNotificationBadge(int notificationsToRemove) {
+        if (!isBadgeVisible())
+            showNotificationBadge();
 
-    @Override
-    public void addNotificationBadge(int number) {
-        navigation.getOrCreateBadge(R.id.navigation_messages).setNumber(number);
+        notifications -= notificationsToRemove;
+        if (notifications < 1)
+            hideNotificationBadge();
+        else
+            navigation.getOrCreateBadge(R.id.navigation_messages).setNumber(notifications);
+
     }
 
-    @Override
-    public void removeNotificationBadge() {
-        navigation.removeBadge(R.id.navigation_messages);
+    public Chat convertShortChatToChat(ShortChat shortChat) {
+        Chat chat = new Chat();
+        chat.setLastSeenMessageId(shortChat.getLastSeenMessageId());
+        chat.setLastMessageId(shortChat.getLastMessageId());
+        chat.setContentId(shortChat.getContentId());
+
+        return chat;
+    }
+
+    public RequestGet convertShortRequestToRequst(ShortRequest shortRequest) {
+        RequestGet request = new RequestGet();
+        request.setSeen(shortRequest.isSeen());
+        request.setDecision(shortRequest.getDecision());
+        request.setId(shortRequest.getId());
+
+        UserProfile fromUser = new UserProfile();
+        fromUser.setId(shortRequest.getFromUser());
+        request.setFromUser(fromUser);
+
+        UserProfile toUser = new UserProfile();
+        toUser.setId(shortRequest.getToUser());
+        request.setToUser(toUser);
+
+        return request;
+    }
+
+    public void initNotificationBadge() {
+        UserProfile userProfile = UserProfileManager.getInstance().getMyProfile();
+        navigation.getOrCreateBadge(R.id.navigation_messages);
+
+        if (navigation.getBadge(R.id.navigation_messages).getNumber() <= 0)
+            hideNotificationBadge();
+
+        for (ShortChat shortChat : userProfile.getShortChats()) {
+            NotificationBadgeManager.getInstance().notifyChat(convertShortChatToChat(shortChat));
+        }
+
+        for (ShortRequest shortRequest : userProfile.getShortRequests()) {
+            NotificationBadgeManager.getInstance().notifyRequest(convertShortRequestToRequst(shortRequest));
+        }
+    }
+
+    public void hideNotificationBadge() {
+        Objects.requireNonNull(navigation.getBadge(R.id.navigation_messages)).setVisible(false);
+    }
+
+    public boolean isBadgeVisible() {
+        return Objects.requireNonNull(navigation.getBadge(R.id.navigation_messages)).isVisible();
+    }
+
+    public void showNotificationBadge() {
+        Objects.requireNonNull(navigation.getBadge(R.id.navigation_messages)).setVisible(true);
+    }
+
+    public void logout() {
+        PreferenceUtils.removeAll(this);
+
+        if (Build.VERSION_CODES.KITKAT <= Build.VERSION.SDK_INT) {
+            ((ActivityManager) Objects.requireNonNull(getSystemService(ACTIVITY_SERVICE)))
+                    .clearApplicationUserData();
+            return;
+        }
+
+        Intent intent = new Intent(this, StartActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+
+        finish();
+    }
+
+    public boolean isInit() {
+        return this.isInit;
     }
 
     @Override

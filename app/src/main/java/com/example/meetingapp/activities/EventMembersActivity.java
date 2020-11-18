@@ -1,6 +1,7 @@
 package com.example.meetingapp.activities;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,11 +27,20 @@ public class EventMembersActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         List<UserProfile> members = getIntent().getParcelableArrayListExtra("EXTRA_MEMBERS");
-        MembersAdapter membersAdapter = new MembersAdapter(this, members);
+        int eventId = getIntent().getIntExtra("EXTRA_EVENT_ID", 0);
+        MembersAdapter membersAdapter = new MembersAdapter(this, members, eventId);
 
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         recyclerView.setAdapter(membersAdapter);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -16,35 +15,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.meetingapp.utils.images.DownloadImageTask;
-import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.R;
-import com.example.meetingapp.services.UserProfileManager;
+import com.example.meetingapp.activities.EventActivity;
+import com.example.meetingapp.activities.EventInfoActivity;
 import com.example.meetingapp.activities.UserProfileActivity;
 import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.models.RequestGet;
 import com.example.meetingapp.models.RequestSend;
 import com.example.meetingapp.models.UserProfile;
+import com.example.meetingapp.services.NotificationBadgeManager;
+import com.example.meetingapp.services.UserProfileManager;
+import com.example.meetingapp.utils.DateConverter;
 import com.example.meetingapp.utils.PreferenceUtils;
+import com.example.meetingapp.utils.images.DownloadImageTask;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,8 +52,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     private final String WANT_JOIN = " хочет вступить в ваше событие";
     private final String SEND_REQUEST = "\nЗаявка отправлена"; // remove
-    private final String ACCEPT = " теперь участвует в вашем событии!";
+
+    private final String ACCEPT = " теперь участвует в вашем событии";
     private final String ACCEPTED = " принял вашу заявку в событие";
+
     private final String DECLINE = "\nЗаявка отклонена"; // remove
     private final String DECLINED = " отклонил вашу заявку";
 
@@ -72,8 +70,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     }
 
     private void removeNoAnswerRequests(List<RequestGet> eventRequests) {
-
-
         for (Iterator<RequestGet> iterator = eventRequests.iterator(); iterator.hasNext(); ) {
             RequestGet eventRequest = iterator.next();
             if ((eventRequest.getFromUser().getId() == UserProfileManager.getInstance().getMyProfile().getId() &&
@@ -100,13 +96,68 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         final RequestGet eventRequest = eventRequests.get(position);
         UserProfile userProfile = UserProfileManager.getInstance().getMyProfile();
 
-        holder.textUserName.setText(eventRequest.getFromUser().getFirstName());
+        NotificationBadgeManager.getInstance().notifyRequest(eventRequest);
 
-        ClickableSpan linkClick = new ClickableSpan() {
+        if (!eventRequest.isSeen() && !eventRequest.getDecision().equals("NO_ANSWER") && eventRequest.getFromUser().getId() == userProfile.getId() ||
+                eventRequest.getToUser().getId() == userProfile.getId() && eventRequest.getDecision().equals("NO_ANSWER")) {
+            holder.readPoint.setVisibility(View.VISIBLE);
+
+        } else {
+            holder.readPoint.setVisibility(View.INVISIBLE);
+        }
+
+        holder.textEventTitle.setText(eventRequest.getTitle());
+        holder.textEventTitle.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Toast.makeText(mContext, "Link Click", Toast.LENGTH_SHORT).show();
-                view.invalidate();
+            public void onClick(View v) {
+                if (eventRequest.getFromUser().getId() == UserProfileManager.getInstance().getMyProfile().getId() && !eventRequest.getDecision().equals("ACCEPT")) {
+                    Intent intent = new Intent(getContext(), EventInfoActivity.class);
+                    intent.putExtra("EXTRA_EVENT_ID", String.valueOf(eventRequest.getEvent()));
+                    getContext().startActivity(intent);
+
+                } else {
+                    Intent intent = new Intent(getContext(), EventActivity.class);
+                    intent.putExtra("EXTRA_EVENT_ID", String.valueOf(eventRequest.getEvent()));
+                    intent.putExtra("EXTRA_EVENT_CREATOR_ID", eventRequest.getToUser().getId());
+                    getContext().startActivity(intent);
+                }
+            }
+        });
+
+        holder.textCreated.setText(DateConverter.getDateTimeInCurrentTimezone(eventRequest.getCreated()));
+
+        UserProfile user = null;
+        String text = "";
+        if (eventRequest.getFromUser().getId() == userProfile.getId()) {
+            user = eventRequest.getToUser();
+            holder.decisionButtons.setVisibility(View.GONE);
+
+            if (eventRequest.getDecision().equals("ACCEPT"))
+                text = ACCEPTED;
+            else if (eventRequest.getDecision().equals("DECLINE"))
+                text = DECLINED;
+
+        } else {
+            user = eventRequest.getFromUser();
+
+            if (eventRequest.getDecision().equals("NO_ANSWER")) {
+                holder.decisionButtons.setVisibility(View.VISIBLE);
+                text = WANT_JOIN;
+            } else if (eventRequest.getDecision().equals("ACCEPT")) {
+                holder.decisionButtons.setVisibility(View.GONE);
+                text = ACCEPT;
+            } else {
+                holder.decisionButtons.setVisibility(View.GONE);
+                text = DECLINE;
+            }
+        }
+
+        holder.setImageProfile(user.getPhoto().getPhoto());
+        UserProfile finalUser = user;
+        ClickableSpan linkClickUserProfile = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View view) {
+                openUserProfile(String.valueOf(finalUser.getId()));
             }
 
             @SuppressLint("ResourceAsColor")
@@ -114,58 +165,19 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             public void updateDrawState(@NonNull TextPaint ds) {
                 ds.setColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
                 ds.setTypeface(Typeface.create("Arial", Typeface.BOLD));
-
-                if (holder.textUserName.isPressed()) {
-                    ds.bgColor = ContextCompat.getColor(mContext, R.color.backgroundPrimaryLight);
-                }
-                holder.textUserName.invalidate();
+                ds.linkColor = ContextCompat.getColor(mContext, R.color.backgroundPrimaryLight);
             }
         };
 
         holder.imageProfile.setOnClickListener(v -> {
-            openUserProfile(String.valueOf(eventRequest.getFromUser().getId()));
+            openUserProfile(String.valueOf(finalUser.getId()));
         });
 
-        holder.textUserName.setOnClickListener(v -> {
-            openUserProfile(String.valueOf(eventRequest.getFromUser().getId()));
-        });
+        String name = user.getFirstName() + " " + user.getLastName();
+        setText(holder.textUserName, linkClickUserProfile, name, text);
 
-        String fromUser = eventRequest.getFromUser().getFirstName() + " " + eventRequest.getFromUser().getLastName();
-        String toUser = eventRequest.getToUser().getFirstName() + " " + eventRequest.getToUser().getLastName();
-        holder.textUserName.setHighlightColor(Color.TRANSPARENT);
-
-        if (eventRequest.getToUser().getId() == userProfile.getId() && eventRequest.getToUser().getPhoto() != null) {
-            holder.setImageProfile(eventRequest.getToUser().getPhoto().getPhoto());
-            setText(holder.textUserName, linkClick, fromUser, WANT_JOIN);
-        } else if (eventRequest.getFromUser().getId() == userProfile.getId() && eventRequest.getFromUser().getPhoto() != null) {
-            holder.setImageProfile(eventRequest.getFromUser().getPhoto().getPhoto());
-            setText(holder.textUserName, linkClick, toUser, SEND_REQUEST);
-        }
-
-        holder.textCreated.setText(parseCreated(eventRequest.getCreated()));
-
-        if (eventRequest.getToUser().getId() == userProfile.getId()) {
-            holder.decisionButtons.setVisibility(View.VISIBLE);
-            if (eventRequest.getDecision().equals("ACCEPT")) {
-                holder.decisionButtons.setVisibility(View.GONE);
-                setText(holder.textUserName, linkClick, fromUser, ACCEPT);
-            } else if (eventRequest.getDecision().equals("DECLINE")) {
-                holder.decisionButtons.setVisibility(View.GONE);
-                setText(holder.textUserName, linkClick, toUser, DECLINE);
-            }
-
-
-        } else if (eventRequest.getFromUser().getId() == userProfile.getId()) {
-            holder.decisionButtons.setVisibility(View.GONE);
-            if (eventRequest.getDecision().equals("ACCEPT")) {
-                setText(holder.textUserName, linkClick, toUser, ACCEPTED);
-            } else if (eventRequest.getDecision().equals("DECLINE")) {
-                setText(holder.textUserName, linkClick, toUser, DECLINED);
-            }
-        }
-
-        holder.acceptButton.setOnClickListener(v -> answerRequest(eventRequest, "ACCEPT"));
-        holder.declineButton.setOnClickListener(v -> answerRequest(eventRequest, "DECLINE"));
+        holder.acceptButton.setOnClickListener(v -> answerRequest(eventRequest, "ACCEPT", position));
+        holder.declineButton.setOnClickListener(v -> answerRequest(eventRequest, "DECLINE", position));
     }
 
     private void setText(TextView textView, ClickableSpan linkClick, String username, String supportText) {
@@ -185,7 +197,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         return mContext;
     }
 
-    private void answerRequest(RequestGet eventRequest, String decision) {
+    private void answerRequest(RequestGet eventRequest, String decision, int position) {
         Call<RequestGet> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(mContext))
                 .getApi()
@@ -196,7 +208,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             public void onResponse(@NonNull Call<RequestGet> call, @NonNull Response<RequestGet> response) {
                 if (response.body() != null) {
                     eventRequest.setDecision(decision);
-                    notifyDataSetChanged();
+                    if (decision.equals("DECLINE")) {
+                        eventRequests.remove(position);
+                        notifyItemRemoved(position);
+                        NotificationBadgeManager.getInstance().notifyRequest(eventRequest);
+
+                    } else
+                        notifyDataSetChanged();
                 }
             }
 
@@ -205,30 +223,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 int a = 0;
             }
         });
-    }
-
-    private String parseCreated(String created) {
-        String newFormat = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            ZonedDateTime zdt = ZonedDateTime.parse(created);
-            newFormat = zdt.format(DateTimeFormatter.ofPattern("dd/MM hh:mm"));
-        }
-
-        SimpleDateFormat month_date = new SimpleDateFormat("dd MMMM в hh:mm", new Locale("RU"));
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM hh:mm");
-
-        Date date = null;
-        try {
-            date = sdf.parse(Objects.requireNonNull(newFormat));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        if (date != null) {
-            return month_date.format(date);
-        }
-
-        return "";
     }
 
     @Override
@@ -244,6 +238,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         @BindView(R.id.notification_username)
         TextView textUserName;
 
+        @BindView(R.id.text_event_description)
+        TextView textEventTitle;
+
         @BindView(R.id.text_created)
         TextView textCreated;
 
@@ -255,6 +252,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
         @BindView(R.id.declineButton)
         Button declineButton;
+
+        @BindView(R.id.read_point)
+        ImageButton readPoint;
 
         Bitmap bitmap;
 
