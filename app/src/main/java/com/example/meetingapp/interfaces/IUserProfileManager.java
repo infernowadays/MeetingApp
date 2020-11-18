@@ -1,8 +1,14 @@
 package com.example.meetingapp.interfaces;
 
+import android.net.Uri;
+
 import java.util.ArrayList;
 
 public interface IUserProfileManager {
+
+    void saveUri(Uri uri);
+
+    Uri getUri();
 
     void saveSex(String sex);
 

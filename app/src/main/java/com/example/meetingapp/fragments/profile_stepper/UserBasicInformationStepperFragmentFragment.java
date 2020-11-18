@@ -3,6 +3,7 @@ package com.example.meetingapp.fragments.profile_stepper;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -17,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -58,6 +61,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.xml.transform.Result;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -71,7 +76,7 @@ import retrofit2.Response;
 import static android.app.Activity.RESULT_OK;
 
 public class UserBasicInformationStepperFragmentFragment extends Fragment implements BlockingStep,
-        DatePickerDialog.OnDateSetListener, GetImageFromAsync {
+        DatePickerDialog.OnDateSetListener {
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -90,14 +95,37 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     TextView headerH4;
     private IUserProfileManager iUserProfileManager;
     private FragmentActivity mContext;
-    private String imageUrl;
     private Bitmap bitmap;
     private String pattern = "yyyy-MM-dd";
     private Date date;
     private String sex;
 
+    private byte[] photoBytes;
+
     private Uri mCropImageUri;
-    private String currentPhotoPath;
+
+    private class CompressBitmap extends AsyncTask<Bitmap, Integer, byte[]>{
+
+        @Override
+        protected byte[] doInBackground(Bitmap... bitmaps) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmaps[0].compress(Bitmap.CompressFormat.PNG, 100, stream);
+            return stream.toByteArray();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(byte[] bytes) {
+            super.onPostExecute(bytes);
+            photoBytes = bytes;
+            iUserProfileManager.savePhoto(photoBytes);
+            Log.d("@@@@@@@@@@@@@@@@@@@", "onNextClicked: new photo saved");
+        }
+    }
 
     public static UserBasicInformationStepperFragmentFragment newInstance() {
         return new UserBasicInformationStepperFragmentFragment();
@@ -157,21 +185,9 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
 
     @OnClick(R.id.image_profile)
     void openImage() {
-        verifyStoragePermissions(requireActivity());
-    }
-
-    private String getRealPathFromURI(Uri contentURI) {
-        String result;
-        Cursor cursor = getContext().getContentResolver().query(contentURI, null, null, null, null);
-        if (cursor == null) { // Source is Dropbox or other similar local file path
-            result = contentURI.getPath();
-        } else {
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            result = cursor.getString(idx);
-            cursor.close();
-        }
-        return result;
+        verifyStoragePermissions(getActivity());
+        iUserProfileManager.savePhoto(null);
+        CropImage.startPickImageActivity(requireContext(), this);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -193,6 +209,10 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                CompressBitmap compressBitmap = new CompressBitmap();
+                compressBitmap.execute(bitmap);
+
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
@@ -217,15 +237,9 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
         String date = Objects.requireNonNull(textBirthDate.getText()).toString();
         iUserProfileManager.saveBirthDate(date);
+        Log.d("@@@@@@@@@@@@@@@@@@@", "date: "+date);
         iUserProfileManager.saveSex(sex);
-        upload(mCropImageUri);
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-
-        iUserProfileManager.savePhoto(byteArray);
-
+        iUserProfileManager.saveUri(mCropImageUri);
         callback.goToNextStep();
     }
 
@@ -267,13 +281,13 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 requireActivity(),
-                R.style.DialogTheme,
+                AlertDialog.THEME_HOLO_LIGHT,
                 this,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
         );
-        datePickerDialog.getDatePicker();
+        datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() - 441797328000L);
         datePickerDialog.show();
     }
 
@@ -315,56 +329,10 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         }
     }
 
-    private void upload(Uri imageUri) {
-
-        String fullPath = getRealPathFromURI(imageUri);
-        File file = new File(fullPath);
-
-        File compressFile = Compressor.getDefault(getContext()).compressToFile(file);
-
-        RequestBody requestFile = RequestBody.create(compressFile, MediaType.parse(fullPath));
-
-        Map<String, RequestBody> map = new HashMap<>();
-        map.put("photo\"; filename=\"" + fullPath + "\"", requestFile);
-
-
-        RetrofitClient.needsHeader(true);
-        RetrofitClient.setToken(PreferenceUtils.getToken(requireContext()));
-        Call<ProfilePhoto> call = RetrofitClient
-                .getInstance(PreferenceUtils.getToken(requireContext()))
-                .getApi()
-                .uploadFile(map);
-
-        call.enqueue(new Callback<ProfilePhoto>() {
-            @Override
-            public void onResponse(@NonNull Call<ProfilePhoto> call, @NonNull Response<ProfilePhoto> response) {
-                ProfilePhoto profilePhoto = response.body();
-                if (profilePhoto != null) {
-                    Toast.makeText(getContext(), "Loaded!", Toast.LENGTH_SHORT).show();
-
-                    imageUrl = profilePhoto.getPhoto();
-                    new DownloadImageTask(UserBasicInformationStepperFragmentFragment.this).execute(imageUrl);
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ProfilePhoto> call, @NonNull Throwable t) {
-                Log.d("error", Objects.requireNonNull(t.getMessage()));
-            }
-        });
-    }
-
     @Override
     public void onResume() {
         super.onResume();
         if (bitmap != null)
             imageProfile.setImageBitmap(bitmap);
-    }
-
-    @Override
-    public void getResult(Bitmap bitmap) {
-        layoutAvatarMask.setVisibility(View.GONE);
-        imageProfile.setImageBitmap(bitmap);
-        this.bitmap = bitmap;
     }
 }
