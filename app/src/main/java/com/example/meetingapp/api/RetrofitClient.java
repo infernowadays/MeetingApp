@@ -2,6 +2,8 @@ package com.example.meetingapp.api;
 
 import android.content.Context;
 
+import com.example.meetingapp.activities.MainActivity;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -36,12 +38,7 @@ public class RetrofitClient {
 
                             switch (response.code()) {
                                 case 401:
-//                                    PreferenceUtils.removeToken(MainActivity.getMainContext());
-//                                    Intent intent = new Intent(MainActivity.getAppContext(), StartActivity.class)
-//                                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-//                                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                                    MainActivity.getMainContext().startActivity(intent);
+//                                    ((MainActivity) requireActivity()).logout();
                                     break;
                                 case 500:
                                     break;

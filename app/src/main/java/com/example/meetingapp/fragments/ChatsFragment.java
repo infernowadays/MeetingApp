@@ -1,5 +1,6 @@
 package com.example.meetingapp.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,13 +21,20 @@ import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.ChatsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Chat;
-import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.Message;
+import com.example.meetingapp.models.RequestGet;
+import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.gson.Gson;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,13 +45,67 @@ import retrofit2.Response;
 
 public class ChatsFragment extends Fragment {
 
+    public static ChatsFragment instance;
+    public static List<Chat> chats;
     @BindView(R.id.recycle_view)
     RecyclerView recycleView;
-
     @BindView(R.id.swipe_layout)
     SwipeRefreshLayout swipeRefreshLayout;
+    private ChatsAdapter chatsAdapter;
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.hasExtra(WebSocketListenerService.EXTRA_MESSAGE)) {
+                Gson gson = new Gson();
+                Message message = gson.fromJson(intent.getStringExtra(
+                        WebSocketListenerService.EXTRA_MESSAGE), Message.class);
 
-    private BroadcastReceiver broadcastReceiver;
+                for (int i = 0; i < chats.size(); i++) {
+                    if (chats.get(i).getContentId() == message.getEvent()) {
+                        Chat removedChat = chats.remove(i);
+                        chats.add(0, removedChat);
+                        chats.get(0).setLastMessage(message.getText());
+                        chats.get(0).setLastMessageFromUserName(message.getFromUser().getFirstName());
+                        chats.get(0).setLastMessageCreated(message.getCreated());
+                        chats.get(0).setLastMessageId(message.getId());
+
+                        chatsAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            if (intent.hasExtra(WebSocketListenerService.EXTRA_REQUEST)) {
+                Gson gson = new Gson();
+                RequestGet eventRequest = gson.fromJson(intent.getStringExtra(
+                        WebSocketListenerService.EXTRA_REQUEST), RequestGet.class);
+
+                if (eventRequest.getFromUser().getId() == UserProfileManager.getInstance().getMyProfile().getId() && !exists(eventRequest) && !eventRequest.getDecision().equals("DECLINE")) {
+                    chats(String.valueOf(eventRequest.getEvent()));
+                }
+            }
+        }
+    };
+
+    public static ChatsFragment getChatsFragmentInstance() {
+        return instance;
+    }
+
+    private boolean exists(RequestGet newRequest) {
+        for (Chat chat : chats)
+            if (chat.getContentId() == newRequest.getEvent())
+                return true;
+        return false;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
 
 
     @Override
@@ -51,22 +113,27 @@ public class ChatsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_chats, container, false);
         ButterKnife.bind(this, view);
 
+        // reset notification badge
+//        MainActivity bottom = MainActivity.instance;
+//        bottom.createNormalBadge();
+
+        instance = this;
+        chats = new ArrayList<>();
+
+        chatsAdapter = null;
+
         recycleView.setHasFixedSize(true);
         recycleView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            chats();
+            chats = new ArrayList<>();
+            chatsAdapter = null;
+            chats(null);
             swipeRefreshLayout.setRefreshing(false);
         });
 
-        chats();
+        chats(null);
 
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                int a = 5;
-            }
-        };
 
         return view;
     }
@@ -81,29 +148,39 @@ public class ChatsFragment extends Fragment {
 
     @Override
     public void onStop() {
-        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver);
+//        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver);
         super.onStop();
     }
 
     @Override
     public void onResume() {
-//        chats();
+        if (chatsAdapter != null)
+            chatsAdapter.notifyDataSetChanged();
+
         super.onResume();
     }
 
-    private void chats() {
+    private void chats(String chatId) {
         Call<List<Chat>> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(requireContext()))
                 .getApi()
-                .getEventChats();
+                .getEventChats(chatId);
 
         call.enqueue(new Callback<List<Chat>>() {
             @Override
             public void onResponse(@NonNull Call<List<Chat>> call, @NonNull Response<List<Chat>> response) {
-                List<Chat> events = response.body();
-                if (events != null) {
-                    ChatsAdapter chatsAdapter = new ChatsAdapter(getContext(), events);
+                List<Chat> newChats = response.body();
+                if (newChats != null) {
+                    chats.addAll(0, newChats);
+                }
+
+                if (chatsAdapter == null) {
+                    chatsAdapter = new ChatsAdapter(getContext(), chats);
+                    Collections.sort(chats, (lhs, rhs) -> Long.compare(getMillis(rhs.getLastMessageCreated()), getMillis(lhs.getLastMessageCreated())));
                     recycleView.setAdapter(chatsAdapter);
+                } else {
+                    chatsAdapter.notifyItemInserted(0);
+                    recycleView.getLayoutManager().scrollToPosition(0);
                 }
             }
 
@@ -112,5 +189,17 @@ public class ChatsFragment extends Fragment {
 
             }
         });
+    }
+
+    private long getMillis(String stringDate) {
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        Date date = null;
+
+        try {
+            return Objects.requireNonNull(sdf.parse(stringDate)).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

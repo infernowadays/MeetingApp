@@ -2,7 +2,9 @@ package com.example.meetingapp.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -39,7 +41,6 @@ public class EditUserProfileCategoriesActivity extends AppCompatActivity impleme
     @BindView(R.id.categories_counter)
     MaterialButton categoriesCounter;
     private ArrayList<String> stringCategories;
-//    private CategoryChipsAdapter categoryChipsAdapter;
 
     @OnClick(R.id.fullscreen_dialog_close)
     void close() {
@@ -65,7 +66,7 @@ public class EditUserProfileCategoriesActivity extends AppCompatActivity impleme
     void updateUserProfileCategories() {
         UserProfile userProfile = new UserProfile();
 
-        List<Category> categories = new ArrayList<>();
+        ArrayList<Category> categories = new ArrayList<>();
         for (String category : stringCategories) {
             categories.add(new Category(category));
         }
@@ -80,6 +81,10 @@ public class EditUserProfileCategoriesActivity extends AppCompatActivity impleme
         call.enqueue(new Callback<UserProfile>() {
             @Override
             public void onResponse(@NonNull Call<UserProfile> call, @NonNull Response<UserProfile> response) {
+                Intent intent = new Intent();
+                intent.putParcelableArrayListExtra("categories", categories);
+                setResult(RESULT_OK, intent);
+
                 finish();
             }
 
@@ -106,10 +111,7 @@ public class EditUserProfileCategoriesActivity extends AppCompatActivity impleme
                         response.body(), EditUserProfileCategoriesActivity.this, stringCategories);
 
                 recyclerView.setAdapter(categoryChipsAdapter);
-
-
                 updateCounter(stringCategories.size());
-
                 RetrofitClient.needsHeader(true);
             }
 

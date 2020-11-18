@@ -1,20 +1,27 @@
 package com.example.meetingapp.activities;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.meetingapp.services.AuthService;
-import com.example.meetingapp.customviews.CustomCallback;
 import com.example.meetingapp.R;
 import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.customviews.CustomCallback;
 import com.example.meetingapp.models.RegisterData;
 import com.example.meetingapp.models.UserProfile;
+import com.example.meetingapp.services.AuthService;
 
 import java.util.Objects;
 
@@ -35,6 +42,9 @@ public class RegisterActivity extends AppCompatActivity {
     @BindView(R.id.text_password)
     EditText textPassword;
 
+    @BindView(R.id.text_agreement)
+    TextView textAgreement;
+
     private Context mContext = this;
 
     @Override
@@ -42,6 +52,37 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
+
+        customTextView();
+    }
+
+
+    private void customTextView() {
+        SpannableStringBuilder spanTxt = new SpannableStringBuilder("Нажимая на \"Создать аккаунт\", Вы принимаете ");
+        spanTxt.append("пользовательское соглашение");
+        spanTxt.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/walkapp/terms-conditions"));
+                startActivity(browserIntent);
+            }
+        }, spanTxt.length() - "пользовательское соглашение".length(), spanTxt.length(), 0);
+
+        spanTxt.append(" и");
+        spanTxt.setSpan(null, 32, spanTxt.length(), 0);
+        spanTxt.append(" политику конфиденциальности сервиса");
+
+        spanTxt.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/walkapp/privacy-policy"));
+                startActivity(browserIntent);
+            }
+        }, spanTxt.length() - "политику конфиденциальности сервиса".length(), spanTxt.length(), 0);
+
+
+        textAgreement.setMovementMethod(LinkMovementMethod.getInstance());
+        textAgreement.setText(spanTxt, TextView.BufferType.SPANNABLE);
     }
 
     @OnClick(R.id.registerButton)

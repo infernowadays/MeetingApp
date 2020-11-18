@@ -2,16 +2,19 @@ package com.example.meetingapp.services;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.example.meetingapp.activities.MainActivity;
+import com.example.meetingapp.interfaces.NotificationListener;
+import com.example.meetingapp.models.Message;
+import com.example.meetingapp.models.RequestGet;
 import com.example.meetingapp.models.WebSocketEvent;
 import com.google.gson.Gson;
-
-import java.util.Objects;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -32,7 +35,9 @@ public class WebSocketListenerService extends Service {
     private static final String AUTHORIZATION = "Authorization";
     private static final String WEB_SOCKET_URL = "https://meetingappbackend.xyz:443/ws/chat/";
     private static final String EXTRA_TOKEN = "EXTRA_TOKEN";
+    public static NotificationListener notificationListener;
     static WebSocket staticWebSocket;
+    private final IBinder binder = new LocalBinder();
     private LocalBroadcastManager broadcaster;
 
     public WebSocketListenerService() {
@@ -40,7 +45,7 @@ public class WebSocketListenerService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return binder;
     }
 
     @Override
@@ -67,6 +72,11 @@ public class WebSocketListenerService extends Service {
         broadcaster = LocalBroadcastManager.getInstance(this);
     }
 
+    public void setCallbacks(NotificationListener callbacks) {
+        notificationListener = callbacks;
+    }
+
+
     private static final class EchoWebSocketListener extends WebSocketListener {
         private static final int NORMAL_CLOSURE_STATUS = 1000;
 
@@ -83,6 +93,7 @@ public class WebSocketListenerService extends Service {
             Log.d("ws_stat", "connected");
         }
 
+
         @Override
         public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
             Gson gson = new Gson();
@@ -91,12 +102,20 @@ public class WebSocketListenerService extends Service {
             WebSocketEvent webSocketEvent = gson.fromJson(text, WebSocketEvent.class);
             if (webSocketEvent.isRequestEvent()) {
                 intent.putExtra(EXTRA_REQUEST, text);
+
+                RequestGet eventRequest = gson.fromJson(text, RequestGet.class);
+                NotificationBadgeManager.getInstance().notifyRequest(eventRequest);
+
             } else if (webSocketEvent.isMessageEvent()) {
                 intent.putExtra(EXTRA_MESSAGE, text);
+
+                Message message = gson.fromJson(text, Message.class);
+                MainActivity instance = MainActivity.instance;
+                NotificationBadgeManager.getInstance().notifyChat(instance.convertShortChatToChat(message.getShortChat()));
+
             } else if (webSocketEvent.isPrivateMessageEvent()) {
                 intent.putExtra(EXTRA_PRIVATE_MESSAGE, text);
             }
-
 
             broadcaster.sendBroadcast(intent);
         }
@@ -109,7 +128,7 @@ public class WebSocketListenerService extends Service {
 
         @Override
         public void onFailure(@NonNull WebSocket webSocket, @NonNull Throwable t, Response response) {
-            Log.d("ws_stat", Objects.requireNonNull(t.getMessage()));
+//            Log.d("ws_stat", Objects.requireNonNull(t.getMessage()));
             webSocket.close(NORMAL_CLOSURE_STATUS, null);
 
             close();
@@ -132,6 +151,13 @@ public class WebSocketListenerService extends Service {
             if (staticWebSocket != null) {
                 staticWebSocket.close(1000, "Connection closed");
             }
+        }
+    }
+
+    public class LocalBinder extends Binder {
+        WebSocketListenerService getService() {
+            // Return this instance of MyService so clients can call public methods
+            return WebSocketListenerService.this;
         }
     }
 }

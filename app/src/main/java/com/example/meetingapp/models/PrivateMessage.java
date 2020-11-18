@@ -7,12 +7,12 @@ public class PrivateMessage extends CommonMessage {
     @SerializedName("user")
     private int user;
 
-    public PrivateMessage(String text, String created, boolean seen) {
-        super(text, created, seen);
+    public PrivateMessage(String text, String created) {
+        super(text, created);
     }
 
     public PrivateMessage(int user, String text, String created, boolean seen) {
-        super(null, text, created, seen);
+        super(0, null, text, created, seen);
         this.user = user;
     }
 

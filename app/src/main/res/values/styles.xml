@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="NotificationTitle">
-        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
 
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="colorAccent">@color/colorPrimary</item>
+
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorPrimaryLight">@color/colorPrimaryLight</item>
@@ -29,6 +27,11 @@
 
         <item name="android:textColorHint">@android:color/white</item>
         <item name="android:editTextColor">@android:color/white</item>
+    </style>
+
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
 
 
@@ -66,12 +69,6 @@
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/colorText</item>
-    </style>
-
-    <style name="Subtitle2" parent="Widget.MaterialComponents.TextView">
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
     <style name="Body" parent="Widget.MaterialComponents.TextView">

@@ -14,11 +14,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.example.meetingapp.interfaces.EventManager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.EventActivity;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.fragments.HomeEventsFragment;
+import com.example.meetingapp.interfaces.EventManager;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.Event;
 import com.example.meetingapp.utils.PreferenceUtils;
@@ -104,7 +104,7 @@ public class EventPublishStepperFragment extends Fragment implements BlockingSte
     }
 
     private void addEventToHomePage() {
-        HomeEventsFragment.getInstance().addCreatedEvent(createdEvent);
+//        HomeEventsFragment.getInstance().addCreatedEvent(createdEvent);
     }
 
     private void updateEvent() {
@@ -182,6 +182,7 @@ public class EventPublishStepperFragment extends Fragment implements BlockingSte
         for (String category : eventManager.getCategories()) {
             Chip chip = (Chip) LayoutInflater.from(getContext()).inflate(R.layout.category_item, chipGroup, false);
             chip.setText(category);
+            chip.setChecked(true);
             chip.setCheckable(false);
             chipGroup.addView(chip);
 

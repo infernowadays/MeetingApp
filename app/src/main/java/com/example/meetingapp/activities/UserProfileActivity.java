@@ -1,6 +1,7 @@
 package com.example.meetingapp.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,39 +11,33 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager.widget.ViewPager;
 
-import com.example.meetingapp.utils.images.DownloadImageTask;
-import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.R;
-import com.example.meetingapp.services.UserProfileManager;
+import com.example.meetingapp.adapters.EventsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
-import com.example.meetingapp.fragments.HomeEventsFragment;
+import com.example.meetingapp.fragments.ComplaintDialog;
+import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.models.Category;
+import com.example.meetingapp.models.Event;
 import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.utils.PreferenceUtils;
+import com.example.meetingapp.utils.images.DownloadImageTask;
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.tabs.TabLayout;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -55,7 +50,6 @@ public class UserProfileActivity extends AppCompatActivity implements GetImageFr
 
     @BindView(R.id.image_profile)
     ImageView imageProfile;
-
 
     @BindView(R.id.text_first_name)
     TextView textFirstName;
@@ -90,35 +84,23 @@ public class UserProfileActivity extends AppCompatActivity implements GetImageFr
     @BindView(R.id.chip_group)
     ChipGroup chipGroup;
 
-    @BindView(R.id.view_pager)
-    ViewPager viewPager;
-
-    @BindView(R.id.tab_layout)
-    TabLayout tabLayout;
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
     @BindView(R.id.text)
     TextView textView;
 
-    @BindView(R.id.content_buttons)
-    LinearLayout contentButtons;
-
-    @BindView(R.id.button_write_message)
-    MaterialButton buttonWriteMessage;
-
-    @BindView(R.id.button_edit_categories)
-    ImageButton buttonEditCategories;
-
-    @BindView(R.id.button_edit_info)
-    ImageButton buttonEditInfo;
-
     @BindView(R.id.swipe_layout)
     SwipeRefreshLayout swipeRefreshLayout;
 
     @BindView(R.id.appBarLayout)
     AppBarLayout appBarLayout;
+
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
+
+    private List<Event> events;
+    private EventsAdapter eventsAdapter;
 
     private UserProfile userProfile;
     private boolean prevSwipeState = true;
@@ -135,35 +117,7 @@ public class UserProfileActivity extends AppCompatActivity implements GetImageFr
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-
-        viewPagerAdapter.addFragment(new HomeEventsFragment("creator"), "БИЛЕТЫ");
-        viewPagerAdapter.addFragment(new HomeEventsFragment("passed"), "СОБЫТИЯ");
-
-        viewPager.setAdapter(viewPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
-
         loadProfile();
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float v, int i1) {
-                swipeRefreshLayout.setEnabled(false);
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                swipeRefreshLayout.setEnabled(prevSwipeState);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                swipeRefreshLayout.setEnabled(state == ViewPager.SCROLL_STATE_DRAGGING);
-                if (state == ViewPager.SCROLL_STATE_IDLE)
-                    swipeRefreshLayout.setEnabled(prevSwipeState);
-
-            }
-        });
 
         appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
             if (verticalOffset == 0) {
@@ -205,12 +159,17 @@ public class UserProfileActivity extends AppCompatActivity implements GetImageFr
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_complain:
-                // do your code
+                openComplaintDialog();
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void openComplaintDialog() {
+        ComplaintDialog dialog = ComplaintDialog.newInstance("PROFILE", userProfile.getId());
+        dialog.show((UserProfileActivity.this).getSupportFragmentManager(), "tag");
     }
 
     @Override
@@ -234,7 +193,7 @@ public class UserProfileActivity extends AppCompatActivity implements GetImageFr
                 if (response.body() != null) {
                     userProfile = response.body();
                     showProfile();
-                    HideIfNotCurrentUserProfile();
+                    events();
                 }
             }
 
@@ -271,14 +230,16 @@ public class UserProfileActivity extends AppCompatActivity implements GetImageFr
             profileEducation.setVisibility(View.VISIBLE);
         }
 
-        if (userProfile.getJob().equals("")) {
+        if (!userProfile.getJob().equals("")) {
             textJob.setText(userProfile.getJob());
             profileJob.setVisibility(View.VISIBLE);
         }
 
+        chipGroup.removeAllViews();
         for (Category category : userProfile.getCategories()) {
             Chip chip = (Chip) LayoutInflater.from(this).inflate(R.layout.category_item, chipGroup, false);
             chip.setText(category.getName());
+            chip.setChecked(true);
             chip.setCheckable(false);
             chipGroup.addView(chip);
         }
@@ -322,15 +283,6 @@ public class UserProfileActivity extends AppCompatActivity implements GetImageFr
         return "";
     }
 
-    private void HideIfNotCurrentUserProfile() {
-        if (userProfile.getId() == UserProfileManager.getInstance().getMyProfile().getId()) {
-            contentButtons.setVisibility(View.VISIBLE);
-            buttonEditCategories.setVisibility(View.VISIBLE);
-            buttonEditInfo.setVisibility(View.VISIBLE);
-            buttonWriteMessage.setVisibility(View.GONE);
-        }
-    }
-
     @Override
     public void getResult(Bitmap bitmap) {
         if (bitmap != null) {
@@ -339,38 +291,28 @@ public class UserProfileActivity extends AppCompatActivity implements GetImageFr
         }
     }
 
-    static class ViewPagerAdapter extends FragmentPagerAdapter {
+    private void events() {
+        Call<List<Event>> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(this))
+                .getApi()
+                .getEvents(null, null, null, null, null, null, null, null, "part", null, "false", 0, String.valueOf(userProfile.getId()));
 
-        private ArrayList<Fragment> fragments;
-        private ArrayList<String> titles;
+        call.enqueue(new Callback<List<Event>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Event>> call, @NonNull Response<List<Event>> response) {
+                events = response.body();
+                eventsAdapter = new EventsAdapter(getContext(), events);
+                recyclerView.setAdapter(eventsAdapter);
+            }
 
-        ViewPagerAdapter(FragmentManager fm) {
-            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-            this.fragments = new ArrayList<>();
-            this.titles = new ArrayList<>();
-        }
+            @Override
+            public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
+                int a = 5;
+            }
+        });
+    }
 
-        @NonNull
-        @Override
-        public Fragment getItem(int position) {
-
-            return fragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
-        }
-
-        void addFragment(Fragment fragment, String title) {
-            fragments.add(fragment);
-            titles.add(title);
-        }
-
-        @Nullable
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return titles.get(position);
-        }
+    private Context getContext() {
+        return this;
     }
 }

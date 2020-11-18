@@ -82,7 +82,7 @@ public class TicketActivity extends AppCompatActivity {
             case R.id.menu_stop:
                 // do your code
                 return true;
-            case R.id.menu_cancel:
+            case R.id.menu_delete:
                 // do your code
                 return true;
             case R.id.action_edit:

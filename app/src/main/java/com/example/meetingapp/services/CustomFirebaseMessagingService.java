@@ -1,6 +1,5 @@
 package com.example.meetingapp.services;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -67,49 +66,29 @@ public class CustomFirebaseMessagingService extends com.google.firebase.messagin
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-
         if (remoteMessage.getData().size() > 0) {
             if (Objects.requireNonNull(remoteMessage.getData().get("content_type")).equals(MESSAGE))
-                messageNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("message"), remoteMessage.getData().get("content_id"));
+                sendNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("message"), remoteMessage.getData().get("content_id"), MESSAGE);
 
             else if (Objects.requireNonNull(remoteMessage.getData().get("content_type")).equals(REQUEST))
-                requestNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("message"));
+                sendNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("message"), String.valueOf(new Random().nextInt(1000)), REQUEST);
         }
     }
 
-    public void requestNotification(String title, String message) {
-        Spannable titleBold = new SpannableString(title);
-        titleBold.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        Intent intentMainActivity = new Intent(this, StartActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                intentMainActivity, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(this, "bundle_channel_id")
-                        .setContentTitle(titleBold)
-                        .setSmallIcon(R.drawable.ic_wolf)
-                        .setContentIntent(pendingIntent)
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                        .setContentText(message);
-
-        Notification notification = builder.build();
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        if (notificationManager != null) {
-            notificationManager.notify(new Random().nextInt(100), notification);
-        }
-    }
-
-    public void messageNotification(String title, String message, String contentId) {
+    public void sendNotification(String title, String message, String contentId, String notificationType) {
         // Make title bold
         Spannable titleBold = new SpannableString(title);
         titleBold.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        // Load parent activity with child
-        Intent intent = new Intent(this, EventActivity.class);
-        intent.putExtra("EXTRA_EVENT_ID", String.valueOf(contentId));
+        Intent intent = null;
+        if (notificationType.equals("REQUEST")) {
+            intent = new Intent(this, StartActivity.class);
+
+        } else if (notificationType.equals("MESSAGE")) {
+            // Load parent activity with child
+            intent = new Intent(this, EventActivity.class);
+            intent.putExtra("EXTRA_EVENT_ID", String.valueOf(contentId));
+        }
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(EventActivity.class);

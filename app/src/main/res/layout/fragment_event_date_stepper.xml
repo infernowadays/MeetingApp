@@ -59,6 +59,7 @@
         android:focusable="false"
         android:hint="@string/time_optional"
         android:inputType="time"/>
+        android:hint="Время" />
 
 </RelativeLayout>
 
