@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
@@ -13,9 +14,10 @@ import androidx.fragment.app.DialogFragment;
 
 import com.appyvet.materialrangebar.RangeBar;
 import com.example.meetingapp.R;
-import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.UserProfile;
+import com.example.meetingapp.services.UserProfileManager;
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
@@ -25,6 +27,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class EventsFilterDialog extends DialogFragment implements View.OnClickListener {
@@ -38,8 +41,22 @@ public class EventsFilterDialog extends DialogFragment implements View.OnClickLi
     @BindView(R.id.range_bar_age)
     RangeBar rangeBarAge;
 
+    @BindView(R.id.checkbox_male)
+    MaterialCheckBox checkBoxMale;
+
+    @BindView(R.id.checkbox_female)
+    MaterialCheckBox checkBoxFemale;
+
+    @BindView(R.id.checkbox_any)
+    MaterialCheckBox checkBoxAny;
+
     private Callback callback;
     private List<String> categories = null;
+    private List<String> sex = null;
+
+    private String fromAge = null;
+    private String toAge = null;
+    private String distance = null;
 
     static EventsFilterDialog newInstance() {
         return new EventsFilterDialog();
@@ -55,14 +72,69 @@ public class EventsFilterDialog extends DialogFragment implements View.OnClickLi
         setStyle(DialogFragment.STYLE_NORMAL, R.style.EventsFilterDialogTheme);
     }
 
+    @OnClick(R.id.clear_filters)
+    public void clearFilters() {
+        chipGroup.clearCheck();
+        categories = new ArrayList<>();
+
+        sex = new ArrayList<>();
+        sex.add("MALE");
+        sex.add("FEMALE");
+        sex.add("UNSURE");
+
+        seekBarDistance.setSeekPinByValue(99);
+        distance = "99";
+        fromAge = "16";
+        toAge = "35";
+        rangeBarAge.setRangePinsByValue(16, 35);
+        checkBoxMale.setChecked(true);
+        checkBoxFemale.setChecked(true);
+        checkBoxAny.setChecked(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_events_filter_dialog, container, false);
         ButterKnife.bind(this, view);
 
-        seekBarDistance.setSeekPinByValue(50);
-        rangeBarAge.setRangePinsByValue(17, 35);
+        clearFilters();
+
+        seekBarDistance.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
+            @Override
+            public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
+                distance = rightPinValue;
+            }
+
+            @Override
+            public void onTouchStarted(RangeBar rangeBar) {
+
+            }
+
+            @Override
+            public void onTouchEnded(RangeBar rangeBar) {
+
+            }
+        });
+
+        rangeBarAge.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
+            @Override
+            public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
+                fromAge = leftPinValue;
+                toAge = rightPinValue;
+            }
+
+            @Override
+            public void onTouchStarted(RangeBar rangeBar) {
+
+            }
+
+            @Override
+            public void onTouchEnded(RangeBar rangeBar) {
+
+            }
+        });
+
         categories = new ArrayList<>();
 
         ImageButton close = view.findViewById(R.id.fullscreen_dialog_close);
@@ -76,8 +148,7 @@ public class EventsFilterDialog extends DialogFragment implements View.OnClickLi
             for (Category category : userProfile.getCategories()) {
                 Chip chip = (Chip) getLayoutInflater().inflate(R.layout.category_item, chipGroup, false);
                 chip.setText(category.getName());
-                chip.setChecked(true);
-                categories.add(String.valueOf(chip.getText()));
+                chip.setChecked(false);
 
                 chip.setOnCheckedChangeListener((compoundButton, checked) -> {
                     if (checked)
@@ -92,6 +163,24 @@ public class EventsFilterDialog extends DialogFragment implements View.OnClickLi
         }
 
         return view;
+    }
+
+    @OnClick({R.id.checkbox_male, R.id.checkbox_female, R.id.checkbox_any})
+    public void onGenderCheckBoxClicked(CheckBox checkBox) {
+        switch (checkBox.getId()) {
+            case R.id.checkbox_male:
+                handleCheckbox("MALE");
+
+                break;
+            case R.id.checkbox_female:
+                handleCheckbox("FEMALE");
+
+                break;
+            case R.id.checkbox_any:
+                handleCheckbox("UNSURE");
+
+                break;
+        }
     }
 
     @Override
@@ -112,19 +201,21 @@ public class EventsFilterDialog extends DialogFragment implements View.OnClickLi
                 break;
 
             case R.id.fullscreen_dialog_action_confirm:
-                callback.onActionClick(categories);
+                callback.onActionClick(categories, sex, fromAge, toAge, null, null, distance, null, true);
 
                 dismiss();
                 break;
-
         }
+    }
 
+    private void handleCheckbox(String sexString) {
+        if (!sex.contains(sexString))
+            sex.add(sexString);
+        else
+            sex.remove(sexString);
     }
 
     public interface Callback {
-
-        void onActionClick(List<String> categories);
-
+        void onActionClick(List<String> categories, List<String> sex, String fromAge, String toAge, String latitude, String longitude, String distance, String text, boolean renew);
     }
-
 }

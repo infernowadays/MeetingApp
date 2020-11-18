@@ -68,9 +68,10 @@ public class ConfirmCodeActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 super.onResponse(call, response);
                 if (response.code() == 406) {
-                    Toast.makeText(ConfirmCodeActivity.this, "Неправльный код :(", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ConfirmCodeActivity.this, "Неправильный код :(", Toast.LENGTH_SHORT).show();
                 } else if (response.code() == 202) {
                     Toast.makeText(ConfirmCodeActivity.this, "Аккаунт подтвержден!", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
                     finish();
                 }
             }

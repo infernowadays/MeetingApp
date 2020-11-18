@@ -28,6 +28,7 @@ import com.example.meetingapp.interfaces.IUserProfileManager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.MainActivity;
 import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.interfaces.IUserProfileManager;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.ProfilePhoto;
 import com.example.meetingapp.models.UserProfile;
@@ -177,24 +178,28 @@ public class UserPublishStepperFragment extends Fragment implements BlockingStep
         textBirthDate.setText(iUserProfileManager.getBirthDate());
         userProfile.setDateOfBirth(iUserProfileManager.getBirthDate());
 
-        textSex.setText(iUserProfileManager.getSex());
-        userProfile.setSex(iUserProfileManager.getSex());
+        if (iUserProfileManager.getSex().equals("MALE"))
+            textSex.setText("Мужчина");
+        else if (iUserProfileManager.getSex().equals("FEMALE"))
+            textSex.setText("Женщина");
+        else
+            textSex.setText("Кто-то еще");
 
-        if (iUserProfileManager.getCity() != null) {
+        if (iUserProfileManager.getCity().equals("")) {
             textCity.setText(iUserProfileManager.getCity());
             textCity.setVisibility(View.VISIBLE);
 
             userProfile.setCity(iUserProfileManager.getCity());
         }
 
-        if (iUserProfileManager.getEducation() != null) {
+        if (!iUserProfileManager.getEducation().equals("")) {
             textEducation.setText(iUserProfileManager.getEducation());
             textEducation.setVisibility(View.VISIBLE);
 
             userProfile.setEducation(iUserProfileManager.getEducation());
         }
 
-        if (iUserProfileManager.getJob() != null) {
+        if (iUserProfileManager.getJob().equals("")) {
             textJob.setText(iUserProfileManager.getJob());
             textJob.setVisibility(View.VISIBLE);
 
@@ -206,6 +211,7 @@ public class UserPublishStepperFragment extends Fragment implements BlockingStep
         for (String category : iUserProfileManager.getCategories()) {
             Chip chip = (Chip) LayoutInflater.from(getContext()).inflate(R.layout.category_item, chipGroup, false);
             chip.setText(category);
+            chip.setChecked(true);
             chip.setCheckable(false);
             chipGroup.addView(chip);
 

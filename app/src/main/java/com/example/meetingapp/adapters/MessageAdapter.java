@@ -13,18 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.meetingapp.models.CommonMessage;
-import com.example.meetingapp.utils.images.DownloadImageTask;
-import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.R;
-import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.activities.UserProfileActivity;
-import com.example.meetingapp.models.Message;
+import com.example.meetingapp.interfaces.GetImageFromAsync;
+import com.example.meetingapp.models.CommonMessage;
+import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.utils.DateConverter;
 import com.example.meetingapp.utils.PreferenceUtils;
+import com.example.meetingapp.utils.images.DownloadImageTask;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
 
@@ -38,12 +35,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     private static final int MSG_TYPE_RIGHT = 1;
 
     private List<CommonMessage> messages;
-
+    private int positionUnreadFlag = -1;
+    private boolean isUnreadFlagActive = false;
     private Context context;
+    private int chatId;
+    private RecyclerView recyclerView;
 
-    public MessageAdapter(Context context, List<CommonMessage> messages) {
+    public MessageAdapter(Context context, List<CommonMessage> messages, int chatId, RecyclerView recyclerView) {
         this.messages = messages;
         this.context = context;
+        this.chatId = chatId;
+        this.recyclerView = recyclerView;
+//        positionUnreadFlag = -1;
     }
 
     @NonNull
@@ -63,7 +66,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         CommonMessage message = messages.get(position);
         holder.textMessage.setText(message.getText());
         holder.textUserName.setText(message.getFromUser().getFirstName());
-        holder.textMessageTime.setText(parseCreated(message.getCreated()));
+        holder.textMessageTime.setText(DateConverter.getTimeInCurrentTimezone(message.getCreated()));
 
         if (message.getFromUser().getPhoto() != null) {
             holder.setImageProfile(message.getFromUser().getPhoto().getPhoto());
@@ -78,6 +81,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
         setTimeTextVisibility(DateConverter.stringDateToMillis(message.getCreated()), previousMillis, holder.textDate);
 
+        setUnreadFlag(message.getId(), message.getFromUser().getId(), holder.unreadMessages);
+
+
         holder.imageProfile.setOnClickListener(v -> {
             openUserProfile(String.valueOf(message.getFromUser().getId()));
         });
@@ -91,6 +97,21 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         Intent intent = new Intent(getContext(), UserProfileActivity.class);
         intent.putExtra("EXTRA_USER_PROFILE_ID", profileId);
         getContext().startActivity(intent);
+    }
+
+    private void setUnreadFlag(int messageId, int userId, TextView unreadFlag) {
+        if (isUnreadFlagActive || userId == UserProfileManager.getInstance().getMyProfile().getId()){
+            unreadFlag.setVisibility(View.GONE);
+            return;
+        }
+
+
+        if (messageId > PreferenceUtils.getChatLastMessagePosition(chatId, getContext())) {
+            unreadFlag.setVisibility(View.VISIBLE);
+            isUnreadFlagActive = true;
+        } else
+            unreadFlag.setVisibility(View.GONE);
+
     }
 
     private void setTimeTextVisibility(long ts1, long ts2, TextView textDate) {
@@ -142,17 +163,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
     }
 
-    private String parseCreated(String created) {
-        ZonedDateTime zdt = null;
-        String newFormat = "";
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            zdt = ZonedDateTime.parse(created);
-            newFormat = zdt.format(DateTimeFormatter.ofPattern("hh:mm"));
-        }
-
-        return newFormat;
-    }
-
     private Context getContext() {
         return context;
     }
@@ -171,14 +181,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         @BindView(R.id.text_user_name)
         TextView textUserName;
 
+        @BindView(R.id.unread_messages)
+        TextView unreadMessages;
+
         @BindView(R.id.image_profile)
         ImageView imageProfile;
+
+        boolean isUnreadFlagActive;
 
         Bitmap bitmap;
 
         ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            isUnreadFlagActive = false;
         }
 
         public void setImageProfile(String photoUrl) {

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -57,7 +58,6 @@ public class CategoryChipsAdapter extends RecyclerView.Adapter<CategoryChipsAdap
         holder.expandButton.setText(megaCategory.getName());
 
 
-
         if (megaCategories.get(position).isExpanded())
             holder.arrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24);
         else
@@ -81,8 +81,11 @@ public class CategoryChipsAdapter extends RecyclerView.Adapter<CategoryChipsAdap
             holder.chipGroup.addView(chip);
 
             chip.setOnTouchListener((v, event) -> {
-                if (categories.size() == 15)
+                if (categories.size() == 15) {
+                    Toast.makeText(context, "Можно выбрать не более 15 интересов :)", Toast.LENGTH_SHORT).show();
                     disableChips();
+                }
+
                 return false;
             });
 

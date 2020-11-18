@@ -11,6 +11,11 @@ public class RequestSend {
     private long event;
     @SerializedName("decision")
     private String decision;
+    private boolean seen;
+
+    public RequestSend(boolean seen) {
+        this.seen = seen;
+    }
 
     public RequestSend(String toUser, long event) {
         this.toUser = toUser;
@@ -22,6 +27,14 @@ public class RequestSend {
     }
 
     public RequestSend() {
+    }
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
     }
 
     public String getDecision() {

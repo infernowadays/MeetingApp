@@ -4,16 +4,18 @@ import android.content.Context;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.meetingapp.customviews.CustomCallback;
 import com.example.meetingapp.R;
 import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.customviews.CustomCallback;
 import com.example.meetingapp.models.Password;
 import com.example.meetingapp.models.Token;
+import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.utils.PreferenceUtils;
 
 import java.util.Objects;
@@ -32,6 +34,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
     @BindView(R.id.text_new_password)
     EditText textNewPassword;
 
+    @BindView(R.id.text_email)
+    TextView textEmail;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -44,6 +49,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_change_password);
         ButterKnife.bind(this);
 
+        textEmail.setText(String.valueOf(UserProfileManager.getInstance().getMyProfile().getEmail()));
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -71,15 +77,18 @@ public class ChangePasswordActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<Token> call, @NonNull Response<Token> response) {
                 super.onResponse(call, response);
-
                 if (response.isSuccessful() && response.body() != null) {
-                    int a = 5;
+                    MainActivity instance = MainActivity.instance;
+                    instance.startWebSocketListener();
 
+                    PreferenceUtils.saveToken(response.body().getToken(), getContext());
+                    RetrofitClient.setToken(response.body().getToken());
+
+                    Toast.makeText(ChangePasswordActivity.this, "Пароль был успешно изменен!", Toast.LENGTH_SHORT).show();
+                    finish();
 
                 } else {
-                    int a = 5;
-                    // wrong password
-
+                    Toast.makeText(ChangePasswordActivity.this, "Неверный пароль!", Toast.LENGTH_SHORT).show();
                 }
             }
 

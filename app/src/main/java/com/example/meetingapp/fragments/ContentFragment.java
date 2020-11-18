@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.services.UserProfileManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,6 +36,7 @@ import butterknife.OnClick;
 public abstract class ContentFragment extends Fragment {
 
     final int REQUEST_CODE = 1337;
+    final int OFFSET = 15;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.floating_action_button)
@@ -45,9 +47,10 @@ public abstract class ContentFragment extends Fragment {
     Toolbar toolbar;
     @BindView(R.id.toolbar_header)
     TextView toolbarHeader;
-
     Location currentLocation = null;
     Menu myMenu;
+    int lastContentId = 0;
+    boolean renew = false;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,14 +61,23 @@ public abstract class ContentFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_content, container, false);
         ButterKnife.bind(this, view);
 
+        UserProfileManager.getInstance().meProfile(getContext());
+
         setupToolbar();
-        loadContent(null);
+        loadContent(null, null, null, null, null, null, null, null, false);
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            loadContent(null);
+            lastContentId = 0;
+            loadContent(null, null, null, null, null, null, null, null, false);
             swipeRefreshLayout.setRefreshing(false);
         });
 
+        setupLocation();
+
+        return view;
+    }
+
+    void setupLocation() {
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
         if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -77,8 +89,6 @@ public abstract class ContentFragment extends Fragment {
                         }
                     });
         }
-
-        return view;
     }
 
     double distance(double lat1, double lon1, double lat2, double lon2) {
@@ -121,7 +131,6 @@ public abstract class ContentFragment extends Fragment {
                 openFilterDialog();
                 return true;
             case R.id.action_search:
-//                MenuItem searchItem = R.id.action_search;
                 openSearchDialog();
                 return true;
 
@@ -133,6 +142,9 @@ public abstract class ContentFragment extends Fragment {
     private void setupToolbar() {
         toolbar.setTitle("");
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
+
+        int unicode = 0x1F43A;
+        toolbarHeader.setText("WALK " + new String(Character.toChars(unicode)));
 
 //        toolbarHeader.setText(getContentType());
 //        int filterIcon = R.drawable.ic_expand_more_black_24dp;
@@ -147,6 +159,10 @@ public abstract class ContentFragment extends Fragment {
                 } else if (dy < 0 && floatingActionButton.getVisibility() != View.VISIBLE) {
                     floatingActionButton.show();
                 }
+
+                if (!recyclerView.canScrollVertically(1) && !renew) {
+                    loadContent(null, null, null, null, null, null, null, null, false);
+                }
             }
         });
     }
@@ -155,7 +171,7 @@ public abstract class ContentFragment extends Fragment {
 
     public abstract void openSearchDialog();
 
-    public abstract void loadContent(List<String> categories);
+    public abstract void loadContent(List<String> categories, List<String> sex, String fromAge, String toAge, String latitude, String longitude, String distance, String text, boolean renew);
 
     public abstract String getContentType();
 }

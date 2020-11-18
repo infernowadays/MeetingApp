@@ -8,7 +8,6 @@ import androidx.annotation.RequiresApi;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Event implements Parcelable {
@@ -28,24 +27,29 @@ public class Event implements Parcelable {
     private UserProfile creator;
     private String name;
     private String description;
+    private boolean requested;
     private String date;
     private String time;
     private List<Category> categories;
     private List<UserProfile> members;
+    private boolean ended;
 
-    public Event(int id, UserProfile creator, String name, String description, String date, String time, GeoPoint geoPoint, List<Category> categories, List<UserProfile> members) {
+    public Event(int id, UserProfile creator, String name, String description, boolean requested, String date, String time, GeoPoint geoPoint, List<Category> categories, List<UserProfile> members, boolean ended) {
         this.id = id;
         this.creator = creator;
         this.name = name;
         this.description = description;
+        this.requested = requested;
         this.date = date;
         this.time = time;
         this.geoPoint = geoPoint;
         this.categories = categories;
         this.members = members;
+        this.ended = ended;
     }
 
     public Event() {
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -55,9 +59,22 @@ public class Event implements Parcelable {
         date = in.readString();
         time = in.readString();
         geoPoint = in.readParcelable(getClass().getClassLoader());
+    }
 
-//        members = new ArrayList<>();
-//        in.readTypedList(members, UserProfile.CREATOR);
+    public boolean isEnded() {
+        return ended;
+    }
+
+    public void setEnded(boolean ended) {
+        this.ended = ended;
+    }
+
+    public boolean isRequested() {
+        return requested;
+    }
+
+    public void setRequested(boolean requested) {
+        this.requested = requested;
     }
 
     public List<Category> getCategories() {
@@ -145,6 +162,5 @@ public class Event implements Parcelable {
         dest.writeString(date);
         dest.writeString(time);
         dest.writeParcelable(geoPoint, flags);
-//        dest.writeTypedList(members);
     }
 }

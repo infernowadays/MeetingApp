@@ -37,10 +37,10 @@ public class TicketsFragment extends ContentFragment {
 
     @Override
     public void openFilterDialog() {
-        TicketsFilterDialog dialog = TicketsFilterDialog.newInstance();
-        dialog.setTargetFragment(TicketsFragment.this, REQUEST_CODE);
-        dialog.setCallback(this::loadContent);
-        dialog.show(requireActivity().getSupportFragmentManager(), "tag");
+//        TicketsFilterDialog dialog = TicketsFilterDialog.newInstance();
+//        dialog.setTargetFragment(TicketsFragment.this, REQUEST_CODE);
+//        dialog.setCallback(this::loadContent);
+//        dialog.show(requireActivity().getSupportFragmentManager(), "tag");
     }
 
     @Override
@@ -49,7 +49,7 @@ public class TicketsFragment extends ContentFragment {
     }
 
     @Override
-    public void loadContent(List<String> categories) {
+    public void loadContent(List<String> categories, List<String> sex, String fromAge, String toAge, String latitude, String longitude, String distance, String text, boolean renew) {
         Call<List<Ticket>> call = RetrofitClient
                 .getInstance(PreferenceUtils.getToken(requireContext()))
                 .getApi()

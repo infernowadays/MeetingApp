@@ -15,11 +15,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.meetingapp.interfaces.IUserProfileManager;
 import com.example.meetingapp.R;
-import com.example.meetingapp.interfaces.TransferCategories;
 import com.example.meetingapp.adapters.CategoryChipsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.interfaces.IUserProfileManager;
+import com.example.meetingapp.interfaces.TransferCategories;
 import com.example.meetingapp.models.MegaCategory;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
@@ -41,6 +41,8 @@ public class UserCategoriesStepperFragment extends Fragment implements BlockingS
     RecyclerView recyclerView;
     @BindView(R.id.header_h4)
     TextView headerH4;
+    @BindView(R.id.chips_counter)
+    TextView chipsCounter;
     private CategoryChipsAdapter categoryChipsAdapter;
     private IUserProfileManager iUserProfileManager;
     private ArrayList<String> categories;
@@ -87,7 +89,6 @@ public class UserCategoriesStepperFragment extends Fragment implements BlockingS
     @Override
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
         iUserProfileManager.saveCategories(categories);
-
         callback.goToNextStep();
     }
 
@@ -103,10 +104,10 @@ public class UserCategoriesStepperFragment extends Fragment implements BlockingS
     @Nullable
     @Override
     public VerificationError verifyStep() {
-//        if (categories != null) {
-//            if (categories.size() < 5)
-//                return new VerificationError("at least 5 categories!");
-//        }
+        if (categories != null) {
+            if (categories.size() < 3)
+                return new VerificationError("Нужно выбрать хотя бы 3 интереса");
+        }
 
         return null;
     }
@@ -147,8 +148,10 @@ public class UserCategoriesStepperFragment extends Fragment implements BlockingS
         });
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void getResult(ArrayList<String> categories) {
         this.categories = categories;
+        chipsCounter.setText("Выбрано " + categories.size() + " из 15 возможных интересов");
     }
 }

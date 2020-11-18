@@ -29,6 +29,7 @@ import com.example.meetingapp.R;
 import com.example.meetingapp.activities.ConfirmCodeActivity;
 import com.example.meetingapp.activities.EditUserProfileActivity;
 import com.example.meetingapp.activities.EditUserProfileCategoriesActivity;
+import com.example.meetingapp.activities.MainActivity;
 import com.example.meetingapp.activities.SettingsActivity;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.customviews.CustomSwipeToRefresh;
@@ -46,6 +47,7 @@ import com.google.android.material.tabs.TabLayout;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,6 +55,8 @@ import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.app.Activity.RESULT_OK;
 
 public class HomeFragment extends Fragment implements GetImageFromAsync {
 
@@ -177,9 +181,12 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
     private void setContent() {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
 
-        viewPagerAdapter.addFragment(new HomeEventsFragment("all"), "События");
-        viewPagerAdapter.addFragment(new HomeTicketsFragment("creator"), "Билеты");
+        viewPagerAdapter.addFragment(new HomeEventsFragment("part", "not_answered", null), "Все");
+        viewPagerAdapter.addFragment(new HomeEventsFragment("part", null, "false"), "Текущие");
+        viewPagerAdapter.addFragment(new HomeEventsFragment(null, "not_answered", null), "Заявки");
+        viewPagerAdapter.addFragment(new HomeEventsFragment("part", null, "true"), "Прошедшие");
 
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }
@@ -187,19 +194,34 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
     @OnClick(R.id.button_edit_categories)
     void editCategories() {
         Intent intent = new Intent(getActivity(), EditUserProfileCategoriesActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
     }
+
 
     @OnClick(R.id.button_edit_user_profile)
     void editUserProfile() {
         Intent intent = new Intent(getActivity(), EditUserProfileActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 2);
     }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // check data != null
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            setCategories(Objects.requireNonNull(data.getParcelableArrayListExtra("categories")));
+
+        } else if (requestCode == 2 && resultCode == RESULT_OK) {
+            meProfile();
+        } else if (requestCode == 3 && resultCode == RESULT_OK) {
+            buttonConfirm.setVisibility(View.GONE);
+
+        }
+    }
+
 
     @OnClick(R.id.button_confirm)
     void confirmAccount() {
         Intent intent = new Intent(getActivity(), ConfirmCodeActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 3);
     }
 
 
@@ -208,18 +230,6 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
         Intent intent = new Intent(getActivity(), SettingsActivity.class);
         startActivity(intent);
     }
-
-//    @OnClick(R.id.button_user_events)
-//    void openUserEvents() {
-//        Intent intent = new Intent(getActivity(), UserEventsActivity.class);
-//        startActivity(intent);
-//    }
-
-//    @OnClick(R.id.button_user_tickets)
-//    void openUserTickets() {
-//        Intent intent = new Intent(getActivity(), UserTicketsActivity.class);
-//        startActivity(intent);
-//    }
 
     private void meProfile() {
         Call<UserProfile> call = RetrofitClient
@@ -236,6 +246,9 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
                     PreferenceUtils.saveUserId(userProfile.getId(), requireContext());
                     showProfile();
                     setContent();
+
+                    MainActivity instance = MainActivity.instance;
+                    instance.initNotificationBadge();
                 }
 
                 layoutProgressBar.setVisibility(View.GONE);
@@ -253,7 +266,7 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
     @Override
     public void onResume() {
         super.onResume();
-//        setContent();
+        setContent();
         if (bitmap != null)
             imageProfile.setImageBitmap(bitmap);
     }
@@ -265,7 +278,7 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
         else
             buttonConfirm.setVisibility(View.GONE);
 
-        if(userProfile.getPhoto() != null){
+        if (userProfile.getPhoto() != null) {
             if (userProfile.getPhoto().getPhoto() != null) {
                 new DownloadImageTask(HomeFragment.this).execute(userProfile.getPhoto().getPhoto());
             }
@@ -303,10 +316,16 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
             profileJob.setVisibility(View.GONE);
         }
 
+        setCategories((ArrayList<Category>) userProfile.getCategories());
+    }
+
+    private void setCategories(ArrayList<Category> categories) {
         chipGroup.removeAllViews();
-        for (Category category : userProfile.getCategories()) {
+        for (Category category : categories) {
             Chip chip = (Chip) LayoutInflater.from(getContext()).inflate(R.layout.category_item, chipGroup, false);
             chip.setText(category.getName());
+            chip.setChecked(true);
+
             chip.setCheckable(false);
             chipGroup.addView(chip);
         }

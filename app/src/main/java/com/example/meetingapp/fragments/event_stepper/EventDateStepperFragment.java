@@ -144,7 +144,12 @@ public class EventDateStepperFragment extends Fragment implements BlockingStep, 
     public VerificationError verifyStep() {
         if (Objects.requireNonNull(textDate.getText()).toString().matches("")) {
             textDate.setError("Поле является обязательным для заполнения");
-            return new VerificationError("Не все обязательные поля заполнены");
+            return new VerificationError("Поставьте дату события");
+        }
+
+        if (Objects.requireNonNull(textTime.getText()).toString().matches("")) {
+            textTime.setError("Поле является обязательным для заполнения");
+            return new VerificationError("Поставьте время события");
         }
         return null;
     }

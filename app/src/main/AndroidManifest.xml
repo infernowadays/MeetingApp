@@ -16,16 +16,17 @@
         android:name=".activities.OAUTHApplication"
         android:allowBackup="true"
         android:fullBackupContent="false"
-        android:icon="@drawable/ic_wolf"
+        android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@drawable/ic_wolf"
+        android:roundIcon="@mipmap/ic_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:fullBackupContent"
         tools:targetApi="q">
+        <activity android:name=".activities.ForgetPasswordActivity"></activity>
         <activity
             android:name=".activities.EventMembersActivity"
             android:parentActivityName=".activities.EventActivity" />
@@ -37,7 +38,6 @@
         <activity android:name=".activities.EditUserProfileActivity" />
         <activity android:name=".activities.BaseCreateContentActivity" />
         <activity android:name=".activities.UserTicketsActivity" />
-        <activity android:name=".activities.UserEventsActivity" />
         <activity android:name=".fragments.TicketChatFragment" />
         <activity android:name=".activities.ComplaintActivity" />
         <activity android:name=".activities.ModeratorActivity" />

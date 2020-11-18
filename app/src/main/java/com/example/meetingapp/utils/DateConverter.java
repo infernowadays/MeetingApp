@@ -123,6 +123,52 @@ public class DateConverter {
         return formatter.format(date);
     }
 
+    public static String getDateTimeInCurrentTimezone(String dateTime) {
+        if (dateTime.equals("0"))
+            return "";
+
+        dateTime = dateTime.substring(0, dateTime.length() - 4).replace("T", " ") + "+0000";
+
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
+        Date date = null;
+
+
+        try {
+            date = sdf.parse(dateTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        DateFormat formatter = new SimpleDateFormat("dd MMMM в HH:mm");
+        formatter.setTimeZone(Calendar.getInstance().getTimeZone());
+        String dateFormatted = formatter.format(date);
+
+        return dateFormatted;
+    }
+
+    public static String getTimeInCurrentTimezone(String dateTime) {
+        if (dateTime.equals("0"))
+            return "";
+
+        dateTime = dateTime.substring(0, dateTime.length() - 4).replace("T", " ") + "+0000";
+
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
+        Date date = null;
+
+
+        try {
+            date = sdf.parse(dateTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        DateFormat formatter = new SimpleDateFormat("HH:mm");
+        formatter.setTimeZone(Calendar.getInstance().getTimeZone());
+        String dateFormatted = formatter.format(date);
+
+        return dateFormatted;
+    }
+
     public String parseCreated(String created) {
         String newFormat = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {

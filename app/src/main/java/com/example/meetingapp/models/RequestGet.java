@@ -14,21 +14,29 @@ public class RequestGet {
     private UserProfile toUser;
 
     @SerializedName("event")
-    private long event;
-
+    private int event;
+    @SerializedName("title")
+    private String title;
     private String decision;
     private boolean seen;
     private String created;
-
-    public RequestGet(int id, UserProfile fromUser, UserProfile toUser, long event, String created) {
+    public RequestGet(int id, UserProfile fromUser, UserProfile toUser, int event, String created, String title) {
         this.id = id;
         this.fromUser = fromUser;
         this.toUser = toUser;
         this.event = event;
         this.created = created;
+        this.title = title;
+    }
+    public RequestGet() {
     }
 
-    public RequestGet() {
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getId() {
@@ -71,11 +79,11 @@ public class RequestGet {
         this.toUser = toUser;
     }
 
-    public long getEvent() {
+    public int getEvent() {
         return event;
     }
 
-    public void setEvent(long event) {
+    public void setEvent(int event) {
         this.event = event;
     }
 

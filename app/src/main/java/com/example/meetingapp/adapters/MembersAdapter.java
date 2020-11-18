@@ -2,21 +2,27 @@ package com.example.meetingapp.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.UserProfileActivity;
+import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.models.UserProfile;
+import com.example.meetingapp.services.UserProfileManager;
+import com.example.meetingapp.utils.PreferenceUtils;
 import com.example.meetingapp.utils.images.DownloadImageTask;
 
 import java.util.List;
@@ -24,16 +30,21 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static androidx.test.InstrumentationRegistry.getContext;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHolder> {
     private Context context;
     private List<UserProfile> members;
+    private int eventId;
+    private int creatorId;
 
-    public MembersAdapter(Context context, List<UserProfile> members) {
+    public MembersAdapter(Context context, List<UserProfile> members, int eventId) {
         this.members = members;
         this.context = context;
+        this.eventId = eventId;
+        this.creatorId = UserProfileManager.getInstance().getMyProfile().getId();
     }
 
     @NonNull
@@ -47,6 +58,12 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final UserProfile member = members.get(position);
+        if (position == 0)
+            holder.buttonRemoveMember.setVisibility(View.GONE);
+
+        if (creatorId != members.get(0).getId())
+            holder.buttonRemoveMember.setVisibility(View.GONE);
+
         holder.textFirstName.setText(member.getFirstName() + " " + member.getLastName());
 
         if (member.getPhoto() != null) {
@@ -55,12 +72,57 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
             Glide.with(context).load(member.getPhoto()).into(holder.imageProfile);
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), UserProfileActivity.class);
+            intent.putExtra("EXTRA_USER_PROFILE_ID", String.valueOf(member.getId()));
+            getContext().startActivity(intent);
+        });
+
+        holder.buttonRemoveMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), UserProfileActivity.class);
-                intent.putExtra("EXTRA_USER_PROFILE_ID", member.getId());
-                getContext().startActivity(intent);
+                confirmationDialog(position);
+            }
+        });
+    }
+
+    private void confirmationDialog(int position) {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        removeUser(position);
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Вы действительно хотите удалить пользователя из события?").setPositiveButton("Да", dialogClickListener)
+                .setNegativeButton("Нет", dialogClickListener).setTitle("Подтверждение").show();
+    }
+
+    private void removeUser(int position) {
+        Call<Void> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(getContext()))
+                .getApi()
+                .removeMember(String.valueOf(eventId), String.valueOf(members.get(position).getId()));
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                members.remove(position);
+                notifyItemRemoved(position);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                int a = 5;
             }
         });
     }
@@ -70,7 +132,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
         return members.size();
     }
 
-    private Context getContext(){
+    private Context getContext() {
         return context;
     }
 
@@ -78,6 +140,9 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
 
         @BindView(R.id.text_first_name)
         TextView textFirstName;
+
+        @BindView(R.id.button_remove_member)
+        ImageButton buttonRemoveMember;
 
         @BindView(R.id.image_profile)
         CircleImageView imageProfile;

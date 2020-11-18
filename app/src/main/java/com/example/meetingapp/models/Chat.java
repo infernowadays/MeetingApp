@@ -13,13 +13,61 @@ public class Chat {
     private UserProfile fromUser;
     @SerializedName("title")
     private String title;
+    @SerializedName("last_message_id")
+    private int lastMessageId;
+    @SerializedName("last_seen_message_id")
+    private int lastSeenMessageId;
+    @SerializedName("last_message_created")
+    private String lastMessageCreated;
+    @SerializedName("last_message_from_user_name")
+    private String lastMessageFromUserName;
 
-    public Chat(String contentType, int contentId, String lastMessage, UserProfile fromUser, String title) {
+    public Chat(String contentType, int contentId, String lastMessage, int lastMessageId, int lastSeenMessageId, UserProfile fromUser, String title, String lastMessageCreated, String lastMessageFromUserName) {
         this.contentType = contentType;
         this.contentId = contentId;
         this.lastMessage = lastMessage;
+        this.lastMessageId = lastMessageId;
+        this.lastSeenMessageId = lastSeenMessageId;
         this.fromUser = fromUser;
         this.title = title;
+        this.lastMessageCreated = lastMessageCreated;
+        this.lastMessageFromUserName = lastMessageFromUserName;
+    }
+
+    public Chat() {
+
+    }
+
+    public int getLastSeenMessageId() {
+        return lastSeenMessageId;
+    }
+
+    public void setLastSeenMessageId(int lastSeenMessageId) {
+        this.lastSeenMessageId = lastSeenMessageId;
+    }
+
+    public String getLastMessageFromUserName() {
+        return lastMessageFromUserName;
+    }
+
+    public void setLastMessageFromUserName(String lastMessageFromUserName) {
+        this.lastMessageFromUserName = lastMessageFromUserName;
+    }
+
+    public String getLastMessageCreated() {
+        return lastMessageCreated;
+    }
+
+    public void setLastMessageCreated(String lastMessageCreated) {
+        this.lastMessageCreated = lastMessageCreated;
+    }
+
+    public int getLastMessageId() {
+        return lastMessageId;
+    }
+
+    public void setLastMessageId(int lastMessageId) {
+        this.lastMessageId = lastMessageId;
     }
 
     public UserProfile getFromUser() {

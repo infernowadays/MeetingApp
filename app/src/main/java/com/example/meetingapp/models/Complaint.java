@@ -17,6 +17,7 @@ public class Complaint {
     private String created;
     @SerializedName("reviewed")
     private boolean reviewed;
+
     public Complaint(int id, UserProfile suspected, String message, int contentId, String contentType, String created, boolean reviewed) {
         this.id = id;
         this.suspected = suspected;
@@ -25,6 +26,12 @@ public class Complaint {
         this.contentType = contentType;
         this.created = created;
         this.reviewed = reviewed;
+    }
+
+    public Complaint(String message, int contentId, String contentType) {
+        this.message = message;
+        this.contentId = contentId;
+        this.contentType = contentType;
     }
 
     public int getId() {

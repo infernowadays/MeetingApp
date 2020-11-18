@@ -17,11 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.meetingapp.interfaces.NotificationListener;
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.NotificationsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.interfaces.NotificationListener;
 import com.example.meetingapp.models.RequestGet;
+import com.example.meetingapp.models.RequestSend;
+import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
 import com.google.gson.Gson;
@@ -54,15 +56,29 @@ public class NotificationsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
         ButterKnife.bind(this, view);
-
+        eventRequests = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
         recycleView.setLayoutManager(linearLayoutManager);
 
-        eventRequests = new ArrayList<>();
+        recycleView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int userProfileId = UserProfileManager.getInstance().getMyProfile().getId();
+                for (int i = 0; i < eventRequests.size(); i++)
+                    if (!eventRequests.get(i).isSeen() &&
+                            (!eventRequests.get(i).getDecision().equals("NO_ANSWER") && eventRequests.get(i).getFromUser().getId() == userProfileId))
+                        seenRequest(i);
+//                    else if (eventRequests.get(i).isSeen() || eventRequests.get(i).getToUser().getId() == userProfileId && !eventRequests.get(i).getDecision().equals("NO_ANSWER"))
+//                        notificationsAdapter.notifyDataSetChanged();
+            }
+        });
+
 
         loadNotifications();
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
+            eventRequests = new ArrayList<>();
+            notificationsAdapter = null;
             loadNotifications();
             swipeRefreshLayout.setRefreshing(false);
         });
@@ -75,16 +91,27 @@ public class NotificationsFragment extends Fragment {
                     RequestGet eventRequest = gson.fromJson(intent.getStringExtra(
                             WebSocketListenerService.EXTRA_REQUEST), RequestGet.class);
 
+                    if (!exists(eventRequest)) {
+                        eventRequests.add(0, eventRequest);
+                        notificationsAdapter.notifyItemInserted(0);
+                        recycleView.smoothScrollToPosition(0);
+                    }
 
-                    eventRequests.add(0, eventRequest);
-                    notificationsAdapter.notifyItemInserted(0);
-                    recycleView.smoothScrollToPosition(0);
+//                    MainActivity instance = MainActivity.instance;
+//                    instance.subNotificationBadge(1);
 
                 }
             }
         };
 
         return view;
+    }
+
+    private boolean exists(RequestGet newRequest) {
+        for (RequestGet request : eventRequests)
+            if (request.getId() == newRequest.getId())
+                return true;
+        return false;
     }
 
     @Override
@@ -107,7 +134,8 @@ public class NotificationsFragment extends Fragment {
 
     @Override
     public void onStop() {
-        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver);
+
+//        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver);
         super.onStop();
     }
 
@@ -126,7 +154,7 @@ public class NotificationsFragment extends Fragment {
                     notificationsAdapter = new NotificationsAdapter(getContext(), eventRequests);
                     recycleView.setAdapter(notificationsAdapter);
 
-                    listener.addNotificationBadge(345);
+//                    listener.addNotificationBadge(345);
 //                    ((MainActivity)getActivity()).aaa(6);
 
                 }
@@ -135,6 +163,26 @@ public class NotificationsFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call<List<RequestGet>> call, @NonNull Throwable t) {
                 Log.d("failure", Objects.requireNonNull(t.getMessage()));
+            }
+        });
+    }
+
+    private void seenRequest(int position) {
+        Call<RequestGet> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(requireContext()))
+                .getApi()
+                .answerRequest(String.valueOf(eventRequests.get(position).getId()), new RequestSend(true));
+
+        call.enqueue(new Callback<RequestGet>() {
+            @Override
+            public void onResponse(@NonNull Call<RequestGet> call, @NonNull Response<RequestGet> response) {
+                eventRequests.get(position).setSeen(true);
+//                notificationsAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<RequestGet> call, @NonNull Throwable t) {
+                int a = 0;
             }
         });
     }
