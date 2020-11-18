@@ -8,7 +8,6 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -19,12 +18,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,13 +30,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.meetingapp.R;
-import com.example.meetingapp.api.RetrofitClient;
-import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.interfaces.IUserProfileManager;
-import com.example.meetingapp.models.ProfilePhoto;
-import com.example.meetingapp.utils.PreferenceUtils;
-import com.example.meetingapp.utils.images.DownloadImageTask;
-import com.example.meetingapp.utils.images.compression.Compressor;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.StepperLayout;
@@ -48,7 +39,6 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -56,22 +46,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
-
-import javax.xml.transform.Result;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -103,29 +84,6 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     private byte[] photoBytes;
 
     private Uri mCropImageUri;
-
-    private class CompressBitmap extends AsyncTask<Bitmap, Integer, byte[]>{
-
-        @Override
-        protected byte[] doInBackground(Bitmap... bitmaps) {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmaps[0].compress(Bitmap.CompressFormat.PNG, 100, stream);
-            return stream.toByteArray();
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(byte[] bytes) {
-            super.onPostExecute(bytes);
-            photoBytes = bytes;
-            iUserProfileManager.savePhoto(photoBytes);
-            Log.d("@@@@@@@@@@@@@@@@@@@", "onNextClicked: new photo saved");
-        }
-    }
 
     public static UserBasicInformationStepperFragmentFragment newInstance() {
         return new UserBasicInformationStepperFragmentFragment();
@@ -187,7 +145,6 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     void openImage() {
         verifyStoragePermissions(getActivity());
         iUserProfileManager.savePhoto(null);
-        CropImage.startPickImageActivity(requireContext(), this);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -237,7 +194,7 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
     public void onNextClicked(StepperLayout.OnNextClickedCallback callback) {
         String date = Objects.requireNonNull(textBirthDate.getText()).toString();
         iUserProfileManager.saveBirthDate(date);
-        Log.d("@@@@@@@@@@@@@@@@@@@", "date: "+date);
+        Log.d("@@@@@@@@@@@@@@@@@@@", "date: " + date);
         iUserProfileManager.saveSex(sex);
         iUserProfileManager.saveUri(mCropImageUri);
         callback.goToNextStep();
@@ -289,6 +246,8 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         );
         datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() - 441797328000L);
         datePickerDialog.show();
+        datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setBackground(null);
+        datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setBackground(null);
     }
 
     @Override
@@ -334,5 +293,28 @@ public class UserBasicInformationStepperFragmentFragment extends Fragment implem
         super.onResume();
         if (bitmap != null)
             imageProfile.setImageBitmap(bitmap);
+    }
+
+    private class CompressBitmap extends AsyncTask<Bitmap, Integer, byte[]> {
+
+        @Override
+        protected byte[] doInBackground(Bitmap... bitmaps) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmaps[0].compress(Bitmap.CompressFormat.PNG, 100, stream);
+            return stream.toByteArray();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(byte[] bytes) {
+            super.onPostExecute(bytes);
+            photoBytes = bytes;
+            iUserProfileManager.savePhoto(photoBytes);
+            Log.d("@@@@@@@@@@@@@@@@@@@", "onNextClicked: new photo saved");
+        }
     }
 }

@@ -185,7 +185,7 @@ public class UserPublishStepperFragment extends Fragment implements BlockingStep
         else
             textSex.setText("Кто-то еще");
 
-        if (iUserProfileManager.getCity().equals("")) {
+        if (!iUserProfileManager.getCity().equals("")) {
             textCity.setText(iUserProfileManager.getCity());
             textCity.setVisibility(View.VISIBLE);
 
@@ -199,7 +199,7 @@ public class UserPublishStepperFragment extends Fragment implements BlockingStep
             userProfile.setEducation(iUserProfileManager.getEducation());
         }
 
-        if (iUserProfileManager.getJob().equals("")) {
+        if (!iUserProfileManager.getJob().equals("")) {
             textJob.setText(iUserProfileManager.getJob());
             textJob.setVisibility(View.VISIBLE);
 
