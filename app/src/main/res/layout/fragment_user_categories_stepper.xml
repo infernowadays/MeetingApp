@@ -20,9 +20,9 @@
         style="@style/Body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:text="Выбрано 0 из 15 возможных интересов"
-        android:padding="16dp"
-
         android:textColor="@color/colorPrimary" />
 
     <androidx.recyclerview.widget.RecyclerView

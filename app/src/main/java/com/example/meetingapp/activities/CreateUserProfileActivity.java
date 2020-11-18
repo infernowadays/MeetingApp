@@ -5,9 +5,9 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.meetingapp.interfaces.IUserProfileManager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.adapters.UserStepperAdapter;
+import com.example.meetingapp.interfaces.IUserProfileManager;
 import com.stepstone.stepper.StepperLayout;
 
 import java.util.ArrayList;
@@ -29,9 +29,9 @@ public class CreateUserProfileActivity extends AppCompatActivity implements IUse
     private Uri uri;
     private byte[] photo;
     private String birthDate;
-    private String city;
-    private String education;
-    private String job;
+    private String city = "";
+    private String education = "";
+    private String job = "";
     private ArrayList<String> categories;
 
     @Override

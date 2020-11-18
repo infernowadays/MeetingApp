@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +30,7 @@ import com.example.meetingapp.activities.EditUserProfileActivity;
 import com.example.meetingapp.activities.EditUserProfileCategoriesActivity;
 import com.example.meetingapp.activities.MainActivity;
 import com.example.meetingapp.activities.SettingsActivity;
+import com.example.meetingapp.activities.StartActivity;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.customviews.CustomSwipeToRefresh;
 import com.example.meetingapp.interfaces.GetImageFromAsync;
@@ -288,28 +288,33 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
         textFirstName.setText(userProfile.getFirstName());
         textLastName.setText(userProfile.getLastName());
 
-        if (!userProfile.getDateOfBirth().equals("")) {
+        if (userProfile.getDateOfBirth() == null) {
+            logout();
+            return;
+        }
+
+        if (userProfile.getDateOfBirth() != null && !userProfile.getDateOfBirth().equals("")) {
             String age = getAgeFromBirthDateString(userProfile.getDateOfBirth());
             age = age + " " + getStringYear(Integer.parseInt(age));
             textYearsOld.setText(age);
             profileYearsOld.setVisibility(View.VISIBLE);
         }
 
-        if (!userProfile.getCity().equals("")) {
+        if (userProfile.getCity() != null && !userProfile.getCity().equals("")) {
             textCity.setText(userProfile.getCity());
             profileCity.setVisibility(View.VISIBLE);
         } else {
             profileCity.setVisibility(View.GONE);
         }
 
-        if (!userProfile.getEducation().equals("")) {
+        if (userProfile.getEducation() != null && !userProfile.getEducation().equals("")) {
             textEducation.setText(userProfile.getEducation());
             profileEducation.setVisibility(View.VISIBLE);
         } else {
             profileEducation.setVisibility(View.GONE);
         }
 
-        if (!userProfile.getJob().equals("")) {
+        if (userProfile.getJob() != null && !userProfile.getJob().equals("")) {
             textJob.setText(userProfile.getJob());
             profileJob.setVisibility(View.VISIBLE);
         } else {
@@ -317,6 +322,18 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
         }
 
         setCategories((ArrayList<Category>) userProfile.getCategories());
+    }
+
+    void logout() {
+        PreferenceUtils.removeAll(requireContext());
+
+        Intent intent = new Intent(requireContext(), StartActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+
+        requireActivity().finish();
     }
 
     private void setCategories(ArrayList<Category> categories) {
@@ -335,6 +352,9 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
         int year = age % 10;
         String stringYears = "";
 
+        if(age % 10 != 0 && age % 100 > 9)
+            return "лет";
+
         switch (year) {
             case 1:
                 stringYears = "год";
@@ -352,9 +372,7 @@ public class HomeFragment extends Fragment implements GetImageFromAsync {
             case 0:
                 stringYears = "лет";
                 break;
-
         }
-
         return stringYears;
     }
 

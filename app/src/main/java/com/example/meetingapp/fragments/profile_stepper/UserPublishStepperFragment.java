@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -16,18 +15,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.meetingapp.interfaces.GetImageFromAsync;
-import com.example.meetingapp.interfaces.IUserProfileManager;
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.MainActivity;
 import com.example.meetingapp.api.RetrofitClient;
+import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.interfaces.IUserProfileManager;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.ProfilePhoto;
@@ -143,7 +139,7 @@ public class UserPublishStepperFragment extends Fragment implements BlockingStep
         call.enqueue(new Callback<UserProfile>() {
             @Override
             public void onResponse(@NonNull Call<UserProfile> call, @NonNull Response<UserProfile> response) {
-                if (iUserProfileManager.getUri()!=null){
+                if (response.body() != null && iUserProfileManager.getUri() != null) {
                     upload(iUserProfileManager.getUri());
                 } else Log.d("@@@@@@@@@@@@@@@@@@@@@@", "onCompleteClicked: no uri");
 
@@ -232,7 +228,7 @@ public class UserPublishStepperFragment extends Fragment implements BlockingStep
         String fullPath = getRealPathFromURI(imageUri);
         File file = new File(fullPath);
 
-        File  compressFile = Compressor.getDefault(getContext()).compressToFile(file);
+        File compressFile = Compressor.getDefault(getContext()).compressToFile(file);
 
         RequestBody requestFile = RequestBody.create(compressFile, MediaType.parse(fullPath));
 
