@@ -77,23 +77,7 @@ public abstract class ContentFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(false);
         });
 
-        setupLocation();
-
         return view;
-    }
-
-    void setupLocation() {
-        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
-        if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-            fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(requireActivity(), location -> {
-                        if (location != null) {
-                            currentLocation = location;
-                        }
-                    });
-        }
     }
 
     double distance(double lat1, double lon1, double lat2, double lon2) {

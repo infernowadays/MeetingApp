@@ -1,7 +1,5 @@
 package com.example.meetingapp.fragments;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,16 +11,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.appyvet.materialrangebar.RangeBar;
 import com.example.meetingapp.R;
+import com.example.meetingapp.activities.MainActivity;
 import com.example.meetingapp.models.Category;
 import com.example.meetingapp.models.UserProfile;
 import com.example.meetingapp.services.UserProfileManager;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -100,16 +96,8 @@ public class EventsFilterDialog extends DialogFragment implements View.OnClickLi
     }
 
     void checkLocationAvailable() {
-        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
-        if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-            fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(requireActivity(), location -> {
-                        if (location == null) {
-                            Toast.makeText(requireActivity(), "Включите геолокацию в настройках смартфона", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+        if (MainActivity.instance.getLocation() == null) {
+            Toast.makeText(requireActivity(), "Включите геолокацию в настройках смартфона", Toast.LENGTH_SHORT).show();
         }
     }
 

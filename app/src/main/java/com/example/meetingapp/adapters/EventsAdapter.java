@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -26,6 +27,7 @@ import com.example.meetingapp.R;
 import com.example.meetingapp.activities.EventActivity;
 import com.example.meetingapp.activities.EventInfoActivity;
 import com.example.meetingapp.activities.EventMembersActivity;
+import com.example.meetingapp.activities.MainActivity;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.interfaces.GetImageFromAsync;
 import com.example.meetingapp.models.Category;
@@ -62,6 +64,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     private List<Event> eventsFull;
     private Context context;
     private List<Integer> eventsIds;
+    private Location currentLocation;
     private Filter eventFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
@@ -95,8 +98,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         this.events = events;
         this.eventsFull = new ArrayList<>(events);
         this.context = context;
+        this.eventsIds = new ArrayList<>();
 
-        eventsIds = new ArrayList<>();
+        if(MainActivity.instance.getLocation() == null)
+            MainActivity.instance.setupLocation();
+        currentLocation = MainActivity.instance.getLocation();
     }
 
     @NonNull
@@ -215,6 +221,42 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             getContext().startActivity(intent);
 
         });
+
+        if (currentLocation != null) {
+            double distance = distance(currentLocation.getLatitude(), currentLocation.getLongitude(), event.getGeoPoint().getLatitude(), event.getGeoPoint().getLongitude());
+            String stringDistance = "";
+
+            if (distance < 1.0)
+                stringDistance += "< 1";
+            else
+                stringDistance += String.valueOf(distance);
+
+            holder.textGeoDistance.setText(stringDistance + " км");
+            holder.geoLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    double distance(double lat1, double lon1, double lat2, double lon2) {
+        if ((lat1 == lat2) && (lon1 == lon2)) {
+            return 0;
+        } else {
+            double earthRadius = 6371.01; //Kilometers
+            double theta = lon1 - lon2;
+            double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+            dist = Math.acos(dist);
+            dist = dist * earthRadius;
+
+            return round(dist, 1);
+        }
+    }
+
+    public double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 
     private String parseCreated(String created) {
@@ -310,11 +352,17 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         @BindView(R.id.parent_layout)
         RelativeLayout parentLayout;
 
+        @BindView(R.id.geo_layout)
+        LinearLayout geoLayout;
+
         @BindView(R.id.image_profile)
         ImageView imageProfile;
 
         @BindView(R.id.text_creator_name)
         TextView textCreatorName;
+
+        @BindView(R.id.text_geo_distance)
+        TextView textGeoDistance;
 
         @BindView(R.id.text_event_created)
         TextView textEventCreated;

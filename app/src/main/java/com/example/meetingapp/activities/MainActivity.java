@@ -1,14 +1,18 @@
 package com.example.meetingapp.activities;
 
+import android.Manifest;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -27,6 +31,8 @@ import com.example.meetingapp.services.NotificationBadgeManager;
 import com.example.meetingapp.services.UserProfileManager;
 import com.example.meetingapp.services.WebSocketListenerService;
 import com.example.meetingapp.utils.PreferenceUtils;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Locale;
@@ -76,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements BottomSheetFragme
         }
         return false;
     };
+    private Location currentLocation;
 
 
     @Override
@@ -94,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements BottomSheetFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setupLocation();
         instance = this;
         setLocale();
 
@@ -118,6 +126,25 @@ public class MainActivity extends AppCompatActivity implements BottomSheetFragme
 
         startWebSocketListener();
     }
+
+    public void setupLocation() {
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, location -> {
+                        if (location != null) {
+                            currentLocation = location;
+                        }
+                    });
+        }
+    }
+
+    public Location getLocation() {
+        return currentLocation;
+    }
+
 
     public void stopWebSocketListener() {
         if (isMyServiceRunning(WebSocketListenerService.class) && webSocketIntent != null) {

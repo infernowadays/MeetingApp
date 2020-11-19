@@ -13,6 +13,7 @@ import androidx.appcompat.widget.SearchView;
 
 import com.example.meetingapp.R;
 import com.example.meetingapp.activities.CreateEventActivity;
+import com.example.meetingapp.activities.MainActivity;
 import com.example.meetingapp.adapters.EventsAdapter;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Event;
@@ -106,7 +107,8 @@ public class EventsFragment extends ContentFragment {
             latitude = String.valueOf(currentLocation.getLatitude());
             longitude = String.valueOf(currentLocation.getLongitude());
         } else {
-            setupLocation();
+            MainActivity.instance.setupLocation();
+            currentLocation = MainActivity.instance.getLocation();
         }
 
         Call<List<Event>> call = RetrofitClient
