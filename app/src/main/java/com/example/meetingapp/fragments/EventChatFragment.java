@@ -1,5 +1,6 @@
 package com.example.meetingapp.fragments;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -143,11 +144,13 @@ public class EventChatFragment extends Fragment {
             public void onResponse(@NonNull Call<LastSeenMessage> call, @NonNull Response<LastSeenMessage> response) {
                 PreferenceUtils.saveChatLastMessagePosition(event.getId(), messageId, getContext());
 
-                for (int i = 0; i < ChatsFragment.chats.size(); i++)
-                    if (ChatsFragment.chats.get(i).getContentId() == event.getId()) {
-                        ChatsFragment.chats.get(i).setLastSeenMessageId(messageId);
-                        break;
-                    }
+                if (ChatsFragment.chats != null) {
+                    for (int i = 0; i < ChatsFragment.chats.size(); i++)
+                        if (ChatsFragment.chats.get(i).getContentId() == event.getId()) {
+                            ChatsFragment.chats.get(i).setLastSeenMessageId(messageId);
+                            break;
+                        }
+                }
 
 
             }
@@ -269,6 +272,12 @@ public class EventChatFragment extends Fragment {
         });
     }
 
+    public void cancelNotification() {
+        String ns = Context.NOTIFICATION_SERVICE;
+        NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(ns);
+        notificationManager.cancel(event.getId());
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -293,6 +302,8 @@ public class EventChatFragment extends Fragment {
             public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
                 event = response.body();
                 readMessages();
+                cancelNotification();
+
             }
 
             @Override

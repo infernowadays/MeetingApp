@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -31,6 +32,8 @@ public class HomeEventsFragment extends Fragment {
     private static HomeEventsFragment instance;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.progressbar_layout)
+    RelativeLayout layoutProgressBar;
     private List<Event> events;
     private EventsAdapter eventsAdapter;
     private String me;
@@ -62,6 +65,7 @@ public class HomeEventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_events, container, false);
         ButterKnife.bind(this, view);
+        layoutProgressBar.setVisibility(View.VISIBLE);
 
         instance = this;
         events = new ArrayList<>();
@@ -84,11 +88,13 @@ public class HomeEventsFragment extends Fragment {
                 events = response.body();
                 eventsAdapter = new EventsAdapter(getContext(), events);
                 recyclerView.setAdapter(eventsAdapter);
+                layoutProgressBar.setVisibility(View.GONE);
+
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
-                int a = 5;
+                layoutProgressBar.setVisibility(View.GONE);
             }
         });
     }

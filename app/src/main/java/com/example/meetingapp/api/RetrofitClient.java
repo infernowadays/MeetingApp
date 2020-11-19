@@ -2,8 +2,6 @@ package com.example.meetingapp.api;
 
 import android.content.Context;
 
-import com.example.meetingapp.activities.MainActivity;
-
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -73,7 +71,10 @@ public class RetrofitClient {
     public static synchronized RetrofitClient getInstance(String token) {
         if (instance == null) {
             instance = new RetrofitClient();
-            setToken(token);
+            if (token == null)
+                needsHeader(false);
+            else
+                setToken(token);
         }
         return instance;
     }

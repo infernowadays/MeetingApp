@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -47,6 +48,8 @@ public class ChatsFragment extends Fragment {
 
     public static ChatsFragment instance;
     public static List<Chat> chats;
+    @BindView(R.id.progressbar_layout)
+    RelativeLayout layoutProgressBar;
     @BindView(R.id.recycle_view)
     RecyclerView recycleView;
     @BindView(R.id.swipe_layout)
@@ -116,6 +119,7 @@ public class ChatsFragment extends Fragment {
         // reset notification badge
 //        MainActivity bottom = MainActivity.instance;
 //        bottom.createNormalBadge();
+        layoutProgressBar.setVisibility(View.VISIBLE);
 
         instance = this;
         chats = new ArrayList<>();
@@ -182,10 +186,13 @@ public class ChatsFragment extends Fragment {
                     chatsAdapter.notifyItemInserted(0);
                     recycleView.getLayoutManager().scrollToPosition(0);
                 }
+                layoutProgressBar.setVisibility(View.GONE);
+
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Chat>> call, @NonNull Throwable t) {
+                layoutProgressBar.setVisibility(View.GONE);
 
             }
         });

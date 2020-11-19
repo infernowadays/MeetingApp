@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -47,6 +48,8 @@ public abstract class ContentFragment extends Fragment {
     Toolbar toolbar;
     @BindView(R.id.toolbar_header)
     TextView toolbarHeader;
+    @BindView(R.id.progressbar_layout)
+    RelativeLayout layoutProgressBar;
     Location currentLocation = null;
     Menu myMenu;
     int lastContentId = 0;
@@ -60,6 +63,8 @@ public abstract class ContentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_content, container, false);
         ButterKnife.bind(this, view);
+
+        layoutProgressBar.setVisibility(View.VISIBLE);
 
         UserProfileManager.getInstance().meProfile(getContext());
 

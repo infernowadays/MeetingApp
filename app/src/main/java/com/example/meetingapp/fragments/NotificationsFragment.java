@@ -1,5 +1,6 @@
 package com.example.meetingapp.fragments;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -45,7 +47,8 @@ public class NotificationsFragment extends Fragment {
 
     @BindView(R.id.swipe_layout)
     SwipeRefreshLayout swipeRefreshLayout;
-
+    @BindView(R.id.progressbar_layout)
+    RelativeLayout layoutProgressBar;
     private NotificationsAdapter notificationsAdapter;
     private List<RequestGet> eventRequests;
     private BroadcastReceiver broadcastReceiver;
@@ -56,6 +59,7 @@ public class NotificationsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
         ButterKnife.bind(this, view);
+        layoutProgressBar.setVisibility(View.VISIBLE);
         eventRequests = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
         recycleView.setLayoutManager(linearLayoutManager);
@@ -63,6 +67,8 @@ public class NotificationsFragment extends Fragment {
         recycleView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                cancelNotifications();
+
                 int userProfileId = UserProfileManager.getInstance().getMyProfile().getId();
                 for (int i = 0; i < eventRequests.size(); i++)
                     if (!eventRequests.get(i).isSeen() &&
@@ -107,9 +113,15 @@ public class NotificationsFragment extends Fragment {
         return view;
     }
 
+    public void cancelNotifications() {
+        String ns = Context.NOTIFICATION_SERVICE;
+        NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(ns);
+        notificationManager.cancelAll();
+    }
+
     private boolean exists(RequestGet newRequest) {
         for (RequestGet request : eventRequests)
-            if (request.getId() == newRequest.getId())
+            if (request.getEvent() == newRequest.getEvent() && request.getToUser().getId() == newRequest.getToUser().getId() && request.getFromUser().getId() == newRequest.getFromUser().getId())
                 return true;
         return false;
     }
@@ -153,6 +165,7 @@ public class NotificationsFragment extends Fragment {
 
                     notificationsAdapter = new NotificationsAdapter(getContext(), eventRequests);
                     recycleView.setAdapter(notificationsAdapter);
+                    layoutProgressBar.setVisibility(View.GONE);
 
 //                    listener.addNotificationBadge(345);
 //                    ((MainActivity)getActivity()).aaa(6);
@@ -162,7 +175,8 @@ public class NotificationsFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<List<RequestGet>> call, @NonNull Throwable t) {
-                Log.d("failure", Objects.requireNonNull(t.getMessage()));
+                layoutProgressBar.setVisibility(View.GONE);
+
             }
         });
     }

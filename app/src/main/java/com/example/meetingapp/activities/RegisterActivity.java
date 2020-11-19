@@ -117,9 +117,8 @@ public class RegisterActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     AuthService authService = new AuthService(getContext());
                     authService.authenticate(email, password);
-
                 } else {
-                    Toast.makeText(RegisterActivity.this, ":(", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Аккаунт с таким email уже существует", Toast.LENGTH_SHORT).show();
                 }
             }
 

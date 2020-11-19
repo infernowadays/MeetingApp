@@ -63,7 +63,7 @@ public class ForgetPasswordEmailStepperFragment extends Fragment implements Bloc
         String email = String.valueOf(textEmail.getText());
 
         Call<Void> call = RetrofitClient
-                .getInstance(PreferenceUtils.getToken(requireContext()))
+                .getInstance(null)
                 .getApi()
                 .generateCode(new EmailConfirmation(email));
 

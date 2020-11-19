@@ -106,7 +106,6 @@ public class EventsFragment extends ContentFragment {
             latitude = String.valueOf(currentLocation.getLatitude());
             longitude = String.valueOf(currentLocation.getLongitude());
         } else {
-            Toast.makeText(requireActivity(), "Включите геолокацию в настройках смартфона", Toast.LENGTH_SHORT).show();
             setupLocation();
         }
 
@@ -130,11 +129,14 @@ public class EventsFragment extends ContentFragment {
                 } else {
                     eventsAdapter.notifyDataSetChanged();
                 }
+                layoutProgressBar.setVisibility(View.GONE);
+
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
-                int a = 5;
+                layoutProgressBar.setVisibility(View.GONE);
+
             }
         });
     }
