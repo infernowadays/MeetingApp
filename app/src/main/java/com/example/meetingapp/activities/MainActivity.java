@@ -130,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements BottomSheetFragme
         fm.beginTransaction().add(R.id.main_container, messagesFragment, "2").hide(messagesFragment).commit();
         fm.beginTransaction().add(R.id.main_container, homeFragment, "1").hide(homeFragment).commit();
 
+        meProfile();
         startWebSocketListener();
     }
 
@@ -262,11 +263,11 @@ public class MainActivity extends AppCompatActivity implements BottomSheetFragme
     public void logout() {
         PreferenceUtils.removeAll(this);
 
-        if (Build.VERSION_CODES.KITKAT <= Build.VERSION.SDK_INT) {
-            ((ActivityManager) Objects.requireNonNull(getSystemService(ACTIVITY_SERVICE)))
-                    .clearApplicationUserData();
-            return;
-        }
+//        if (Build.VERSION_CODES.KITKAT <= Build.VERSION.SDK_INT) {
+//            ((ActivityManager) Objects.requireNonNull(getSystemService(ACTIVITY_SERVICE)))
+//                    .clearApplicationUserData();
+//            return;
+//        }
 
         Intent intent = new Intent(this, StartActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -291,6 +292,9 @@ public class MainActivity extends AppCompatActivity implements BottomSheetFragme
                     UserProfileManager.getInstance().initialize(userProfile);
                     PreferenceUtils.saveUserId(userProfile.getId(), getContext());
                 }
+
+                if(response.code() == 401)
+                    logout();
             }
 
             @Override
