@@ -178,6 +178,9 @@ public class EventInfoFragment extends Fragment implements GetImageFromAsync {
                         chipGroup.addView(chip);
                     }
                     putEvent();
+
+
+                    ((EventActivity) requireActivity()).setupUser(event.getCreator().getId());
                 }
             }
 

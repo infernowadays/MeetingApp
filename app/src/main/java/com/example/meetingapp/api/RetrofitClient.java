@@ -71,11 +71,13 @@ public class RetrofitClient {
     public static synchronized RetrofitClient getInstance(String token) {
         if (instance == null) {
             instance = new RetrofitClient();
-            if (token == null)
-                needsHeader(false);
-            else
-                setToken(token);
         }
+
+        if (token == null)
+            needsHeader(false);
+        else
+            setToken(token);
+
         return instance;
     }
 

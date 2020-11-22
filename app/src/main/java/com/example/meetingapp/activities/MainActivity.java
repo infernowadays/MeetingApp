@@ -11,12 +11,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.fragments.BottomSheetFragment;
 import com.example.meetingapp.fragments.EventsFragment;
 import com.example.meetingapp.fragments.HomeFragment;
@@ -37,6 +39,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Locale;
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements BottomSheetFragment.ItemClickListener {
 
@@ -269,6 +275,32 @@ public class MainActivity extends AppCompatActivity implements BottomSheetFragme
         startActivity(intent);
 
         finish();
+    }
+
+    private void meProfile() {
+        Call<UserProfile> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(this))
+                .getApi()
+                .meProfile();
+
+        call.enqueue(new Callback<UserProfile>() {
+            @Override
+            public void onResponse(@NonNull Call<UserProfile> call, @NonNull Response<UserProfile> response) {
+                if (response.body() != null) {
+                    UserProfile userProfile = response.body();
+                    UserProfileManager.getInstance().initialize(userProfile);
+                    PreferenceUtils.saveUserId(userProfile.getId(), getContext());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<UserProfile> call, @NonNull Throwable t) {
+            }
+        });
+    }
+
+    private Context getContext() {
+        return this;
     }
 
     public boolean isInit() {

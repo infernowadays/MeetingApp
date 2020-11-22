@@ -100,7 +100,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     private void setUnreadFlag(int messageId, int userId, TextView unreadFlag) {
-        if (isUnreadFlagActive || userId == UserProfileManager.getInstance().getMyProfile().getId()){
+        if (isUnreadFlagActive || userId == PreferenceUtils.getUserId(getContext())){
             unreadFlag.setVisibility(View.GONE);
             return;
         }

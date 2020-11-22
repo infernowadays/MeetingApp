@@ -34,7 +34,6 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
     private String theLastMessage;
     private Context context;
     private List<Chat> events;
-    private boolean is_chat;
 
     public ChatsAdapter(Context context, List<Chat> events) {
         this.events = events;

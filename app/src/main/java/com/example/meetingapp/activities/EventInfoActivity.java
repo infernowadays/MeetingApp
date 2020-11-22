@@ -125,7 +125,7 @@ public class EventInfoActivity extends AppCompatActivity implements GetImageFrom
             public void onResponse(@NonNull Call<RequestGet> call, @NonNull Response<RequestGet> response) {
                 Log.d("response", response.message());
                 Toast.makeText(getContext(), "Заявка была успешно отправлена!", Toast.LENGTH_SHORT).show();
-                buttonSendRequest.setText("ОТМЕНИТЬ ЗАЯВКУ");
+                buttonSendRequest.setText("ОТМЕНИТЬ");
                 buttonSendRequest.getBackground().setTint(getContext().getResources().getColor(R.color.colorSecondaryLight));
                 buttonSendRequest.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
             }
@@ -180,8 +180,9 @@ public class EventInfoActivity extends AppCompatActivity implements GetImageFrom
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.content_options_menu, menu);
-        MenuItem item = menu.getItem(0);
         menu.removeItem(R.id.menu_remove_member);
+
+        MenuItem item = menu.getItem(0);
         SpannableString s = new SpannableString("Пожаловаться");
         s.setSpan(new ForegroundColorSpan(Color.RED), 0, s.length(), 0);
         item.setTitle(s);
@@ -256,6 +257,7 @@ public class EventInfoActivity extends AppCompatActivity implements GetImageFrom
                     }
                     putEvent();
                     setupToolbar();
+
                 }
             }
 

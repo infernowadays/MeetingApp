@@ -37,8 +37,6 @@
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:expandedTitleMarginEnd="64dp"
-                app:expandedTitleMarginStart="48dp"
                 app:layout_scrollFlags="scroll">
 
                 <LinearLayout
@@ -52,7 +50,8 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="32dp"
+                        android:layout_marginBottom="32dp"
                         android:gravity="center"
                         tools:ignore="UselessParent">
 
@@ -93,8 +92,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginBottom="16dp"
                         android:background="@color/colorSecondary" />
 
                     <TextView
@@ -117,8 +115,8 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
                         android:background="@color/colorSecondary" />
 
                     <TextView
@@ -130,7 +128,6 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -153,6 +150,7 @@
                                 android:id="@+id/text_years_old"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:textColor="@color/colorSecondaryDarkDark"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -177,6 +175,7 @@
                                 android:id="@+id/text_city"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:textColor="@color/colorSecondaryDarkDark"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -201,6 +200,7 @@
                                 android:id="@+id/text_education"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:textColor="@color/colorSecondaryDarkDark"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -225,6 +225,7 @@
                                 android:id="@+id/text_job"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:textColor="@color/colorSecondaryDarkDark"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -233,14 +234,15 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
                         android:background="@color/colorSecondary" />
 
                     <TextView
                         style="@style/H5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
                         android:text="Контент" />
                 </LinearLayout>
             </com.google.android.material.appbar.CollapsingToolbarLayout>

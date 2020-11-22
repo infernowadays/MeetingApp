@@ -59,6 +59,8 @@ public class EventActivity extends AppCompatActivity implements GetImageFromAsyn
     TextView textCreatorName;
     private int lastSeenMessageId = 0;
     private Intent intent;
+    private Menu menu;
+    private int creatorId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +69,6 @@ public class EventActivity extends AppCompatActivity implements GetImageFromAsyn
         ButterKnife.bind(this);
 
         intent = getIntent();
-
-//        if (intent.hasExtra("EXTRA_LAST_SEEN_MESSAGE_ID")) {
-//            lastSeenMessageId = intent.getIntExtra("EXTRA_LAST_SEEN_MESSAGE_ID", 0);
-//        }
-
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
@@ -101,19 +98,22 @@ public class EventActivity extends AppCompatActivity implements GetImageFromAsyn
         new DownloadImageTask(this, creatorAvatar).execute(creatorPhotoUrl);
     }
 
+    public void setupUser(int creatorId) {
+        this.creatorId = creatorId;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        int creatorId = -1;
-        if (intent.hasExtra("EXTRA_EVENT_CREATOR_ID")) {
-            creatorId = intent.getIntExtra("EXTRA_EVENT_CREATOR_ID", -1);
-        }
+        this.menu = menu;
 
-        if (creatorId == UserProfileManager.getInstance().getMyProfile().getId()) {
-            getMenuInflater().inflate(R.menu.content_options_menu_for_creator, menu);
+        int userId = PreferenceUtils.getUserId(this);
+
+        if (creatorId != -1 && userId != -1 && creatorId == userId) {
+            getMenuInflater().inflate(R.menu.content_options_menu_for_creator, this.menu);
         } else {
-            getMenuInflater().inflate(R.menu.content_options_menu, menu);
+            getMenuInflater().inflate(R.menu.content_options_menu, this.menu);
 
-            MenuItem item = menu.getItem(0);
+            MenuItem item = this.menu.getItem(1);
             SpannableString s = new SpannableString("Пожаловаться");
             s.setSpan(new ForegroundColorSpan(Color.RED), 0, s.length(), 0);
             item.setTitle(s);
@@ -145,9 +145,34 @@ public class EventActivity extends AppCompatActivity implements GetImageFromAsyn
             case R.id.menu_complain:
                 openComplaintDialog();
                 return true;
+            case R.id.menu_remove_member:
+                removeMeFromEvent();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void removeMeFromEvent() {
+
+        Call<Void> call = RetrofitClient
+                .getInstance(PreferenceUtils.getToken(getContext()))
+                .getApi()
+                .removeMember(String.valueOf(EventInfoFragment.getEvent().getId()), String.valueOf(UserProfileManager.getInstance().getMyProfile().getId()));
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                Toast.makeText(getContext(), "Вы больше не являетесь участиником события", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                int a = 5;
+            }
+        });
+
     }
 
     private void openEventEditor() {
@@ -165,6 +190,26 @@ public class EventActivity extends AppCompatActivity implements GetImageFromAsyn
 
     private Context getContext() {
         return this;
+    }
+
+    private void confirmToLeave() {
+        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    removeMeFromEvent();
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    break;
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Вы действительно хотите покинуть событие?").setPositiveButton("Да", dialogClickListener)
+                .setNegativeButton("Нет", dialogClickListener).setTitle("Подтверждение").show();
+
+
     }
 
     private void confirmToStop() {

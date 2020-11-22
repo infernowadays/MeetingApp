@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meetingapp.R;
+import com.example.meetingapp.activities.EventActivity;
 import com.example.meetingapp.adapters.MessageAdapter;
 import com.example.meetingapp.api.RetrofitClient;
 import com.example.meetingapp.models.Chat;
@@ -51,29 +52,28 @@ import retrofit2.Response;
 
 public class EventChatFragment extends Fragment {
 
+    private static Event event;
     @BindView(R.id.button_send)
     ImageButton buttonSend;
-
     @BindView(R.id.text_message)
     EditText textMessage;
-
     @BindView(R.id.recycle_view)
     RecyclerView recycleView;
-
     @BindView(R.id.scroll_down_btn)
     ImageView scroll_down_btn;
-
     private MessageAdapter messageAdapter;
     private List<CommonMessage> messages;
-
     private DatabaseReference databaseReference;
     private String eventId;
     private BroadcastReceiver broadcastReceiver;
     private Context mContext;
     private LinearLayoutManager linearLayoutManager;
-    private Event event;
     private int firstContentId = 0;
     private int offset = 50;
+
+    public static Event getEvent() {
+        return event;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -250,7 +250,7 @@ public class EventChatFragment extends Fragment {
                 }
 
                 if (messageAdapter == null) {
-                    messageAdapter = new MessageAdapter(getContext(), messages, event.getId(), recycleView);
+                    messageAdapter = new MessageAdapter(requireContext(), messages, event.getId(), recycleView);
                     recycleView.setAdapter(messageAdapter);
                 } else {
                     if (newMessages != null)
@@ -301,9 +301,11 @@ public class EventChatFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
                 event = response.body();
-                readMessages();
-                cancelNotification();
-
+                if (event != null) {
+                    readMessages();
+                    cancelNotification();
+                    ((EventActivity) requireActivity()).setupUser(event.getCreator().getId());
+                }
             }
 
             @Override

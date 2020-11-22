@@ -100,7 +100,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         this.context = context;
         this.eventsIds = new ArrayList<>();
 
-        if(MainActivity.instance.getLocation() == null)
+        if (MainActivity.instance.getLocation() == null)
             MainActivity.instance.setupLocation();
         currentLocation = MainActivity.instance.getLocation();
     }
@@ -131,27 +131,27 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
 
         if (isCreator || isMember || event.isEnded())
-            holder.buttonSendRequest.setEnabled(false);
+            holder.buttonSendRequest.setVisibility(View.GONE);
 
         boolean finalIsCreator = isCreator;
         boolean finalIsMember = isMember;
 
         if (event.isRequested()) {
             holder.buttonSendRequest.setBackgroundColor(holder.buttonSendRequest.getContext().getResources().getColor(R.color.colorSecondaryDark));
-            holder.buttonSendRequest.setText("ОТМЕНИТЬ ЗАЯВКУ");
+            holder.buttonSendRequest.setText("ОТМЕНИТЬ");
         }
 
         holder.buttonSendRequest.setOnClickListener(v -> {
             if (!finalIsMember && !finalIsCreator)
                 if (event.isRequested()) {
                     removeRequest(event);
-                    holder.buttonSendRequest.setText("ХОЧУ ПОЙТИ");
+                    holder.buttonSendRequest.setText("GO");
                     holder.buttonSendRequest.setBackgroundColor(holder.buttonSendRequest.getContext().getResources().getColor(R.color.colorPrimary));
                     holder.buttonSendRequest.setTextColor(holder.buttonSendRequest.getContext().getResources().getColor(R.color.ms_white));
 
                 } else {
                     sendRequest(event);
-                    holder.buttonSendRequest.setText("ОТМЕНИТЬ ЗАЯВКУ");
+                    holder.buttonSendRequest.setText("ОТМЕНИТЬ");
                     holder.buttonSendRequest.setBackgroundColor(holder.buttonSendRequest.getContext().getResources().getColor(R.color.colorSecondaryDark));
                 }
         });
@@ -202,7 +202,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             if (event.getCreator().getId() == UserProfileManager.getInstance().getMyProfile().getId() || finalIsMember) {
                 Intent intent = new Intent(context, EventActivity.class);
                 intent.putExtra("EXTRA_EVENT_ID", String.valueOf(event.getId()));
-                intent.putExtra("EXTRA_EVENT_CREATOR_ID", event.getCreator().getId());
+                intent.putExtra("EXTRA_EVENT_CREATOR_ID", String.valueOf(event.getCreator().getId()));
                 context.startActivity(intent);
             } else {
                 Intent intent = new Intent(context, EventInfoActivity.class);

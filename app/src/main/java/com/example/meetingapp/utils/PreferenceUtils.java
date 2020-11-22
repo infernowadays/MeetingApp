@@ -48,7 +48,7 @@ public class PreferenceUtils {
 
     public static int getUserId(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_FILE, MODE_PRIVATE);
-        return preferences.getInt(Constants.KEY_USER_ID, 0);
+        return preferences.getInt(Constants.KEY_USER_ID, -1);
     }
 
     public static boolean hasFirebaseToken(Context context) {

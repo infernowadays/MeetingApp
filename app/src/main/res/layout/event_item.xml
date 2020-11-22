@@ -54,9 +54,9 @@
                     android:layout_toEndOf="@id/image_profile">
 
                     <LinearLayout
+                        android:id="@+id/first_line"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/first_line"
 
                         android:orientation="horizontal">
 
@@ -105,13 +105,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/line"
-                android:gravity="center"
+                android:gravity="left|center_vertical"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/members"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -155,27 +156,16 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
                         android:text="13"
+                        android:textColor="@color/colorSecondaryDarkDark"
                         android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button_send_request"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:text="ХОЧУ ПОЙТИ"
-                    android:textAlignment="center"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:cornerRadius="32dp" />
-
                 <LinearLayout
+                    android:id="@+id/geo_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/geo_layout"
-                    android:visibility="gone"
+                    android:layout_marginEnd="16dp"
                     android:orientation="horizontal">
 
                     <ImageButton
@@ -188,11 +178,23 @@
                     <TextView
                         android:id="@+id/text_geo_distance"
                         android:layout_width="wrap_content"
-                        android:layout_gravity="center"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="15 km from you"
                         android:textSize="16sp"
+                        android:textColor="@color/colorSecondaryDarkDark"
                         android:textStyle="bold" />
                 </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_send_request"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GO"
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="64dp" />
             </LinearLayout>
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>
