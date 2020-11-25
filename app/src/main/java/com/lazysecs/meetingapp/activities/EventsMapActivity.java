@@ -64,7 +64,7 @@ public class EventsMapActivity extends FragmentActivity implements OnMapReadyCal
         setContentView(R.layout.activity_events_map);
 
         Dexter.withActivity(this)
-                .withPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse response) {
