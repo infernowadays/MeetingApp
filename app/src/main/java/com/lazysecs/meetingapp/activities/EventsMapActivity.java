@@ -5,7 +5,6 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import com.lazysecs.meetingapp.R;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -42,6 +40,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
+import com.lazysecs.meetingapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +64,7 @@ public class EventsMapActivity extends FragmentActivity implements OnMapReadyCal
         setContentView(R.layout.activity_events_map);
 
         Dexter.withActivity(this)
-                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .withPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse response) {
@@ -145,8 +144,7 @@ public class EventsMapActivity extends FragmentActivity implements OnMapReadyCal
 
         if (fusedLocationProviderClient != null)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                        && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (!MainActivity.instance.checkLocationPermission()) {
                     return;
                 }
             }

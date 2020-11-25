@@ -23,6 +23,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.common.util.ArrayUtils;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.lazysecs.meetingapp.R;
 import com.lazysecs.meetingapp.activities.EventActivity;
 import com.lazysecs.meetingapp.activities.EventInfoActivity;
@@ -38,9 +41,6 @@ import com.lazysecs.meetingapp.models.UserProfile;
 import com.lazysecs.meetingapp.services.UserProfileManager;
 import com.lazysecs.meetingapp.utils.PreferenceUtils;
 import com.lazysecs.meetingapp.utils.images.DownloadImageTask;
-import com.google.android.gms.common.util.ArrayUtils;
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -100,9 +100,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         this.context = context;
         this.eventsIds = new ArrayList<>();
 
-        if (MainActivity.instance.getLocation() == null)
-            MainActivity.instance.setupLocation();
+        if (MainActivity.instance.getLocation() == null) {
+            MainActivity.instance.checkLocationPermission();
+        }
         currentLocation = MainActivity.instance.getLocation();
+
     }
 
     @NonNull
@@ -233,7 +235,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
             holder.textGeoDistance.setText(stringDistance + " км");
             holder.geoLayout.setVisibility(View.VISIBLE);
+        } else {
+            holder.geoLayout.setVisibility(View.GONE);
         }
+
     }
 
     double distance(double lat1, double lon1, double lat2, double lon2) {

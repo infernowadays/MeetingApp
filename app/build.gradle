@@ -93,10 +93,6 @@ dependencies {
 
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
 
-    implementation 'com.amazonaws:aws-android-sdk-core:2.16.12'
-    implementation 'com.amazonaws:aws-android-sdk-cognito:2.16.12'
-    implementation 'com.amazonaws:aws-android-sdk-s3:2.16.12'
-    implementation 'com.amazonaws:aws-android-sdk-ddb:2.16.12'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.vipulasri:ticketview:1.0.7'
     implementation 'com.fasterxml.jackson.core:com.springsource.com.fasterxml.jackson.core.jackson-annotations:2.0.2'

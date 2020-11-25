@@ -1,6 +1,7 @@
 package com.lazysecs.meetingapp.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -11,11 +12,16 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.lazysecs.meetingapp.R;
 import com.lazysecs.meetingapp.api.RetrofitClient;
 import com.lazysecs.meetingapp.fragments.BottomSheetFragment;
@@ -32,9 +38,6 @@ import com.lazysecs.meetingapp.services.NotificationBadgeManager;
 import com.lazysecs.meetingapp.services.UserProfileManager;
 import com.lazysecs.meetingapp.services.WebSocketListenerService;
 import com.lazysecs.meetingapp.utils.PreferenceUtils;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -45,6 +48,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements BottomSheetFragment.ItemClickListener {
 
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     //    NotificationListener
     public static MainActivity instance;
     private static BottomNavigationView navigation;
@@ -89,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements BottomSheetFragme
     };
     private Location currentLocation;
 
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -100,13 +103,14 @@ public class MainActivity extends AppCompatActivity implements BottomSheetFragme
         super.onStop();
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setupLocation();
+//        setupLocation();
+//        checkLocationPermission();
+
         instance = this;
         setLocale();
 
@@ -133,22 +137,94 @@ public class MainActivity extends AppCompatActivity implements BottomSheetFragme
         startWebSocketListener();
     }
 
+    @SuppressLint("MissingPermission")
     public void setupLocation() {
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, location -> {
+                    if (location != null) {
+                        currentLocation = location;
+                    }
+                });
+    }
 
-            fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(this, location -> {
-                        if (location != null) {
-                            currentLocation = location;
-                        }
-                    });
+    public boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                new AlertDialog.Builder(this)
+                        .setTitle("Использование Вашей геопозиции")
+                        .setMessage("Чтобы находить события вблизи от Вас приложению потребутся доступ к Вашей геопозиции во время работы приложения.")
+                        .setPositiveButton("OK", (dialogInterface, i) -> {
+                            //Prompt the user once explanation has been shown
+                            ActivityCompat.requestPermissions(MainActivity.this,
+                                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                                    MY_PERMISSIONS_REQUEST_LOCATION);
+                        })
+                        .setNegativeButton("НЕТ", (dialogInterface, i) -> {
+
+                        })
+                        .create()
+                        .show();
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+            return false;
+        } else {
+            setupLocation();
+            return true;
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_COARSE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+
+                        setupLocation();
+                    }
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+                }
+                return;
+            }
+
+        }
+    }
+
+
     public Location getLocation() {
-        return currentLocation;
+        if (currentLocation != null)
+            return currentLocation;
+        else
+            return null;
     }
 
 
@@ -292,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements BottomSheetFragme
                     PreferenceUtils.saveUserId(userProfile.getId(), getContext());
                 }
 
-                if(response.code() == 401)
+                if (response.code() == 401)
                     logout();
             }
 
@@ -312,13 +388,13 @@ public class MainActivity extends AppCompatActivity implements BottomSheetFragme
 
     @Override
     public void onItemClick(String item) {
-        if (item.equals(EVENTS)) {
-            if (content.equals(TICKETS))
-                changeContent(ticketsFragment, eventsFragment, EVENTS, EVENT_ICON);
-        } else if (item.equals(TICKETS)) {
-            if (content.equals(EVENTS))
-                changeContent(eventsFragment, ticketsFragment, TICKETS, TICKET_ICON);
-        }
+//        if (item.equals(EVENTS)) {
+//            if (content.equals(TICKETS))
+//                changeContent(ticketsFragment, eventsFragment, EVENTS, EVENT_ICON);
+//        } else if (item.equals(TICKETS)) {
+//            if (content.equals(EVENTS))
+//                changeContent(eventsFragment, ticketsFragment, TICKETS, TICKET_ICON);
+//        }
     }
 
     private void changeContent(Fragment removeFragment, Fragment addFragment, String contentType, int icon) {

@@ -91,8 +91,8 @@ public abstract class ContentFragment extends Fragment {
 
     @OnClick(R.id.toolbar_header)
     void changeContent() {
-        BottomSheetFragment bottomSheetFragment = BottomSheetFragment.newInstance();
-        bottomSheetFragment.show(requireActivity().getSupportFragmentManager(), BottomSheetFragment.TAG);
+//        BottomSheetFragment bottomSheetFragment = BottomSheetFragment.newInstance();
+//        bottomSheetFragment.show(requireActivity().getSupportFragmentManager(), BottomSheetFragment.TAG);
     }
 
     @Override
