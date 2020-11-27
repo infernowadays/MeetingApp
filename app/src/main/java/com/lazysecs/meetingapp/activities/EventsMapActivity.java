@@ -93,13 +93,6 @@ public class EventsMapActivity extends FragmentActivity implements OnMapReadyCal
 
     }
 
-    private void initArea() {
-        area = new ArrayList<>();
-        area.add(new LatLng(59.8809, 30.3194));
-        area.add(new LatLng(59.8809, 30.3594));
-        area.add(new LatLng(59.8809, 30.4094));
-    }
-
     private void settingGeoFire() {
         databaseReference = FirebaseDatabase.getInstance().getReference("GeoPoint");
         geoFire = new GeoFire(databaseReference);

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -56,7 +57,21 @@ public class SetAddressFragment extends Fragment implements OnMapReadyCallback,
 
     private void checkUserLocationPermission() {
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Request_User_Location_Code);
+
+            new AlertDialog.Builder(requireContext())
+                    .setTitle("Использование Вашей геопозиции")
+                    .setMessage("Чтобы находить события вблизи от Вас приложению потребутся доступ к Вашей геопозиции во время работы приложения.")
+                    .setPositiveButton("OK", (dialogInterface, i) -> {
+                        //Prompt the user once explanation has been shown
+                        ActivityCompat.requestPermissions(requireActivity(),
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                Request_User_Location_Code);
+                    })
+                    .setNegativeButton("НЕТ", (dialogInterface, i) -> {
+
+                    })
+                    .create()
+                    .show();
         }
     }
 

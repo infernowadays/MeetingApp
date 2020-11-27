@@ -11,12 +11,11 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import com.lazysecs.meetingapp.R;
-import com.lazysecs.meetingapp.models.GeoPoint;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,6 +25,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.lazysecs.meetingapp.R;
+import com.lazysecs.meetingapp.models.GeoPoint;
 
 import java.io.IOException;
 import java.util.List;
@@ -93,9 +94,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void fetchLastLocation() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]
-                        {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                new AlertDialog.Builder(this)
+                        .setTitle("Использование Вашей геопозиции")
+                        .setMessage("Чтобы находить события вблизи от Вас приложению потребутся доступ к Вашей геопозиции во время работы приложения.")
+                        .setPositiveButton("OK", (dialogInterface, i) -> {
+                            //Prompt the user once explanation has been shown
+                            ActivityCompat.requestPermissions(MapsActivity.this,
+                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                    REQUEST_CODE);
+                        })
+                        .setNegativeButton("НЕТ", (dialogInterface, i) -> {
+
+                        })
+                        .create()
+                        .show();
+
                 return;
             }
         }

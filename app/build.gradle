@@ -5,17 +5,19 @@ apply plugin: 'com.jakewharton.butterknife'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
+    ndkVersion "22.0.6917172"
     defaultConfig {
         applicationId "com.lazysecs.meetingapp"
         minSdkVersion 22
         targetSdkVersion 29
-        versionCode 4
-        versionName "1.2"
+        versionCode 10
+        versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -106,6 +108,8 @@ dependencies {
 
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 }
+
+android.buildTypes.release.ndk.debugSymbolLevel = 'FULL'
 
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
