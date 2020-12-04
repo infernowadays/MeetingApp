@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.lazysecs.meetingapp.customviews.CustomSwipeToRefresh xmlns:android="http://schemas.android.com/apk/res/android"
+<com.lazysecs.walk.customviews.CustomSwipeToRefresh xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipe_layout"
@@ -338,4 +338,4 @@
         </androidx.core.widget.NestedScrollView>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</com.lazysecs.meetingapp.customviews.CustomSwipeToRefresh>
+</com.lazysecs.walk.customviews.CustomSwipeToRefresh>
